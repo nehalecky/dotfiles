@@ -2,6 +2,8 @@
 
 Modern dotfiles management with [chezmoi](https://chezmoi.io/).
 
+📚 **[Applications & Tools Guide](APPLICATIONS.md)** | 🔧 **[Brewfile](Brewfile)** | 📊 **[Dependency Analysis](homebrew-analysis.md)**
+
 ## Quick Setup
 
 ```bash
@@ -26,32 +28,15 @@ brew bundle
 
 The `Brewfile` installs a curated set of tools organized by category:
 
-#### Core Development (7 tools)
-- `git`, `gh` - Version control and GitHub CLI
-- `docker` - Containerization 
-- `node`, `pdm` - JavaScript and Python development
-- `jq` - JSON processing
-- `chezmoi` - Dotfiles management
+- **56 Command-line tools** (formulae) - Enhanced Unix utilities, development tools
+- **32 Desktop applications** (casks) - Editors, browsers, productivity apps
+- **11 VS Code extensions** - Python, Markdown, and Jupyter support
 
-#### Terminal Enhancement (11 tools)
-- `starship` - Modern shell prompt
-- `bat`, `eza`, `ripgrep` - Better cat, ls, and grep
-- `fzf` - Fuzzy finder for history and files
-- `btop` - System resource monitor
-- `glow`, `tealdeer` - Markdown rendering and tldr pages
-
-#### Security & Privacy (3 tools)
-- `1password`, `1password-cli` - Password management
-- `gpg-suite` - GPG encryption and signing
-
-#### Applications (25+ apps)
-- **Development**: VS Code, Cursor, iTerm2, Docker Desktop
-- **Communication**: Slack, Signal, Telegram, WhatsApp, Zoom
-- **Productivity**: Obsidian, Raycast, Zotero
-- **Browsers**: Arc, Firefox
-- **Media**: Spotify, VLC
-
-See `Brewfile` for the complete list with comments.
+📚 **See [APPLICATIONS.md](APPLICATIONS.md) for detailed documentation** including:
+- Complete tables with links and descriptions
+- What each tool enhances or replaces  
+- Installation categories and use cases
+- Maintenance tips and philosophy
 
 ## Key Features
 
