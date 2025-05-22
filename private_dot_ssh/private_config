@@ -1,0 +1,14 @@
+# ~/.ssh/config
+# GitHub configuration using 1Password agent with controlled key ordering
+Host github.com
+HostName github.com
+User git
+IdentityAgent "~/.1password/agent.sock"
+PreferredAuthentications publickey
+
+Host *
+IdentityAgent "~/.1password/agent.sock"
+AddKeysToAgent yes
+IgnoreUnknown UseKeychain
+UseKeychain yes
+
