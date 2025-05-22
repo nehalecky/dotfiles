@@ -2,7 +2,7 @@
 
 Modern dotfiles management with [chezmoi](https://chezmoi.io/).
 
-📚 **[Applications & Tools Guide](APPLICATIONS.md)** | 🔧 **[Brewfile](Brewfile)** | 📊 **[Dependency Analysis](homebrew-analysis.md)**
+📚 **[Applications & Tools Guide](APPLICATIONS.md)** | 🔧 **[Brewfile](Brewfile)** | 📊 **[Dependency Analysis](homebrew-analysis.md)** | 🤖 **[Claude Instructions](CLAUDE.md)**
 
 ## Quick Setup
 
