@@ -97,7 +97,110 @@ Chezmoi now manages actual file content, eliminating symlink issues.
 3. **Test changes**: `chezmoi diff` before applying
 4. **Update**: `chezmoi update` pulls latest changes
 
+## Brewfile Maintenance
+
+### Installing from Brewfile
+```bash
+# Install everything in the Brewfile
+brew bundle
+
+# Check what would be installed without installing
+brew bundle --no-upgrade
+
+# Install in a specific directory
+brew bundle --file=~/dotfiles/Brewfile
+```
+
+### Updating Brewfile
+```bash
+# Regenerate Brewfile with current packages
+brew bundle dump --force
+
+# Add descriptions and organize (manual step)
+# Then commit changes
+chezmoi add Brewfile
+chezmoi cd
+git add Brewfile && git commit -m "Update Brewfile"
+git push
+```
+
+### Cleaning Up
+```bash
+# List packages not in Brewfile
+brew bundle cleanup --dry-run
+
+# Remove packages not in Brewfile
+brew bundle cleanup
+
+# Update all packages
+brew bundle --no-lock
+```
+
+### Checking Dependencies
+```bash
+# See what depends on a package
+brew uses --installed <formula>
+
+# List all leaf packages (not dependencies)
+brew leaves
+
+# Show dependency tree
+brew deps --tree --installed
+
+# Find unnecessary dependencies
+brew autoremove --dry-run
+```
+
+### Best Practices
+1. **Regular Updates**: Run `brew bundle dump` periodically to catch new installations
+2. **Document Changes**: Add comments in Brewfile explaining why packages are needed
+3. **Version Control**: Always commit Brewfile changes with descriptive messages
+4. **Clean Installs**: Test Brewfile on fresh systems to ensure completeness
+5. **Minimize Dependencies**: Regularly review with `brew leaves` and remove unused packages
+
+### Example Maintenance Workflow
+```bash
+# 1. Check for outdated packages
+brew outdated
+
+# 2. Update everything
+brew upgrade
+brew upgrade --cask
+
+# 3. Clean up old versions
+brew cleanup
+
+# 4. Regenerate Brewfile if you installed anything new
+brew bundle dump --force --describe
+
+# 5. Review and commit changes
+chezmoi diff
+chezmoi add Brewfile
+chezmoi cd && git add -A && git commit -m "Update Brewfile after maintenance"
+chezmoi git push
+```
+
+### Brewfile Structure
+```ruby
+# Group related packages with comments
+# Development Tools
+brew "git"          # Version control
+brew "gh"           # GitHub CLI
+
+# Use cask for GUI applications
+cask "1password"    # Password manager
+
+# Pin specific options when needed
+brew "emacs", restart_service: :changed
+```
+
 ## Troubleshooting
+
+### Brewfile Issues
+- **Missing taps**: Add required taps at the top of Brewfile
+- **Conflicts**: Use `brew bundle cleanup` to identify conflicts
+- **Cask errors**: Ensure `homebrew/cask` is available
+- **VS Code extensions**: Require VS Code to be installed first
 
 ### SSH Key Issues
 - Ensure 1Password SSH agent is running
