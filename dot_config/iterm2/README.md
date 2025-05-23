@@ -4,15 +4,20 @@ This directory contains iTerm2 preferences and profiles managed by chezmoi using
 
 ## How It Works
 
-iTerm2 automatically loads JSON profiles from:
+iTerm2 automatically loads JSON profiles from a **fixed location**:
 ```
 ~/Library/Application Support/iTerm2/DynamicProfiles/
 ```
 
 Our setup:
 1. **Stores** profiles in `~/.config/iterm2/DynamicProfiles/` (version controlled)
-2. **Symlinks** to iTerm2's expected location (automated by chezmoi)
+2. **Syncs** to iTerm2's required location via chezmoi script
 3. **Auto-reloads** when files change (instant updates!)
+
+The sync happens automatically:
+- After every `chezmoi apply`
+- Uses rsync for efficient updates
+- Preserves all your profile customizations
 
 ## Initial Setup (One-time)
 
@@ -44,10 +49,11 @@ chezmoi init --apply nehalecky/dotfiles
 open -a iTerm
 ```
 
-The `run_once_01-setup-iterm2.sh` script automatically:
-- Creates the DynamicProfiles directory
-- Sets up the symlink
-- Configures iTerm2 preferences
+The `.chezmoiscripts/run_after_10-sync-iterm2-profiles.sh` script automatically:
+- Runs after every `chezmoi apply`
+- Syncs profiles from `~/.config/iterm2/DynamicProfiles/`
+- Updates iTerm2's directory without symlinks
+- Handles additions, updates, and deletions
 
 ## What's Included
 
