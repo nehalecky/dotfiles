@@ -1,0 +1,319 @@
+{
+  "numStartups": 6,
+  "autoUpdaterStatus": "enabled",
+  "customApiKeyResponses": {
+    "approved": [
+      "f8wBvCDOsOw-_hGEzAAA"
+    ],
+    "rejected": []
+  },
+  "tipsHistory": {
+    "new-user-warmup": 3,
+    "shift-enter": 6
+  },
+  "userID": "f1b482d2b0c8feabcd645119a48ab8d1d88b83c5fbca7d4a177d682b392b203e",
+  "hasCompletedOnboarding": true,
+  "lastOnboardingVersion": "0.2.14",
+  "projects": {
+    "/Users/nehalecky": {
+      "allowedTools": [],
+      "context": {},
+      "history": [
+        {
+          "display": "yes",
+          "pastedContents": {}
+        },
+        {
+          "display": "Can we inspect what the script will do beforehand?",
+          "pastedContents": {}
+        },
+        {
+          "display": "ok, let's do it! But how to I ensure applications know where to find these configs in their updated locations?",
+          "pastedContents": {}
+        },
+        {
+          "display": "what is xdg?",
+          "pastedContents": {}
+        },
+        {
+          "display": "Where are the config files store locally? I want to keep my home directory as clean as possible.",
+          "pastedContents": {}
+        },
+        {
+          "display": "Sure, you can do the copy for now, but also, isn't their a way to tell iterm2 which profile to load?? Please spend time understanding this so we can get away from fragile symlink to the defaul profile location.",
+          "pastedContents": {}
+        },
+        {
+          "display": "I just recieved a popup error from iterm 2 5/22, 22:30:18.492: Could not read Dynamic Profile from file /Users/nehalecky/Library/Application Support/iTerm2/DynamicProfiles/DynamicProfiles: The file “DynamicProfiles” couldn’t be opened.\n5/22, 22:30:18.492: Ignoring dynamic profiles in “/Users/nehalecky/Library/Application Support/iTerm2/DynamicProfiles/DynamicProfiles” because of an error.",
+          "pastedContents": {}
+        },
+        {
+          "display": "OK, I've run the one time manual tasks",
+          "pastedContents": {}
+        },
+        {
+          "display": "I am fine if you want to make an export script to support one time, however, does this assume that we'd continue to make changes via tha application that wouldn't manifest in the JSON configuration directly, via the application? I would assume that's the case, and if so, the export script is only needed one time. ",
+          "pastedContents": {}
+        },
+        {
+          "display": "I want to make sure we're using iterm2 ability to have a custom profile that points to a json based config. Research this, and come up with a plan that allows us to output to such, and then immediately pick up in iterm when it opens! We should be reducing any and all manual steps in our macOS env setup, by pushing everything to a versionable config, adding it to our dotfiles via chezmoi, and then ensure that the chezmoi init workflow picks up and properly integrate / links the configuration, across os, application, dependencies, and setup dimensions! :)",
+          "pastedContents": {}
+        },
+        {
+          "display": "Great, now lets move on to outputting, versioning and expanding the configuration we have for iterm. Can you guide me through how to set this up? Thanks!",
+          "pastedContents": {}
+        },
+        {
+          "display": "Also, shouldn't I have a claude.md included in the repo to allow for use of claude more seemlessly in the future. :) ",
+          "pastedContents": {}
+        },
+        {
+          "display": "Let's expand the documentation, and seperate from the main readme, to give overview of the  apps and the categorization of such, correct? Both casks (applications) and for formula (for macOS cli utilities). We might even consider creating a table with name (linked to websites for each), category, and a brief description of what it does and what it replaces or ehances. Take your time and go for it! :) ",
+          "pastedContents": {}
+        },
+        {
+          "display": "And I'd like to make sure the brew bundle maintaence workflow is well documented in the readme",
+          "pastedContents": {}
+        },
+        {
+          "display": "It's fine to remove this, but it's also great to have this context that these are the dependencies!",
+          "pastedContents": {}
+        },
+        {
+          "display": "Sounds great. Now, let's make sure we're capturing all the configuration info. Let's start with ensuring the homebrew dependencies are listed, versioned and added, and that the readme is updated. We want to have as minimal a set of dependencies, so we can first try reduce or remove any brew installs that we have, and finally we will update the readme",
+          "pastedContents": {}
+        },
+        {
+          "display": "Whatever is easier to achieve the goal of having the right name.",
+          "pastedContents": {}
+        },
+        {
+          "display": "sorry, I wanted the name of the repo to be dotfiles only, can you confirm this is the case?",
+          "pastedContents": {}
+        },
+        {
+          "display": "OK, now let's get back to our plan!",
+          "pastedContents": {}
+        },
+        {
+          "display": "Press Enter to open https://github.com/login/device in your browser...\n✓ Authentication complete.\n- gh config set -h github.com git_protocol ssh\n✓ Configured git protocol\n✓ Logged in as nehalecky",
+          "pastedContents": {}
+        },
+        {
+          "display": "? How would you like to authenticate GitHub CLI?  [Use arrows to move, type to filter]\n> Login with a web browser\n  Paste an authentication token\n",
+          "pastedContents": {}
+        },
+        {
+          "display": "  gh auth login\n? Where do you use GitHub? GitHub.com\n? What is your preferred protocol for Git operations on this host? SSH\n? Upload your SSH public key to your GitHub account?  [Use arrows to move, type to filter]\n> /Users/nehalecky/.ssh/id_ed25519.pub\n  Skip\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "pastedContents": {}
+        },
+        {
+          "display": "Should use HTTPS or SSH protocol",
+          "pastedContents": {}
+        },
+        {
+          "display": "make it permanent ",
+          "pastedContents": {}
+        },
+        {
+          "display": "1",
+          "pastedContents": {}
+        },
+        {
+          "display": "the alias is currently set in the .zshrc, so you'll have to take care of both. ",
+          "pastedContents": {}
+        },
+        {
+          "display": "1",
+          "pastedContents": {}
+        },
+        {
+          "display": "gh auth login\n? Where do you use GitHub? GitHub.com\nThe value of the GITHUB_TOKEN environment variable is being used for authentication.\nTo have GitHub CLI store credentials instead, first clear the value from the environment.\n❯ alias gh\ngh='op plugin run -- gh'",
+          "pastedContents": {}
+        },
+        {
+          "display": "Hi claude, let's pick back up where we left off. I'd like to resolve the gh auth issues so you can interact from cli to resolve things. ",
+          "pastedContents": {}
+        },
+        {
+          "display": "/compact make sure and reference the plan for migration that we have so you can pick it back up, thanks!",
+          "pastedContents": {}
+        },
+        {
+          "display": "let's auth first?",
+          "pastedContents": {}
+        },
+        {
+          "display": "yes, let's go with that name! ",
+          "pastedContents": {}
+        },
+        {
+          "display": "Can we come up with a better name? Even just .dotfiles or dotfiles is better. Also, where will the repo live on my local device directory? Guess that influences what it is called. Thanks! :) ",
+          "pastedContents": {}
+        },
+        {
+          "display": "yes, let's make a new repo and get this setup! ",
+          "pastedContents": {}
+        },
+        {
+          "display": "I want to make sure you have properly used `chezmoi add --follow` for simlinks? ",
+          "pastedContents": {}
+        },
+        {
+          "display": "Nevermind, let's proceed with the migration.",
+          "pastedContents": {}
+        },
+        {
+          "display": "Sorry, yes, but before we proceed, what is the memorize tip you keep giving me?",
+          "pastedContents": {}
+        },
+        {
+          "display": "Well, 2, but given we're going to be migrating to chezmoi (and away from pretzo), it likely doesn't really matter? Thoughts?",
+          "pastedContents": {}
+        },
+        {
+          "display": "Sure, but before we do that, did you push the changes to remote? Also I have strange feeling that we have a differnce between remote and local wrt changes made to .zshrc and .zpreztorc, can you check and confirm? Thanks!",
+          "pastedContents": {}
+        },
+        {
+          "display": "I just want to make sure you're also referring to this info, which allow https://developer.1password.com/docs/ssh/agent/config",
+          "pastedContents": {}
+        },
+        {
+          "display": "yes, but I'm very surprised it is this complicated. It feels like we might be missing something more fundamental, such as a way to explicitly reference the github ssh auth key that 1pass has stored. ",
+          "pastedContents": {}
+        },
+        {
+          "display": "I want to make sure you know that there exists a ~/.1password directory in $HOME, and that also you've incorporated this https://developer.1password.com/docs/ssh/get-started into your plan. I'll let you proceed after.",
+          "pastedContents": {}
+        },
+        {
+          "display": "option 2, obviously as I use the signing key dynamically to sign commits.",
+          "pastedContents": {}
+        },
+        {
+          "display": "How is this dynamic? You've added a the public key to disk, instead of resolving it from 1pass at runtime.",
+          "pastedContents": {}
+        },
+        {
+          "display": "Please take the time do think about how to more deeply test what is going on and come up with at plan. ",
+          "pastedContents": {}
+        },
+        {
+          "display": "Great! Before we do that, can you confirm that we're using the dynamically resolved ssh auth key from 1pass now when pushing local changes to remote github?",
+          "pastedContents": {}
+        },
+        {
+          "display": "Just to be clear, current shell is zsh with a pretzo configuration. Hope that helps, let's try again.",
+          "pastedContents": {}
+        },
+        {
+          "display": "Hi Claude, welcome! I need help getting my dotfiles management setup. You can understand things by use of the `dotfiles` command, which is an aliased git that points to a bare git repo in $HOME directory (check it out with the alias command). Currently, I have an issue being able to push local changes in it to my origin repo on github (https://github.com/nehalecky/.dotfiles-config). I have been attempting to use 1pass for my secrets management alongside use of the SSH agent and cli op. You will help me resolve this first, by analyzing, planning, and iteratively executing and observing. You and I will work together to accomplish this, as you will require me to interact with applications interfaces, that our out of reach now from the terminal command line. \n\nAfter we're able to resolve this remote push issue (to capture changes), we're going to execute a full revamp of my local setup, but migration to chezmoi for dotfile management and then after, migraiton to starship prompt. Given you can see what's versioned in my homegrown dotfile manager (including the README which is there, which is out of date). One of the primary things we will establish is a readme that describes our enviroment setup, and this will be a primary interface to it's maintence and use in the future. Finally, do feel free to get a claude.md file setup that will capture guidance I give you along the way! Let's do this, take your time, and thanks much! Very exciting :) ",
+          "pastedContents": {}
+        },
+        {
+          "display": "/help ",
+          "pastedContents": {}
+        },
+        {
+          "display": "/login ",
+          "pastedContents": {}
+        }
+      ],
+      "dontCrawlDirectory": true,
+      "enableArchitectTool": false,
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "approvedMcprcServers": [],
+      "rejectedMcprcServers": [],
+      "hasTrustDialogAccepted": false,
+      "hasCompletedProjectOnboarding": true
+    },
+    "/Users/nehalecky/repos": {
+      "allowedTools": [],
+      "history": [
+        {
+          "display": "ls",
+          "pastedContents": {}
+        },
+        {
+          "display": "security",
+          "pastedContents": {}
+        },
+        {
+          "display": "where are my configs for API keys managed for Claude Code?",
+          "pastedContents": {}
+        },
+        {
+          "display": "/release-notes ",
+          "pastedContents": {}
+        },
+        {
+          "display": "/help ",
+          "pastedContents": {}
+        },
+        {
+          "display": "help",
+          "pastedContents": {}
+        },
+        {
+          "display": "/cost ",
+          "pastedContents": {}
+        },
+        {
+          "display": "/mcp ",
+          "pastedContents": {}
+        },
+        {
+          "display": "/terminal-setup ",
+          "pastedContents": {}
+        }
+      ],
+      "dontCrawlDirectory": false,
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "enableAllProjectMcpServers": false,
+      "hasTrustDialogAccepted": true,
+      "ignorePatterns": [],
+      "projectOnboardingSeenCount": 1,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "lastCost": 0.16553695000000007,
+      "lastAPIDuration": 70123,
+      "lastDuration": 4134266,
+      "lastLinesAdded": 0,
+      "lastLinesRemoved": 0,
+      "lastTotalInputTokens": 8629,
+      "lastTotalOutputTokens": 918,
+      "lastTotalCacheCreationInputTokens": 28607,
+      "lastTotalCacheReadInputTokens": 138917,
+      "lastSessionId": "9592438d-23b2-4837-b82d-13720bbcbb06"
+    }
+  },
+  "firstStartTime": "2025-05-20T16:14:15.175Z",
+  "statsigModel": {
+    "bedrock": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "vertex": "claude-3-7-sonnet@20250219",
+    "firstParty": "claude-3-7-sonnet-20250219"
+  },
+  "cachedChangelog": "# Changelog\n\n## 1.0.1\n\n- Added `DISABLE_INTERLEAVED_THINKING` to give users the option to opt out of interleaved thinking.\n- Improved model references to show provider-specific names (Sonnet 3.7 for Bedrock, Sonnet 4 for Console)\n- Updated documentation links and OAuth process descriptions\n\n## 1.0.0\n\n- Claude Code is now generally available\n- Introducing Sonnet 4 and Opus 4 models\n\n## 0.2.125\n\n- Breaking change: Bedrock ARN passed to `ANTHROPIC_MODEL` or `ANTHROPIC_SMALL_FAST_MODEL` should no longer contain an escaped slash (specify `/` instead of `%2F`)\n- Removed `DEBUG=true` in favor of `ANTHROPIC_LOG=debug`, to log all requests\n\n## 0.2.117\n\n- Breaking change: --print JSON output now returns nested message objects, for forwards-compatibility as we introduce new metadata fields\n- Introduced settings.cleanupPeriodDays\n- Introduced CLAUDE_CODE_API_KEY_HELPER_TTL_MS env var\n- Introduced --debug mode\n\n## 0.2.108\n\n- You can now send messages to Claude while it works to steer Claude in real-time\n- Introduced BASH_DEFAULT_TIMEOUT_MS and BASH_MAX_TIMEOUT_MS env vars\n- Fixed a bug where thinking was not working in -p mode\n- Fixed a regression in /cost reporting\n- Deprecated MCP wizard interface in favor of other MCP commands\n- Lots of other bugfixes and improvements\n\n## 0.2.107\n\n- CLAUDE.md files can now import other files. Add @path/to/file.md to ./CLAUDE.md to load additional files on launch\n\n## 0.2.106\n\n- MCP SSE server configs can now specify custom headers\n- Fixed a bug where MCP permission prompt didn't always show correctly\n\n## 0.2.105\n\n- Claude can now search the web\n- Moved system & account status to /status\n- Added word movement keybindings for Vim\n- Improved latency for startup, todo tool, and file edits\n\n## 0.2.102\n\n- Improved thinking triggering reliability\n- Improved @mention reliability for images and folders\n- You can now paste multiple large chunks into one prompt\n\n## 0.2.100\n\n- Fixed a crash caused by a stack overflow error\n- Made db storage optional; missing db support disables --continue and --resume\n\n## 0.2.98\n\n- Fixed an issue where auto-compact was running twice\n\n## 0.2.96\n\n- Claude Code can now also be used with a Claude Max subscription (https://claude.ai/upgrade)\n\n## 0.2.93\n\n- Resume conversations from where you left off from with \"claude --continue\" and \"claude --resume\"\n- Claude now has access to a Todo list that helps it stay on track and be more organized\n\n## 0.2.82\n\n- Added support for --disallowedTools\n- Renamed tools for consistency: LSTool -> LS, View -> Read, etc.\n\n## 0.2.75\n\n- Hit Enter to queue up additional messages while Claude is working\n- Drag in or copy/paste image files directly into the prompt\n- @-mention files to directly add them to context\n- Run one-off MCP servers with `claude --mcp-config <path-to-file>`\n- Improved performance for filename auto-complete\n\n## 0.2.74\n\n- Added support for refreshing dynamically generated API keys (via apiKeyHelper), with a 5 minute TTL\n- Task tool can now perform writes and run bash commands\n\n## 0.2.72\n\n- Updated spinner to indicate tokens loaded and tool usage\n\n## 0.2.70\n\n- Network commands like curl are now available for Claude to use\n- Claude can now run multiple web queries in parallel\n- Pressing ESC once immediately interrupts Claude in Auto-accept mode\n\n## 0.2.69\n\n- Fixed UI glitches with improved Select component behavior\n- Enhanced terminal output display with better text truncation logic\n\n## 0.2.67\n\n- Shared project permission rules can be saved in .claude/settings.json\n\n## 0.2.66\n\n- Print mode (-p) now supports streaming output via --output-format=stream-json\n- Fixed issue where pasting could trigger memory or bash mode unexpectedly\n\n## 0.2.63\n\n- Fixed an issue where MCP tools were loaded twice, which caused tool call errors\n\n## 0.2.61\n\n- Navigate menus with vim-style keys (j/k) or bash/emacs shortcuts (Ctrl+n/p) for faster interaction\n- Enhanced image detection for more reliable clipboard paste functionality\n- Fixed an issue where ESC key could crash the conversation history selector\n\n## 0.2.59\n\n- Copy+paste images directly into your prompt\n- Improved progress indicators for bash and fetch tools\n- Bugfixes for non-interactive mode (-p)\n\n## 0.2.54\n\n- Quickly add to Memory by starting your message with '#'\n- Press ctrl+r to see full output for long tool results\n- Added support for MCP SSE transport\n\n## 0.2.53\n\n- New web fetch tool lets Claude view URLs that you paste in\n- Fixed a bug with JPEG detection\n\n## 0.2.50\n\n- New MCP \"project\" scope now allows you to add MCP servers to .mcp.json files and commit them to your repository\n\n## 0.2.49\n\n- Previous MCP server scopes have been renamed: previous \"project\" scope is now \"local\" and \"global\" scope is now \"user\"\n\n## 0.2.47\n\n- Press Tab to auto-complete file and folder names\n- Press Shift + Tab to toggle auto-accept for file edits\n- Automatic conversation compaction for infinite conversation length (toggle with /config)\n\n## 0.2.44\n\n- Ask Claude to make a plan with thinking mode: just say 'think' or 'think harder' or even 'ultrathink'\n\n## 0.2.41\n\n- MCP server startup timeout can now be configured via MCP_TIMEOUT environment variable\n- MCP server startup no longer blocks the app from starting up\n\n## 0.2.37\n\n- New /release-notes command lets you view release notes at any time\n- `claude config add/remove` commands now accept multiple values separated by commas or spaces\n\n## 0.2.36\n\n- Import MCP servers from Claude Desktop with `claude mcp add-from-claude-desktop`\n- Add MCP servers as JSON strings with `claude mcp add-json <n> <json>`\n\n## 0.2.34\n\n- Vim bindings for text input - enable with /vim or /config\n\n## 0.2.32\n\n- Interactive MCP setup wizard: Run \"claude mcp add\" to add MCP servers with a step-by-step interface\n- Fix for some PersistentShell issues\n\n## 0.2.31\n\n- Custom slash commands: Markdown files in .claude/commands/ directories now appear as custom slash commands to insert prompts into your conversation\n- MCP debug mode: Run with --mcp-debug flag to get more information about MCP server errors\n\n## 0.2.30\n\n- Added ANSI color theme for better terminal compatibility\n- Fixed issue where slash command arguments weren't being sent properly\n- (Mac-only) API keys are now stored in macOS Keychain\n\n## 0.2.26\n\n- New /approved-tools command for managing tool permissions\n- Word-level diff display for improved code readability\n- Fuzzy matching for slash commands\n\n## 0.2.21\n\n- Fuzzy matching for /commands\n",
+  "changelogLastFetched": 1747947057027,
+  "maxSubscriptionNoticeCount": 2,
+  "hasAvailableMaxSubscription": false,
+  "isQualifiedForDataSharing": false,
+  "iterm2SetupInProgress": false,
+  "iterm2BackupPath": "/Users/nehalecky/Library/Preferences/com.googlecode.iterm2.plist.bak",
+  "shiftEnterKeyBindingInstalled": true,
+  "lastReleaseNotesSeen": "1.0.1",
+  "claudeMaxTier": "5x",
+  "oauthAccount": {
+    "accountUuid": "f25504fa-eca3-4c9d-a290-676c0d9bfb22",
+    "emailAddress": "nehalecky@gmail.com",
+    "organizationUuid": "43d3e2cc-a784-4d46-9cb3-46e924412819",
+    "organizationRole": "admin",
+    "workspaceRole": null,
+    "organizationName": "nehalecky@gmail.com's Organization"
+  }
+}

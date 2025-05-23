@@ -30,8 +30,12 @@ export GOPASS_HOMEDIR="$XDG_DATA_HOME/gopass"
 # Shell/CLI Tools
 export ZDOTDIR="$HOME"  # Keep zsh configs in home for now
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
-export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
+export LESSHISTFILE="$XDG_STATE_HOME/less_history"
 export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
+export WGET_HSTS_FILE="$XDG_CACHE_HOME/wget-hsts"
+
+# Claude
+export CLAUDE_CONFIG="$XDG_CONFIG_HOME/claude/config.json"
 
 # Application Data
 export JULIA_DEPOT_PATH="$XDG_DATA_HOME/julia:$JULIA_DEPOT_PATH"

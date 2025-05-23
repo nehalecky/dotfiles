@@ -68,12 +68,34 @@ if [ -d "$HOME/.jupyter" ]; then
     move_if_exists "$HOME/.jupyter" "$HOME/.config/jupyter"
 fi
 
-# 6. Create directory structure
+# 6. Additional migrations
+echo "📦 Checking additional configs..."
+
+# NPM directory
+move_if_exists "$HOME/.npm" "$HOME/.config/npm"
+
+# Yarn
+move_if_exists "$HOME/.yarn" "$HOME/.config/yarn"
+
+# Claude
+if [ -f "$HOME/.claude.json" ]; then
+    echo "🤖 Migrating Claude config..."
+    mkdir -p "$HOME/.config/claude"
+    move_if_exists "$HOME/.claude.json" "$HOME/.config/claude/config.json"
+fi
+
+# Less history
+move_if_exists "$HOME/.lesshst" "$HOME/.local/state/less_history"
+
+# Wget history
+move_if_exists "$HOME/.wget-hsts" "$HOME/.cache/wget-hsts"
+
+# 7. Create directory structure
 echo "📁 Creating XDG directory structure..."
-mkdir -p "$HOME/.config"/{shell,git,npm,conda,docker}
-mkdir -p "$HOME/.cache"/{pip,yarn,less,pylint}
-mkdir -p "$HOME/.local/share"/{gnupg,virtualenvs,gem,cargo}
-mkdir -p "$HOME/.local/state/zsh"
+mkdir -p "$HOME/.config"/{shell,git,npm,conda,docker,claude,yarn}
+mkdir -p "$HOME/.cache"/{pip,yarn,less,pylint,wget,jupyter,theano,claude}
+mkdir -p "$HOME/.local/share"/{gnupg,virtualenvs,gem,cargo,julia}
+mkdir -p "$HOME/.local/state"/{zsh,less}
 
 echo "✅ XDG migration complete!"
 echo ""
