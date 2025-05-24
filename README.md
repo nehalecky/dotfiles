@@ -1,198 +1,147 @@
 # dotfiles
 
-Modern dotfiles management with [chezmoi](https://chezmoi.io/).
+Modern dotfiles management with [chezmoi](https://chezmoi.io/) and XDG Base Directory compliance.
 
-📚 **[Applications & Tools Guide](APPLICATIONS.md)** | 🔧 **[Brewfile](Brewfile)** | 📊 **[Dependency Analysis](homebrew-analysis.md)** | 🤖 **[Claude Instructions](CLAUDE.md)**
+> **Note**: This repository uses `$HOME` paths throughout. Replace any hardcoded paths with your home directory.
 
-## Quick Setup
+## 📚 Documentation
+
+- **[Project History](docs/PROJECT-HISTORY.md)** - All changes and learnings
+- **[Secrets Management](docs/SECRETS-MANAGEMENT.md)** - 1Password integration & encryption
+- **[Applications Guide](docs/APPLICATIONS.md)** - Detailed tool documentation
+- **[Claude Instructions](docs/CLAUDE.md)** - AI assistant context
+
+## 🚀 Quick Setup
+
+### Prerequisites
+
+Install [Homebrew](https://brew.sh/) if not already installed:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+### Initialize Dotfiles
 
 ```bash
-# Install chezmoi and initialize dotfiles
+# Install chezmoi and apply dotfiles
 brew install chezmoi
-chezmoi init --apply nehalecky/dotfiles
+chezmoi init --apply $GITHUB_USERNAME/dotfiles
 
 # Install all dependencies
 brew bundle
 ```
 
-## What's Managed
+## 🔐 Secrets Management
 
-### Configuration Files
-- **Shell Environment**: Zsh with prezto framework and starship prompt
-- **SSH Configuration**: 1Password SSH agent integration with dynamic key selection
-- **Git Configuration**: User settings, aliases, and GPG signing
-- **1Password**: SSH agent configuration at `~/.1password/agent.sock`
-- **Terminal**: iTerm2 shell integration
+This repository uses a **hybrid secrets strategy** with [1Password](https://1password.com/) as the canonical source:
 
-### Dependencies (via Homebrew)
+- **Development**: Secrets pulled directly from 1Password
+- **Restricted Environments**: Falls back to age-encrypted files
+- **Automatic Detection**: Templates adapt based on environment
 
-The `Brewfile` installs a curated set of tools organized by category:
+See [Secrets Management Guide](docs/SECRETS-MANAGEMENT.md) for full details.
 
-- **56 Command-line tools** (formulae) - Enhanced Unix utilities, development tools
-- **32 Desktop applications** (casks) - Editors, browsers, productivity apps
-- **11 VS Code extensions** - Python, Markdown, and Jupyter support
+## 📦 Dependency Management
 
-📚 **See [APPLICATIONS.md](APPLICATIONS.md) for detailed documentation** including:
-- Complete tables with links and descriptions
-- What each tool enhances or replaces  
-- Installation categories and use cases
-- Maintenance tips and philosophy
+All dependencies are managed via [Homebrew](https://brew.sh/) with a versioned `Brewfile`:
 
-## Key Features
+### What's Included
+- **56 Command-line tools** - Modern replacements for Unix utilities
+- **32 Desktop applications** - Development and productivity apps  
+- **11 VS Code extensions** - Language and tool support
 
-### 🔐 Security First
-- SSH keys stored in 1Password, never on disk
-- GPG signing for git commits
-- SSH agent integration with key selection
-
-### 🚀 Modern Terminal
-- Starship prompt with git integration
-- Enhanced commands (bat, eza, ripgrep)
-- Fuzzy search for files and history
-
-### 📦 Dependency Management
-- All tools versioned in `Brewfile`
-- Minimal dependencies (56 formulae, 32 casks)
-- VS Code extensions included
-
-### 🔄 Easy Maintenance
-- Single command updates: `chezmoi update`
-- Brew bundle for consistent environments
-- Git-backed configuration history
-
-## Architecture Notes
-
-### Dependency Analysis
-See `homebrew-analysis.md` for a detailed breakdown of:
-- Which packages are leaves vs dependencies
-- What libraries are auto-installed
-- Recommendations for package management
-
-### Migration from Symlinks
-This setup replaces a previous approach using:
-- Bare git repo at `~/.dotfiles-config/`
-- Symlinks to `.zprezto/runcoms/*`
-
-Chezmoi now manages actual file content, eliminating symlink issues.
-
-## Customization
-
-1. **Fork this repository**
-2. **Modify configurations** in your fork
-3. **Test changes**: `chezmoi diff` before applying
-4. **Update**: `chezmoi update` pulls latest changes
-
-## Brewfile Maintenance
-
-### Installing from Brewfile
+### Key Commands
 ```bash
-# Install everything in the Brewfile
+# Install all dependencies
 brew bundle
 
-# Check what would be installed without installing
-brew bundle --no-upgrade
+# Update dependencies
+brew upgrade && brew upgrade --cask
 
-# Install in a specific directory
-brew bundle --file=~/dotfiles/Brewfile
-```
-
-### Updating Brewfile
-```bash
-# Regenerate Brewfile with current packages
-brew bundle dump --force
-
-# Add descriptions and organize (manual step)
-# Then commit changes
-chezmoi add Brewfile
-chezmoi cd
-git add Brewfile && git commit -m "Update Brewfile"
-git push
-```
-
-### Cleaning Up
-```bash
-# List packages not in Brewfile
-brew bundle cleanup --dry-run
-
-# Remove packages not in Brewfile
+# Clean up unused dependencies
 brew bundle cleanup
-
-# Update all packages
-brew bundle --no-lock
 ```
 
-### Checking Dependencies
+See [Dependency Analysis](docs/homebrew-analysis.md) for detailed package information.
+
+## 🛠 What's Managed
+
+### Shell Environment
+- **Shell**: [Zsh](https://www.zsh.org/) with [Prezto](https://github.com/sorin-ionescu/prezto)
+- **Prompt**: [Starship](https://starship.rs/)
+- **Enhancements**: [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [ripgrep](https://github.com/BurntSushi/ripgrep), [fzf](https://github.com/junegunn/fzf)
+
+### Security & Authentication
+- **Password Manager**: [1Password](https://1password.com/) with CLI integration
+- **SSH**: 1Password SSH agent at `$HOME/.1password/agent.sock`
+- **Git Signing**: GPG via [GPG Suite](https://gpgtools.org/)
+
+### Development Tools
+- **Version Control**: [Git](https://git-scm.com/) + [GitHub CLI](https://cli.github.com/)
+- **Containers**: [Docker](https://www.docker.com/)
+- **Python**: [uv](https://github.com/astral-sh/uv) package manager
+- **Editors**: [VS Code](https://code.visualstudio.com/), [Cursor](https://cursor.sh/), [Emacs](https://www.gnu.org/software/emacs/)
+
+## 🎯 Key Features
+
+### XDG Compliance
+- Configs organized under `$HOME/.config/`
+- Cache in `$HOME/.cache/`
+- Data in `$HOME/.local/share/`
+
+### Security First
+- No hardcoded secrets
+- SSH keys never on disk
+- Encrypted fallback for restricted environments
+
+### Modern Terminal
+- Fast, informative prompt
+- Smart command replacements
+- Powerful search and navigation
+
+## 🔧 Customization
+
+1. **Fork** this repository
+2. **Modify** configurations as needed
+3. **Test** with `chezmoi diff`
+4. **Apply** with `chezmoi apply`
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+**Chezmoi not found**
 ```bash
-# See what depends on a package
-brew uses --installed <formula>
-
-# List all leaf packages (not dependencies)
-brew leaves
-
-# Show dependency tree
-brew deps --tree --installed
-
-# Find unnecessary dependencies
-brew autoremove --dry-run
+brew install chezmoi
 ```
 
-### Best Practices
-1. **Regular Updates**: Run `brew bundle dump` periodically to catch new installations
-2. **Document Changes**: Add comments in Brewfile explaining why packages are needed
-3. **Version Control**: Always commit Brewfile changes with descriptive messages
-4. **Clean Installs**: Test Brewfile on fresh systems to ensure completeness
-5. **Minimize Dependencies**: Regularly review with `brew leaves` and remove unused packages
-
-### Example Maintenance Workflow
+**1Password CLI issues**
 ```bash
-# 1. Check for outdated packages
-brew outdated
+# Sign in
+eval $(op signin)
 
-# 2. Update everything
-brew upgrade
-brew upgrade --cask
-
-# 3. Clean up old versions
-brew cleanup
-
-# 4. Regenerate Brewfile if you installed anything new
-brew bundle dump --force --describe
-
-# 5. Review and commit changes
-chezmoi diff
-chezmoi add Brewfile
-chezmoi cd && git add -A && git commit -m "Update Brewfile after maintenance"
-chezmoi git push
+# Verify
+op vault list
 ```
 
-### Brewfile Structure
-```ruby
-# Group related packages with comments
-# Development Tools
-brew "git"          # Version control
-brew "gh"           # GitHub CLI
-
-# Use cask for GUI applications
-cask "1password"    # Password manager
-
-# Pin specific options when needed
-brew "emacs", restart_service: :changed
+**Missing dependencies**
+```bash
+brew bundle check
+brew bundle install
 ```
 
-## Troubleshooting
+### Getting Help
+- Chezmoi: `chezmoi doctor`
+- Homebrew: `brew doctor`
+- This repo: Check [Project History](docs/PROJECT-HISTORY.md)
 
-### Brewfile Issues
-- **Missing taps**: Add required taps at the top of Brewfile
-- **Conflicts**: Use `brew bundle cleanup` to identify conflicts
-- **Cask errors**: Ensure `homebrew/cask` is available
-- **VS Code extensions**: Require VS Code to be installed first
+## 📖 References
 
-### SSH Key Issues
-- Ensure 1Password SSH agent is running
-- Check `SSH_AUTH_SOCK` points to `~/.1password/agent.sock`
-- Verify keys with `ssh-add -l`
+- [Chezmoi Documentation](https://www.chezmoi.io/)
+- [Homebrew Documentation](https://docs.brew.sh/)
+- [1Password CLI](https://developer.1password.com/docs/cli/)
+- [XDG Base Directory](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
 
-### Zsh/Prezto Issues
-- Run `prezto-update` to update framework
-- Check `.zpreztorc` for module configuration
-- Ensure `.zshrc` sources prezto correctly
+---
+
+*Managed with [chezmoi](https://chezmoi.io/) • Secured by [1Password](https://1password.com/) • Powered by [Homebrew](https://brew.sh/)*

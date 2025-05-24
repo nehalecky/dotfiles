@@ -2,6 +2,62 @@
 
 This document tracks the evolution of this dotfiles repository in reverse chronological order.
 
+## 2025-05-24: README Modernization & Cleanup
+- **Goal**: Create a clean, modern README focused on current state
+- **Changes Made**:
+  - Removed all migration/legacy sections (moved to project history)
+  - Added Homebrew installation command
+  - Created dedicated sections for Secrets and Dependency Management
+  - Replaced hardcoded paths with `$HOME` throughout
+  - Added links to all referenced tools and documentation
+  - Emphasized prerequisites and quick setup
+  - Streamlined content to essentials only
+- **Key Improvements**:
+  - Clear entry point with Homebrew installation
+  - Prominent secrets management section
+  - All tools properly linked to documentation
+  - Focus on current state, not history
+
+## 2025-05-24: Hybrid Secrets Management Strategy
+- **Goal**: Create a flexible secrets system with 1Password as canonical source
+- **Changes Made**:
+  - Designed hybrid approach: 1Password (primary) + encrypted files (fallback)
+  - Rewrote `SECRETS-MANAGEMENT.md` with comprehensive hybrid strategy
+  - Created environment detection templates using `lookPath`
+  - Documented sync workflow from 1Password to encrypted files
+  - Added automation scripts for secret synchronization
+- **Key Innovation**:
+  - Templates automatically detect environment capabilities
+  - Single source of truth (1Password) with secure fallback
+  - Works in both development (with 1Password) and restricted environments
+- **Security Analysis**:
+  - No hardcoded secrets found in current dotfiles
+  - Already using 1Password for SSH and Git signing
+  - Clean environment with security best practices
+
+## 2025-05-24: 1Password Integration Setup
+- **Goal**: Integrate chezmoi with 1Password for secure secrets management
+- **Changes Made**:
+  - Created `.install-1password-cli.sh` hook to ensure 1Password CLI availability
+  - Added `chezmoi.toml` configuration for 1Password integration
+  - Created initial `SECRETS-MANAGEMENT.md` documentation
+  - Added example `.env.tmpl` template for environment variables
+  - Set up framework for hybrid secrets (1Password + age encryption)
+- **References**:
+  - https://www.chezmoi.io/user-guide/password-managers/1password/
+  - https://www.chezmoi.io/user-guide/advanced/install-your-password-manager-on-init/
+
+## 2025-05-23: Documentation Accuracy Improvement
+- **Goal**: Ensure AI assistance is grounded in actual documentation
+- **Changes Made**:
+  - Removed incorrectly created `setup-iterm2-integration.sh` based on hallucinated "it2" commands
+  - Updated CLAUDE.md to emphasize documentation verification
+  - Added guideline to provide clickable URLs for references
+- **Lessons Learned**:
+  - Always verify tool capabilities against official documentation
+  - iTerm2 shell integration uses functions, not CLI commands
+  - Documentation links: https://iterm2.com/documentation-shell-integration.html
+
 ## 2025-05-23: Bare Repo Archive & Final Cleanup
 - **Goal**: Complete migration from bare repo to chezmoi
 - **Changes Made**:
