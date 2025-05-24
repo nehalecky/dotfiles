@@ -6,6 +6,7 @@ Modern dotfiles management with [chezmoi](https://chezmoi.io/) and XDG Base Dire
 
 ## 📚 Documentation
 
+- **[Architecture](docs/ARCHITECTURE.md)** - System design and structure
 - **[Project History](docs/PROJECT-HISTORY.md)** - All changes and learnings
 - **[Secrets Management](docs/SECRETS-MANAGEMENT.md)** - 1Password integration & encryption
 - **[Applications Guide](docs/APPLICATIONS.md)** - Detailed tool documentation
@@ -27,9 +28,11 @@ Install [Homebrew](https://brew.sh/) if not already installed:
 brew install chezmoi
 chezmoi init --apply $GITHUB_USERNAME/dotfiles
 
-# Install all dependencies
+# Install all dependencies (chezmoi will prompt about Brewfile updates)
 brew bundle
 ```
+
+> **Tip**: Chezmoi handles all dotfile management. Use `chezmoi update` to pull latest changes and `chezmoi apply` to apply them.
 
 ## 🔐 Secrets Management
 
@@ -68,7 +71,7 @@ See [Dependency Analysis](docs/homebrew-analysis.md) for detailed package inform
 
 ### Shell Environment
 - **Shell**: [Zsh](https://www.zsh.org/) with [Prezto](https://github.com/sorin-ionescu/prezto)
-- **Prompt**: [Starship](https://starship.rs/)
+- **Prompt**: [Powerlevel10k](https://github.com/romkatv/powerlevel10k) (planning to migrate to Starship)
 - **Enhancements**: [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [ripgrep](https://github.com/BurntSushi/ripgrep), [fzf](https://github.com/junegunn/fzf)
 
 ### Security & Authentication
@@ -99,7 +102,38 @@ See [Dependency Analysis](docs/homebrew-analysis.md) for detailed package inform
 - Smart command replacements
 - Powerful search and navigation
 
-## 🔧 Customization
+## 🔧 Common Workflows
+
+### Update Everything
+```bash
+# Pull latest dotfiles and apply (auto-syncs Brewfile)
+chezmoi update
+
+# Update Homebrew packages
+brew update && brew upgrade
+```
+
+> **Note**: Running `chezmoi apply` automatically checks if your Brewfile is out of sync with installed packages and prompts to update it.
+
+### Check What Changed
+```bash
+# See pending changes
+chezmoi diff
+
+# See managed files status
+chezmoi status
+```
+
+### Add New Configurations
+```bash
+# Add a new config file
+chezmoi add ~/.config/newapp/config
+
+# Add with encryption
+chezmoi add --encrypt ~/.config/sensitive/config
+```
+
+### Customization
 
 1. **Fork** this repository
 2. **Modify** configurations as needed

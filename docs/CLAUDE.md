@@ -20,7 +20,7 @@ This is a modern dotfiles setup using [chezmoi](https://chezmoi.io/) for managin
 
 ### Shell Environment
 - **Shell**: Zsh with Prezto framework
-- **Prompt**: Starship (replaced Powerlevel10k)
+- **Prompt**: Powerlevel10k (planning to migrate to Starship)
 - **Enhancements**: bat, eza, ripgrep, fzf
 
 ## Working with This Repository
@@ -98,6 +98,23 @@ When helping with this repository:
    - Provide clickable URLs for references (iTerm2 will make them clickable!)
    - Ground suggestions in actual documentation, not assumptions
    - Example: https://iterm2.com/documentation-shell-integration.html
+7. **Consult before creating tools** - Always ask before building new tools or scripts
+   - Use existing tools (especially chezmoi) as the primary interface
+   - Leverage chezmoi's built-in features (hooks, scripts, templates)
+   - Avoid creating separate management tools
+8. **Chezmoi-first approach** - Use chezmoi's native capabilities
+   - Hooks for automation (e.g., checking Brewfile updates)
+   - Scripts for complex workflows
+   - Templates for dynamic configuration
+9. **Present proposals before implementing** - Always explain the approach first
+   - Describe what you plan to do and why
+   - Wait for approval before implementing
+   - Avoid over-engineering - simpler is better
+   - Question if additional tools/functions are truly needed
+10. **Keep code portable** - Never use hardcoded paths
+   - Always use `$HOME` instead of `/Users/username`
+   - This ensures dotfiles work for any user
+   - Check all documentation for hardcoded references
 
 ### Helpful Context
 

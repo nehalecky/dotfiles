@@ -2,6 +2,23 @@
 
 This document tracks the evolution of this dotfiles repository in reverse chronological order.
 
+## 2025-05-24: Architecture Documentation & Chezmoi-First Workflows
+- **Goal**: Create clear architecture visualization and leverage chezmoi for workflows
+- **Changes Made**:
+  - Created comprehensive `ARCHITECTURE.md` with diagrams
+  - Added chezmoi hook to check Brewfile updates
+  - Updated CLAUDE.md to require consultation before creating tools
+  - Modified README to show chezmoi workflows
+  - Removed custom tool in favor of chezmoi's native capabilities
+- **Key Features**:
+  - Visual architecture at multiple levels (100K' and detailed)
+  - Chezmoi hooks for automation
+  - Native chezmoi commands for all workflows
+- **Lessons Learned**:
+  - Don't reinvent the wheel - chezmoi is already the management tool
+  - Use hooks and scripts within chezmoi's framework
+  - Always consult before creating new tools
+
 ## 2025-05-24: README Modernization & Cleanup
 - **Goal**: Create a clean, modern README focused on current state
 - **Changes Made**:
