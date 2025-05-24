@@ -1,1 +1,8 @@
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Minimal bash configuration
+# Primary shell is zsh - this is just for compatibility
+
+# Ensure homebrew is in PATH
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Source XDG-compliant bash config if it exists
+[ -f "$HOME/.config/bash/bashrc" ] && source "$HOME/.config/bash/bashrc"
