@@ -93,6 +93,11 @@ When helping with this repository:
 3. **Test before applying** - Use `chezmoi diff` to preview
 4. **Security first** - Never expose secrets or credentials
 5. **Explain decisions** - Document why changes were made
+6. **Verify before suggesting** - Always check documentation before suggesting commands
+   - Use WebFetch to verify tool documentation
+   - Provide clickable URLs for references (iTerm2 will make them clickable!)
+   - Ground suggestions in actual documentation, not assumptions
+   - Example: https://iterm2.com/documentation-shell-integration.html
 
 ### Helpful Context
 
