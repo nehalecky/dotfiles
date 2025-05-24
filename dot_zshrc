@@ -24,11 +24,11 @@ fi
 eval $(/opt/homebrew/bin/brew shellenv)
 
 ## iTerm2 Shell Integration
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+test -e "${HOME}/.config/iterm2/shell_integration.zsh" && source "${HOME}/.config/iterm2/shell_integration.zsh"
 
 ## Dotfile Config
-# Add alias for dotfile config command
-alias dotfiles='git --git-dir=$HOME/.dotfiles-config/ --work-tree=$HOME'
+# Using chezmoi for dotfile management now
+# Old bare repo archived to ~/Repos/dotfiles-config-bare-repo-archive
 
 # 1password op cli 
 source ~/.config/op/plugins.sh
@@ -42,7 +42,7 @@ export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
 # sudo port install fzf
 export FZF_KEY_BINDS_SCRIPT=/opt/local/share/fzf/shell/key-bindings.zsh
 [ -f  $FZF_KEY_BINDS_SCRIPT ] && source $FZF_KEY_BINDS_SCRIPT
-#[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#[ -f ~/.config/fzf/fzf.zsh ] && source ~/.config/fzf/fzf.zsh
 
 
 # Google Cloud SDK setup
@@ -53,20 +53,9 @@ export FZF_KEY_BINDS_SCRIPT=/opt/local/share/fzf/shell/key-bindings.zsh
   # if [ -f '/Users/nhalecky/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/nhalecky/google-cloud-sdk/completion.zsh.inc'; fi
 
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+# UV Python package manager
+# https://github.com/astral-sh/uv
+# UV manages Python installations and virtual environments
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
