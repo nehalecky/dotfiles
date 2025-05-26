@@ -1,0 +1,175 @@
+# Starship prompt configuration - Migrated from Powerlevel10k
+# https://starship.rs/config/
+# Matches P10k two-line layout with context on line 1, cursor on line 2
+
+# Global format - defines the prompt layout
+format = """
+$os\
+$directory\
+$git_branch\
+$git_status\
+$fill\
+$status\
+$cmd_duration\
+$jobs\
+{{ if .starship.show_kubernetes -}}
+$kubernetes\
+{{ end -}}
+$time\
+$line_break\
+$character"""
+
+# Timeout for commands (in milliseconds)
+command_timeout = 500
+
+# Scan timeout for files (in milliseconds)
+scan_timeout = 30
+
+# Enable two-line prompt
+[line_break]
+disabled = false
+
+# OS Module - Apple icon (matches P10k os_icon)
+[os]
+disabled = false
+format = "[$symbol]($style) "
+
+[os.symbols]
+Macos = ""  # Nerd Font Apple logo
+
+# Directory module - with smart truncation (matches P10k dir)
+[directory]
+format = "[$path]($style)[$read_only]($read_only_style) "
+style = "cyan bold"  # Bright blue, similar to P10k color 31
+truncation_length = 3
+truncate_to_repo = true
+truncation_symbol = "…/"
+home_symbol = "~"
+
+# Fancy icons for special directories
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Developer" = " "
+{{ if eq .starship.profile "work" -}}
+"~/work" = " "
+{{ end }}
+
+# Git branch (matches P10k vcs branch icon)
+[git_branch]
+format = "[$symbol$branch(:$remote_branch)]($style) "
+symbol = " "  # Same as P10k \uF126
+style = "bold green"  # P10k uses color 76
+truncation_length = 20
+truncation_symbol = "…"
+
+# Git status (matches P10k vcs status indicators)
+[git_status]
+format = '([\[$all_status$ahead_behind\]]($style) )'
+style = "bold green"
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?${count}"
+stashed = "$${count}"
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»${count}"
+deleted = "✘${count}"
+
+# Fill module - pushes everything after it to the right
+[fill]
+symbol = " "
+
+# Status module - exit code of last command (matches P10k status)
+[status]
+format = '[$symbol$status]($style) '
+symbol = "✘"
+success_symbol = ""  # Don't show anything on success
+not_executable_symbol = "🚫"
+not_found_symbol = "🔍"
+sigint_symbol = "🧱"
+signal_symbol = "⚡"
+style = "bold red"
+map_symbol = true
+disabled = false
+
+# Python virtual environment
+[python]
+symbol = " "
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+style = "yellow"
+detect_extensions = ["py"]
+detect_files = ["requirements.txt", "pyproject.toml", "Pipfile", "tox.ini", "setup.py", "setup.cfg"]
+
+# Conda environment
+[conda]
+symbol = " "
+format = "[$symbol$environment]($style) "
+style = "green"
+
+# Node.js version
+[nodejs]
+symbol = " "
+format = "[$symbol($version )]($style)"
+style = "green"
+detect_extensions = ["js", "mjs", "cjs", "ts", "mts", "cts"]
+detect_files = ["package.json", ".node-version", ".nvmrc"]
+detect_folders = ["node_modules"]
+
+# Command duration (matches P10k command_execution_time)
+[cmd_duration]
+min_time = 0  # Show always, like P10k
+format = "took [$duration]($style) "
+style = "bold yellow"
+show_milliseconds = false
+show_notifications = false
+
+# Background jobs (matches P10k background_jobs)
+[jobs]
+format = "[$symbol$number]($style) "
+symbol = "✦"
+style = "bold blue"
+number_threshold = 1
+symbol_threshold = 1
+
+# Time module - 24h format with seconds (matches P10k time)
+[time]
+disabled = false
+format = '[$time]($style)'
+style = "bright-black"  # Subtle color
+time_format = "%H:%M:%S"  # 24h format matching P10k
+use_12hr = false
+
+# Character module - the prompt symbol (matches P10k prompt_char)
+[character]
+format = "$symbol "
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+vimcmd_visual_symbol = "[❮](bold yellow)"
+vimcmd_replace_symbol = "[❮](bold purple)"
+
+# Optional: Docker context (uncomment to enable)
+# [docker_context]
+# symbol = " "
+# format = "[$symbol$context]($style) "
+# style = "blue"
+
+# Optional: Show current shell (useful for testing)
+# [shell]
+# disabled = false
+# format = "[$indicator]($style) "
+# style = "dimmed white"
+
+# Optional: Battery indicator (for laptops)
+# [battery]
+# full_symbol = "🔋"
+# charging_symbol = "⚡️"
+# discharging_symbol = "💀"
+# [[battery.display]]
+# threshold = 20
+# style = "bold red"

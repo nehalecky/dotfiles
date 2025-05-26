@@ -1,0 +1,32 @@
+# Chezmoi data for machine-specific configurations
+# This file contains variables that can be used in templates
+
+# Starship prompt configuration
+starship:
+  # Profile: "personal" or "work"
+  profile: "personal"
+  
+  # Show/hide specific modules
+  show_time: true
+  show_kubernetes: false
+  
+  # Git branch truncation length
+  git_truncation: 20
+  
+  # Directory truncation depth
+  dir_truncation: 3
+  
+  # Prompt theme (for testing during migration)
+  # Options: "starship" or "p10k"
+  prompt_theme: "p10k"
+
+# System information
+system:
+  # Hostname (automatically detected, can override)
+  hostname: "{{ .chezmoi.hostname }}"
+  
+  # Username (automatically detected, can override)
+  username: "{{ .chezmoi.username }}"
+  
+  # OS type
+  os: "{{ .chezmoi.os }}"

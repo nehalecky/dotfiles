@@ -1,0 +1,43 @@
+#!/bin/bash
+# Starship installation script
+# This script runs when the Brewfile changes or on first setup
+
+set -eufo pipefail
+
+echo "🚀 Checking Starship installation..."
+
+# Check if we're on macOS
+if [[ "{{ .chezmoi.os }}" == "darwin" ]]; then
+    # Check if Homebrew is installed
+    if command -v brew >/dev/null 2>&1; then
+        # Check if Starship is installed
+        if ! brew list starship >/dev/null 2>&1; then
+            echo "📦 Installing Starship via Homebrew..."
+            brew install starship
+        else
+            echo "✅ Starship is already installed"
+        fi
+    else
+        echo "❌ Homebrew not found. Please install Homebrew first."
+        exit 1
+    fi
+elif [[ "{{ .chezmoi.os }}" == "linux" ]]; then
+    # Linux installation (for future cross-platform support)
+    if ! command -v starship >/dev/null 2>&1; then
+        echo "📦 Installing Starship on Linux..."
+        curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    else
+        echo "✅ Starship is already installed"
+    fi
+else
+    echo "⚠️  Unsupported OS: {{ .chezmoi.os }}"
+    echo "Please install Starship manually: https://starship.rs/guide/#🚀-installation"
+fi
+
+# Verify installation
+if command -v starship >/dev/null 2>&1; then
+    echo "✨ Starship $(starship --version) is ready!"
+else
+    echo "❌ Starship installation failed"
+    exit 1
+fi

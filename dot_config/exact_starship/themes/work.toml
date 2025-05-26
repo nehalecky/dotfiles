@@ -1,0 +1,31 @@
+# Work-specific Starship overrides
+# This file can be sourced for work-specific customizations
+
+# Example: Different directory color for work
+[directory]
+style = "bold blue"
+
+# Example: Show Kubernetes context at work
+[kubernetes]
+disabled = false
+format = 'on [$symbol$context( \($namespace\))]($style) '
+symbol = "☸ "
+style = "bold blue"
+
+# Example: Show AWS profile at work
+[aws]
+disabled = false
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+symbol = " "
+style = "bold orange"
+
+# Example: Different git branch color
+[git_branch]
+style = "bold purple"
+
+# Example: Show hostname on work machines
+[hostname]
+ssh_only = false
+format = "[$hostname]($style) "
+style = "bold dimmed green"
+disabled = false

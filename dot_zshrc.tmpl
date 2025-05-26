@@ -57,8 +57,31 @@ export FZF_KEY_BINDS_SCRIPT=/opt/local/share/fzf/shell/key-bindings.zsh
 # https://github.com/astral-sh/uv
 # UV manages Python installations and virtual environments
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Prompt configuration - Toggle between Starship and Powerlevel10k
+# Set PROMPT_THEME to "starship" or "p10k" (defaults to p10k for safety during migration)
+export PROMPT_THEME="${PROMPT_THEME:-{{ .starship.prompt_theme }}}"
+
+if [[ "$PROMPT_THEME" == "starship" ]]; then
+  # Initialize Starship
+  eval "$(starship init zsh)"
+else
+  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
+
+# Helper function to switch between prompts
+prompt_switch() {
+  if [[ "$1" == "starship" ]]; then
+    export PROMPT_THEME="starship"
+    echo "Switched to Starship prompt. Restart your shell or run: exec zsh"
+  elif [[ "$1" == "p10k" ]]; then
+    export PROMPT_THEME="p10k"
+    echo "Switched to Powerlevel10k prompt. Restart your shell or run: exec zsh"
+  else
+    echo "Usage: prompt_switch [starship|p10k]"
+    echo "Current prompt: $PROMPT_THEME"
+  fi
+}
 
 # GH completion
 eval "$(gh completion -s zsh)"

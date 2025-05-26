@@ -1,131 +1,99 @@
-# Claude AI Assistant Instructions
+# Claude Code Instructions - Dotfiles Repository
 
-This file provides context and instructions for Claude when working with this dotfiles repository.
+## Primary Development Workflows
 
-## Repository Overview
+### 1. Discovery-First Development
+**When:** Complex features or unfamiliar codebases  
+**Process:** Explore → Plan → Confirm → Code → Commit
+- Use search tools extensively to understand the codebase
+- Create a TodoWrite plan before implementation
+- Present the plan to user for confirmation
+- Implement with confidence
+- Commit with descriptive message
 
-This is a modern dotfiles setup using [chezmoi](https://chezmoi.io/) for managing configuration files across machines. The repository emphasizes security, maintainability, and documentation.
+### 2. Test-Driven Workflow
+**When:** Adding new functionality with clear requirements  
+**Process:** Write tests → Commit → Code → Iterate → Commit
+- Write failing tests first
+- Commit the tests
+- Implement code to pass tests
+- Refactor and iterate
+- Commit working implementation
 
-## Key Architecture Decisions
+### 3. Visual Feedback Loop
+**When:** UI/UX development or visual outputs  
+**Process:** Write code → Screenshot → Iterate
+- Implement initial version
+- Use screenshot tools or Puppeteer for visual feedback
+- Iterate based on visual results
+- Perfect the output through rapid cycles
 
-### Dotfiles Management
-- **Tool**: chezmoi (replaced bare git repo approach)
-- **Structure**: Actual file content, not symlinks
-- **Location**: `~/.local/share/chezmoi/`
+## Repository Context
 
-### Security
-- **SSH Keys**: Stored in 1Password, never on disk
-- **SSH Agent**: 1Password agent at `~/.1password/agent.sock`
-- **Git Signing**: GPG keys managed via GPG Suite
+**Stack:** macOS, Zsh/Prezto, Starship prompt, chezmoi  
+**Security:** 1Password for SSH/secrets, GPG for signing  
+**Philosophy:** Terminal-first, minimal dependencies, security without friction
 
-### Shell Environment
-- **Shell**: Zsh with Prezto framework
-- **Prompt**: Starship (replaced Powerlevel10k)
-- **Enhancements**: bat, eza, ripgrep, fzf
+## Specific Instructions
 
-## Working with This Repository
+### Chezmoi Operations
+- Always use `$HOME` not `/Users/username` in paths
+- Run `chezmoi diff` before `chezmoi apply`
+- Use templates (`.tmpl`) for machine-specific configs
+- Store machine variations in `.chezmoidata.yaml`
+
+### Code Standards
+- Use 2-space indentation for shell scripts
+- Comment non-obvious configuration choices
+- Group related settings with clear headers
+- Never commit secrets or credentials
+
+### Git Practices
+- Descriptive commit messages explaining "why"
+- Reference issues/PRs when applicable
+- Use conventional commits: `feat:`, `fix:`, `docs:`, `chore:`
+- Always sign commits (GPG configured)
+
+### Tool Preferences
+- Use ripgrep (`rg`) not grep
+- Use `eza` not `ls` for listings
+- Use `bat` not `cat` for file viewing
+- Verify tool docs with WebFetch before suggesting commands
+
+## Quick Reference
 
 ### Common Tasks
+```bash
+# Add config to chezmoi
+chezmoi add ~/.config/app/config
 
-1. **Adding new dotfiles**:
-   ```bash
-   chezmoi add ~/.config/newapp/config
-   ```
+# Edit with chezmoi
+chezmoi edit ~/.zshrc
 
-2. **Updating configurations**:
-   ```bash
-   chezmoi edit ~/.zshrc
-   chezmoi diff
-   chezmoi apply
-   ```
+# Apply changes
+chezmoi diff  # Preview first!
+chezmoi apply
+```
 
-3. **Syncing changes**:
-   ```bash
-   chezmoi git add .
-   chezmoi git commit -m "Update configurations"
-   chezmoi git push
-   ```
+### Key Files
+- `Brewfile` - Homebrew dependencies
+- `.chezmoidata.yaml` - Machine-specific variables
+- `dot_config/starship.toml.tmpl` - Prompt configuration
+- `.chezmoiscripts/` - Installation hooks
 
-### Important Files
+## Development Guidelines
 
-- `Brewfile` - All Homebrew dependencies
-- `APPLICATIONS.md` - Detailed documentation of all tools
-- `homebrew-analysis.md` - Dependency analysis
-- `.zshrc` - Main shell configuration
-- `.gitconfig` - Git configuration with signing
+1. **Ask before creating** - Propose new tools/scripts before implementing
+2. **Enhance, don't add** - Improve existing tools over adding new ones
+3. **Document changes** - Update relevant .md files when making changes
+4. **Test everything** - Verify commands work before suggesting
+5. **Keep it portable** - Ensure configs work across machines
 
-## Preferences and Standards
-
-### Code Style
-- Clear, commented configurations
-- Group related settings with headers
-- Document non-obvious choices
-
-### Git Commits
-- Descriptive commit messages
-- Include what changed and why
-- Reference issues when applicable
-
-### Documentation
-- Keep README concise but complete
-- Detailed docs in separate files
-- Include examples and use cases
-
-## System Context
-
-### Development Focus
-- **Languages**: Python, JavaScript/Node.js, Shell scripting
-- **Tools**: Docker, Git, GitHub CLI
-- **Editors**: VS Code, Cursor (AI-assisted), Emacs
-
-### Workflow Preferences
-- Terminal-first approach
-- Keyboard shortcuts over GUI
-- Automation where sensible
-- Security without friction
-
-## AI Assistant Guidelines
-
-When helping with this repository:
-
-1. **Maintain existing patterns** - Follow established conventions
-2. **Document changes** - Update relevant documentation files
-3. **Test before applying** - Use `chezmoi diff` to preview
-4. **Security first** - Never expose secrets or credentials
-5. **Explain decisions** - Document why changes were made
-
-### Helpful Context
-
-- User prefers minimal dependencies
-- Performance and security are priorities
-- Documentation should be comprehensive
-- Changes should be version controlled
-
-### Common Improvements
-
-When asked to enhance the setup, consider:
-- Terminal productivity tools
-- Security hardening
+## Current Focus Areas
+- Terminal productivity enhancements
+- Security hardening without friction
 - Development workflow optimization
-- Documentation updates
-- Dependency minimization
-
-## Future Enhancements Under Consideration
-
-1. **Starship configuration** - Custom prompt setup
-2. **Neovim migration** - Potential editor change
-3. **Tmux configuration** - Terminal multiplexing
-4. **Automated testing** - Validate dotfiles work correctly
-5. **Cross-platform support** - Linux compatibility
-
-## Notes for Claude
-
-- The user values clean, well-documented code
-- Prefer enhancing existing tools over adding new ones
-- Always consider security implications
-- Keep backups before major changes
-- Test commands before suggesting them
+- Cross-platform compatibility prep
 
 ---
-
-*This file helps Claude understand the repository structure and user preferences for more effective assistance.*
+@docs/important-instruction-reminders.md
