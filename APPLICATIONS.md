@@ -45,6 +45,7 @@ This document provides a comprehensive overview of all applications and command-
 | [tealdeer](https://github.com/dbrgn/tealdeer) | Help Pages | Fast tldr client - simplified man pages | man pages (supplements) |
 | [btop](https://github.com/aristocratos/btop) | System Monitor | Beautiful resource monitor with mouse support | htop, top |
 | [wget](https://www.gnu.org/software/wget/) | File Download | Non-interactive network downloader | curl (different features) |
+| [wezterm](https://wezfurlong.org/wezterm/) | Terminal Emulator | GPU-accelerated terminal with Lua config | iTerm2, Terminal.app |
 
 ### Development Utilities
 
