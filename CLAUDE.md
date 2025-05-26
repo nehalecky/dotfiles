@@ -63,16 +63,31 @@
 ## Quick Reference
 
 ### Common Tasks
+
+**Quick Edit** (edit in home, sync to source):
 ```bash
-# Add config to chezmoi
-chezmoi add ~/.config/app/config
+vim ~/.zshrc                    # Edit actual file
+chezmoi add ~/.zshrc           # Update source
+chezmoi git commit -- -m "msg"  # Commit
+chezmoi git push               # Push
+```
 
-# Edit with chezmoi
-chezmoi edit ~/.zshrc
+**Structured Edit** (edit in source, test, apply):
+```bash
+chezmoi edit ~/.zshrc          # Edit source file
+chezmoi diff                   # Preview changes
+chezmoi apply                  # Apply to home
+chezmoi git commit -- -m "msg"  # Commit
+chezmoi git push               # Push
+```
 
-# Apply changes
-chezmoi diff  # Preview first!
-chezmoi apply
+**Sync from Remote**:
+```bash
+chezmoi update                 # Pull + apply
+# OR
+chezmoi git pull              # Just pull
+chezmoi diff                  # Preview
+chezmoi apply                 # Apply
 ```
 
 ### Key Files
