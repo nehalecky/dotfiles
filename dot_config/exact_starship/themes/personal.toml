@@ -1,0 +1,36 @@
+# Personal-specific Starship overrides
+# This file can be sourced for personal customizations
+
+# Example: Fun directory icons for personal projects
+[directory.substitutions]
+"~/Projects" = " "
+"~/Code" = " "
+"~/Documents/Writing" = " "
+"~/Photos" = " "
+
+# Example: Different colors for personal setup
+[directory]
+style = "bold cyan"
+
+[git_branch]
+style = "bold green"
+
+# Example: Hide work-related modules
+[kubernetes]
+disabled = true
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+# Example: Show battery on personal laptop
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡"
+discharging_symbol = "💀"
+
+[[battery.display]]
+threshold = 20
+style = "bold red"
