@@ -102,43 +102,83 @@ See [Dependency Analysis](docs/homebrew-analysis.md) for detailed package inform
 - Smart command replacements
 - Powerful search and navigation
 
-## 🔧 Common Workflows
+## 🔧 Daily Workflows
 
-### Update Everything
+### Understanding the Flow
+Chezmoi manages two directories:
+- **Source**: `~/.local/share/chezmoi/` (version controlled)
+- **Target**: Your home directory (where configs live)
+
+### Workflow 1: Quick Config Changes
+**When**: Making small edits to existing configs
 ```bash
-# Pull latest dotfiles and apply (auto-syncs Brewfile)
-chezmoi update
+# Edit the actual config file
+vim ~/.zshrc
 
-# Update Homebrew packages
-brew update && brew upgrade
+# Copy changes to source directory
+chezmoi add ~/.zshrc
+
+# Commit and push
+chezmoi git add .
+chezmoi git commit -- -m "Update zsh config"
+chezmoi git push
 ```
 
-> **Note**: Running `chezmoi apply` automatically checks if your Brewfile is out of sync with installed packages and prompts to update it.
-
-### Check What Changed
+### Workflow 2: Structured Development
+**When**: Making complex changes, testing new configs
 ```bash
-# See pending changes
+# Edit in source directory
+chezmoi edit ~/.zshrc
+
+# Preview what will change
 chezmoi diff
 
-# See managed files status
-chezmoi status
+# Apply to home directory
+chezmoi apply
+
+# If happy, commit and push
+chezmoi git add .
+chezmoi git commit -- -m "Update zsh config"
+chezmoi git push
+```
+
+### Workflow 3: Sync Across Machines
+**When**: Pulling changes from another machine
+```bash
+# Pull and apply in one command
+chezmoi update
+
+# Or preview first
+chezmoi git pull
+chezmoi diff
+chezmoi apply
 ```
 
 ### Add New Configurations
 ```bash
-# Add a new config file
+# Track a new config file
 chezmoi add ~/.config/newapp/config
 
-# Add with encryption
+# Track with encryption
 chezmoi add --encrypt ~/.config/sensitive/config
+
+# Commit
+chezmoi git add .
+chezmoi git commit -- -m "Add newapp config"
+chezmoi git push
 ```
 
-### Customization
+### Check Status
+```bash
+# See what's different between source and target
+chezmoi status
 
-1. **Fork** this repository
-2. **Modify** configurations as needed
-3. **Test** with `chezmoi diff`
-4. **Apply** with `chezmoi apply`
+# See detailed differences
+chezmoi diff
+
+# See managed files
+chezmoi managed
+```
 
 ## 🆘 Troubleshooting
 
