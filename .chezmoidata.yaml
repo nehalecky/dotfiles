@@ -20,6 +20,10 @@ starship:
   # Options: "starship" or "p10k"
   prompt_theme: "p10k"
 
+# Machine type
+# Set to true if this is a work machine
+is_work: false
+
 # System information
 system:
   # Hostname (automatically detected, can override)
