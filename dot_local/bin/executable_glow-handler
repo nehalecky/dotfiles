@@ -1,0 +1,9 @@
+#!/bin/bash
+# Handler for opening markdown files in glow within WezTerm
+
+# Extract the file path from the URL or argument
+FILE="$1"
+FILE="${FILE#file://}"  # Remove file:// prefix if present
+
+# Open in a new WezTerm pane with glow
+/Applications/WezTerm.app/Contents/MacOS/wezterm cli split-pane --right --percent 60 -- glow "$FILE"

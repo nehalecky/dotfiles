@@ -191,6 +191,24 @@ config.keys = {
     action = wezterm.action.TogglePaneZoomState,
   },
   
+  -- Show debug overlay (see all keys being pressed)
+  {
+    key = 'd',
+    mods = 'LEADER',
+    action = wezterm.action.ShowDebugOverlay,
+  },
+  
+  -- Open documentation browser in glow
+  {
+    key = 'D',
+    mods = 'LEADER|SHIFT',
+    action = wezterm.action.SplitPane {
+      direction = 'Right',
+      size = { Percent = 60 },
+      command = { args = { '/opt/homebrew/bin/glow', os.getenv('HOME') .. '/.docs/' } },
+    },
+  },
+  
   -- Quick launch system monitoring
   {
     key = 'm',
@@ -198,14 +216,14 @@ config.keys = {
     action = wezterm.action.SplitPane {
       direction = 'Right',
       size = { Percent = 50 },
-      command = { args = { 'btop' } },
+      command = { args = { '/opt/homebrew/bin/btop' } },
     },
   },
   {
     key = 'M',
     mods = 'LEADER|SHIFT',
     action = wezterm.action.SpawnCommandInNewWindow {
-      args = { 'btop' },
+      args = { '/opt/homebrew/bin/btop' },
     },
   },
   -- Option+Delete to delete word forward
@@ -229,6 +247,11 @@ config.mouse_bindings = {
 -- Working directory
 config.default_cwd = wezterm.home_dir
 
+-- Set PATH to include Homebrew (for macOS)
+config.set_environment_variables = {
+  PATH = '/opt/homebrew/bin:/usr/local/bin:' .. os.getenv('PATH'),
+}
+
 -- Performance
 config.front_end = 'WebGpu'  -- GPU acceleration
 config.max_fps = 120
@@ -242,6 +265,20 @@ config.macos_window_background_blur = 0  -- No blur by default
 
 -- Hyperlink configuration (iTerm2 had link color configured)
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
+
+-- Add markdown file link handler
+table.insert(config.hyperlink_rules, {
+  regex = '\\[([^\\]]+)\\]\\(([^\\)]+\\.md)\\)',
+  format = 'file://$2',
+  highlight = 1,
+})
+
+-- Make .md files clickable when they appear as plain text
+table.insert(config.hyperlink_rules, {
+  regex = '(\\S+\\.md)',
+  format = 'file://$1',
+  highlight = 0,
+})
 
 -- Status bar configuration
 config.status_update_interval = 1000
@@ -269,15 +306,26 @@ wezterm.on('update-status', function(window, pane)
     { Text = '  ' .. cwd .. ' ' },
   })
   
-  -- Right status (leader key indicator)
+  -- Get the active key table name
+  local key_table = window:active_key_table()
+  
+  -- Right status (leader key indicator and key sequence)
   local leader = ''
+  local key_status = ''
+  
   if window:leader_is_active() then
     leader = '  LEADER  '
+  end
+  
+  if key_table then
+    key_status = ' [' .. key_table .. '] '
   end
   
   window:set_right_status(wezterm.format {
     { Foreground = { Color = '#f92672' } },
     { Text = leader },
+    { Foreground = { Color = '#a6e22e' } },
+    { Text = key_status },
   })
 end)
 

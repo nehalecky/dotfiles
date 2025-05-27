@@ -1,0 +1,18 @@
+#!/bin/bash
+# Quick doc viewer with glow
+
+DOCS_DIR="$HOME/.docs"
+
+# If no argument, show picker
+if [ $# -eq 0 ]; then
+    # Use fzf if available, otherwise use glow's picker
+    if command -v fzf >/dev/null 2>&1; then
+        FILE=$(find "$DOCS_DIR" -name "*.md" -type f | sed "s|$DOCS_DIR/||" | fzf --preview "glow $DOCS_DIR/{}")
+        [ -n "$FILE" ] && glow "$DOCS_DIR/$FILE"
+    else
+        glow "$DOCS_DIR"
+    fi
+else
+    # Direct file access
+    glow "$DOCS_DIR/$1"
+fi

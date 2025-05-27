@@ -6,12 +6,12 @@ Modern dotfiles management with [chezmoi](https://chezmoi.io/) and XDG Base Dire
 
 ## 📚 Documentation
 
-- **[Architecture](docs/ARCHITECTURE.md)** - System design and structure
-- **[Project History](docs/PROJECT-HISTORY.md)** - All changes and learnings
-- **[Secrets Management](docs/SECRETS-MANAGEMENT.md)** - 1Password integration & encryption
-- **[Applications Guide](docs/APPLICATIONS.md)** - Detailed tool documentation
-- **[Terminal Setup](docs/terminal-setup.md)** - WezTerm multiplexing & keybindings
-- **[Claude Instructions](docs/CLAUDE.md)** - AI assistant context
+- **[Architecture](.docs/ARCHITECTURE.md)** - System design and structure
+- **[Project History](.docs/PROJECT-HISTORY.md)** - All changes and learnings
+- **[Secrets Management](.docs/SECRETS-MANAGEMENT.md)** - 1Password integration & encryption
+- **[Applications Guide](.docs/APPLICATIONS.md)** - Detailed tool documentation
+- **[Terminal Setup](.docs/TERMINAL-SETUP.md)** - WezTerm multiplexing & keybindings
+- **[Claude Instructions](.docs/CLAUDE.md)** - AI assistant context
 
 ## 🚀 Quick Setup
 
@@ -72,7 +72,9 @@ See [Dependency Analysis](docs/homebrew-analysis.md) for detailed package inform
 
 ### Shell Environment
 - **Shell**: [Zsh](https://www.zsh.org/) with [Prezto](https://github.com/sorin-ionescu/prezto)
-- **Prompt**: [Starship](https://starship.rs/) (migrated from Powerlevel10k)
+- **Prompt**: Dual setup with [Powerlevel10k](https://github.com/romkatv/powerlevel10k) (default) and [Starship](https://starship.rs/)
+  - Switch with: `prompt_switch starship` or `prompt_switch p10k`
+  - Current: Check with `echo $PROMPT_THEME`
 - **Terminal**: [WezTerm](https://wezfurlong.org/wezterm/) - GPU-accelerated with Lua config
 - **Enhancements**: [bat](https://github.com/sharkdp/bat), [eza](https://github.com/eza-community/eza), [ripgrep](https://github.com/BurntSushi/ripgrep), [fzf](https://github.com/junegunn/fzf)
 

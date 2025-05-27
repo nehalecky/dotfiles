@@ -116,6 +116,28 @@ The status bar updates every second. If not visible:
 - Check `enable_tab_bar = true`
 - Verify `hide_tab_bar_if_only_one_tab = false`
 
+## Prompt Switching
+
+This setup includes both Powerlevel10k and Starship prompts:
+
+### Switching Prompts
+```bash
+# Switch to Starship
+prompt_switch starship
+
+# Switch back to Powerlevel10k
+prompt_switch p10k
+
+# Check current prompt
+echo $PROMPT_THEME
+```
+
+### Making it Permanent
+To set Starship as default, add to your shell config:
+```bash
+export PROMPT_THEME="starship"
+```
+
 ## Philosophy
 
 This configuration follows the terminal-first approach:
