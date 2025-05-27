@@ -2,6 +2,11 @@
 
 This document provides a comprehensive overview of all applications and command-line tools managed through Homebrew in this dotfiles setup.
 
+**Current Stats:**
+- **90 Command-line tools** (formulae)
+- **32 Desktop applications** (casks)
+- **Last updated**: May 2025
+
 ## Table of Contents
 - [Command-Line Tools (Formulae)](#command-line-tools-formulae)
   - [Core Development](#core-development)
@@ -45,6 +50,7 @@ This document provides a comprehensive overview of all applications and command-
 | [tealdeer](https://github.com/dbrgn/tealdeer) | Help Pages | Fast tldr client - simplified man pages | man pages (supplements) |
 | [btop](https://github.com/aristocratos/btop) | System Monitor | Beautiful resource monitor with mouse support | htop, top |
 | [wget](https://www.gnu.org/software/wget/) | File Download | Non-interactive network downloader | curl (different features) |
+| [lazygit](https://github.com/jesseduffield/lazygit) | Git UI | Terminal UI for git commands | git CLI |
 
 ### Development Utilities
 
@@ -71,6 +77,7 @@ This document provides a comprehensive overview of all applications and command-
 | [Visual Studio Code](https://code.visualstudio.com/) | Code Editor | Extensible code editor with IntelliSense, debugging, Git | Primary code editor with vast extension ecosystem |
 | [Cursor](https://cursor.sh/) | AI Code Editor | AI-first code editor built on VSCode | AI-assisted coding, pair programming with AI |
 | [iTerm2](https://iterm2.com/) | Terminal Emulator | Advanced terminal with split panes, search, autocomplete | Enhanced terminal experience vs Terminal.app |
+| [WezTerm](https://wezfurlong.org/wezterm/) | Terminal Emulator | GPU-accelerated terminal with built-in multiplexing | iTerm2/Terminal.app |
 | [Docker Desktop](https://www.docker.com/products/docker-desktop/) | Containerization | Docker with GUI, Kubernetes, and development tools | Container development and management |
 | [Julia](https://julialang.org/) | Scientific Computing | High-performance language for technical computing | Scientific computing, data science |
 | [Miniconda](https://docs.conda.io/en/latest/miniconda.html) | Python Environment | Minimal conda installer for Python environments | Python version and package management |

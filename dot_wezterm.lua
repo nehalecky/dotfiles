@@ -209,6 +209,48 @@ config.keys = {
     },
   },
   
+  -- Launch 4-tile development workspace
+  {
+    key = 'w',
+    mods = 'LEADER',
+    action = wezterm.action_callback(function(window, pane)
+      -- Split right for btop (50/50)
+      window:perform_action(
+        wezterm.action.SplitPane {
+          direction = 'Right',
+          command = { args = { '/opt/homebrew/bin/btop' } },
+        },
+        pane
+      )
+      
+      -- Go back to left pane
+      window:perform_action(wezterm.action.ActivatePaneDirection 'Left', pane)
+      
+      -- Split bottom for lazygit
+      window:perform_action(
+        wezterm.action.SplitPane {
+          direction = 'Down',
+          command = { args = { '/opt/homebrew/bin/lazygit' } },
+        },
+        pane
+      )
+      
+      -- Go to top-right and split for fourth pane
+      window:perform_action(wezterm.action.ActivatePaneDirection 'Right', pane)
+      window:perform_action(wezterm.action.ActivatePaneDirection 'Up', pane)
+      window:perform_action(
+        wezterm.action.SplitPane {
+          direction = 'Down',
+        },
+        pane
+      )
+      
+      -- Return to top-left (main workspace)
+      window:perform_action(wezterm.action.ActivatePaneDirection 'Left', pane)
+      window:perform_action(wezterm.action.ActivatePaneDirection 'Up', pane)
+    end),
+  },
+  
   -- Quick launch system monitoring
   {
     key = 'm',

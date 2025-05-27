@@ -43,7 +43,7 @@ This repository uses a **hybrid secrets strategy** with [1Password](https://1pas
 - **Restricted Environments**: Falls back to age-encrypted files
 - **Automatic Detection**: Templates adapt based on environment
 
-See [Secrets Management Guide](docs/SECRETS-MANAGEMENT.md) for full details.
+See [Secrets Management Guide](.docs/SECRETS-MANAGEMENT.md) for full details.
 
 ## 📦 Dependency Management
 
@@ -66,7 +66,7 @@ brew upgrade && brew upgrade --cask
 brew bundle cleanup
 ```
 
-See [Dependency Analysis](docs/homebrew-analysis.md) for detailed package information.
+See [Dependency Analysis](.docs/archive/homebrew-analysis.md) for detailed package information.
 
 ## 🛠 What's Managed
 
@@ -217,7 +217,7 @@ brew bundle install
 ### Getting Help
 - Chezmoi: `chezmoi doctor`
 - Homebrew: `brew doctor`
-- This repo: Check [Project History](docs/PROJECT-HISTORY.md)
+- This repo: Check [Project History](.docs/PROJECT-HISTORY.md)
 
 ## 📖 References
 
