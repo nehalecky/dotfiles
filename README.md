@@ -111,6 +111,12 @@ Chezmoi manages two directories:
 - **Source**: `~/.local/share/chezmoi/` (version controlled)
 - **Target**: Your home directory (where configs live)
 
+### Key Points
+- **Quick Edit**: Edit in HOME → `chezmoi add` → commit
+- **Structured Edit**: `chezmoi edit` → preview → apply → commit
+- **Changes flow**: HOME ↔ chezmoi source → git repository
+- **Best practice**: Use Quick Edit for small changes, Structured Edit for complex updates
+
 ### Workflow 1: Quick Config Changes
 **When**: Making small edits to existing configs
 ```bash
