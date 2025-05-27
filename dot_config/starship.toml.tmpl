@@ -4,19 +4,7 @@
 
 # Global format - defines the prompt layout
 format = """
-$os\
-$directory\
-$git_branch\
-$git_status\
-$fill\
-$status\
-$cmd_duration\
-$jobs\
-{{ if .starship.show_kubernetes -}}
-$kubernetes\
-{{ end -}}
-$time\
-$line_break\
+$os$directory$git_branch$git_status$fill$status$cmd_duration$jobs{{ if .starship.show_kubernetes }}$kubernetes{{ end }}$time
 $character"""
 
 # Timeout for commands (in milliseconds)
@@ -24,6 +12,9 @@ command_timeout = 500
 
 # Scan timeout for files (in milliseconds)
 scan_timeout = 30
+
+# Don't add newline at start of prompt
+add_newline = false
 
 # Enable two-line prompt
 [line_break]
@@ -40,7 +31,7 @@ Macos = ""  # Nerd Font Apple logo
 # Directory module - with smart truncation (matches P10k dir)
 [directory]
 format = "[$path]($style)[$read_only]($read_only_style) "
-style = "cyan bold"  # Bright blue, similar to P10k color 31
+style = "31 bold"  # P10k color 31 (cyan)
 truncation_length = 3
 truncate_to_repo = true
 truncation_symbol = "…/"
@@ -68,7 +59,7 @@ truncation_symbol = "…"
 # Git status (matches P10k vcs status indicators)
 [git_status]
 format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "bold green"
+style = "76 bold"  # P10k color 76 (green)
 conflicted = "="
 ahead = "⇡${count}"
 behind = "⇣${count}"
@@ -140,18 +131,18 @@ symbol_threshold = 1
 [time]
 disabled = false
 format = '[$time]($style)'
-style = "bright-black"  # Subtle color
+style = "244"  # P10k color 244 (grey)
 time_format = "%H:%M:%S"  # 24h format matching P10k
 use_12hr = false
 
 # Character module - the prompt symbol (matches P10k prompt_char)
 [character]
 format = "$symbol "
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
-vimcmd_symbol = "[❮](bold green)"
-vimcmd_visual_symbol = "[❮](bold yellow)"
-vimcmd_replace_symbol = "[❮](bold purple)"
+success_symbol = "[❯](76 bold)"  # P10k color 76 (green)
+error_symbol = "[❯](196 bold)"   # P10k red
+vimcmd_symbol = "[❮](76 bold)"   # P10k green
+vimcmd_visual_symbol = "[❮](178 bold)"  # P10k yellow
+vimcmd_replace_symbol = "[❮](176 bold)"  # P10k purple
 
 # Optional: Docker context (uncomment to enable)
 # [docker_context]
