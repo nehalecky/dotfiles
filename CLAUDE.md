@@ -121,6 +121,13 @@ When helping with this repository:
    - Trust chezmoi's automation - hooks run after every `chezmoi apply`
    - When installing new tools via brew, the Brewfile hook will auto-detect on next `chezmoi apply`
    - Example: After `brew install lazygit`, just continue working. The next `chezmoi apply` will detect and prompt to sync
+12. **ALWAYS check paths in documentation** - Never use hardcoded usernames
+   - WRONG: `/Users/nehalecky/docs/file.md`
+   - RIGHT: `~/.docs/file.md` or `.docs/file.md` (relative)
+   - RIGHT: `$HOME/.docs/file.md` (when full path needed)
+   - Check ALL documentation updates for hardcoded paths
+   - This includes README, docs, and any generated content
+   - The user has specifically requested this multiple times
 
 ### Helpful Context
 

@@ -31,12 +31,19 @@ This repository uses WezTerm as the primary terminal emulator with a hybrid appr
 | Close Pane | `Leader + x` | Close current pane (with confirmation) |
 | Zoom Toggle | `Leader + z` | Toggle pane zoom state |
 
+### Quick Reference
+- **Navigate**: `Leader + h/j/k/l` (vim-style)
+- **Resize**: `Leader + Shift + H/J/K/L`
+- **Close**: `Leader + x`
+- **Zoom**: `Leader + z`
+
 ### System Monitoring
 
 | Action | Keybinding | Description |
 |--------|-----------|-------------|
 | Monitor Split | `Leader + m` | Open btop in right split (50%) |
 | Monitor Window | `Leader + Shift + M` | Open btop in new window |
+| Dev Workspace | `Leader + w` | Create 4-tile layout (see below) |
 
 ### iTerm2 Compatibility Shortcuts
 
@@ -115,6 +122,22 @@ Ensure no other applications are intercepting `Ctrl+a`. Check:
 The status bar updates every second. If not visible:
 - Check `enable_tab_bar = true`
 - Verify `hide_tab_bar_if_only_one_tab = false`
+
+## Development Workspace
+
+The `Leader + w` keybinding creates a 4-tile development layout:
+
+```
+┌─────────────┬─────────────┐
+│   Terminal  │    btop     │
+│  (focused)  │  (system)   │
+├─────────────┼─────────────┤
+│   lazygit   │  Terminal   │
+│   (git)     │   (free)    │
+└─────────────┴─────────────┘
+```
+
+Perfect for monitoring system resources, git status, and having multiple terminals.
 
 ## Prompt Switching
 
