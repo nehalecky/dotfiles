@@ -65,6 +65,8 @@ cask "cursor"
 # Web browser
 cask "firefox"
 cask "font-awesome-terminal-fonts"
+# Nerd Font specifically patched for Powerlevel10k
+cask "font-meslo-for-powerlevel10k"
 # Update maps and software, sync with Garmin Connect and register your device
 cask "garmin-express"
 # Desktop client for GitHub repositories

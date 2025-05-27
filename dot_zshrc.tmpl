@@ -64,6 +64,8 @@ export PROMPT_THEME="${PROMPT_THEME:-{{ .starship.prompt_theme }}}"
 if [[ "$PROMPT_THEME" == "starship" ]]; then
   # Initialize Starship
   eval "$(starship init zsh)"
+  # Suppress P10k configuration wizard when using Starship
+  export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 else
   # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
