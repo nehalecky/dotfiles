@@ -244,6 +244,12 @@ If Claude Code doesn't respond:
 2. Restart session: `C-c c k` then `C-c c c`
 3. Verify claude CLI works: Run `claude` in terminal
 
+## See Also
+
+- **[APPLICATIONS.md](APPLICATIONS.md)** - Complete guide to Emacs and other development tools
+- **[PYTHON-DEVELOPMENT.md](PYTHON-DEVELOPMENT.md)** - Modern Python workflow that integrates well with Emacs
+- **[TERMINAL-SETUP.md](TERMINAL-SETUP.md)** - Terminal configuration for development workflow
+
 ---
 
 *Remember: Claude Code in Emacs gives you AI assistance without context switching. Use it to stay in flow while coding!*
