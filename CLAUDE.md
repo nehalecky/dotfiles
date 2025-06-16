@@ -1,166 +1,141 @@
-# Claude AI Assistant Instructions
+# Claude Code Instructions - Dotfiles Repository
 
-This file provides context and instructions for Claude when working with this dotfiles repository.
+## Primary Development Workflows
 
-## Repository Overview
+### 1. Discovery-First Development
+**When:** Complex features or unfamiliar codebases  
+**Process:** Explore → Plan → Confirm → Code → Commit
+- Use search tools extensively to understand the codebase
+- Create a TodoWrite plan before implementation
+- Present the plan to user for confirmation
+- Implement with confidence
+- Commit with descriptive message
 
-This is a modern dotfiles setup using [chezmoi](https://chezmoi.io/) for managing configuration files across machines. The repository emphasizes security, maintainability, and documentation.
+### 2. Test-Driven Workflow
+**When:** Adding new functionality with clear requirements  
+**Process:** Write tests → Commit → Code → Iterate → Commit
+- Write failing tests first
+- Commit the tests
+- Implement code to pass tests
+- Refactor and iterate
+- Commit working implementation
 
-## Key Architecture Decisions
+### 3. Visual Feedback Loop
+**When:** UI/UX development or visual outputs  
+**Process:** Write code → Screenshot → Iterate
+- Implement initial version
+- Use screenshot tools or Puppeteer for visual feedback
+- Iterate based on visual results
+- Perfect the output through rapid cycles
 
-### Dotfiles Management
-- **Tool**: chezmoi (replaced bare git repo approach)
-- **Structure**: Actual file content, not symlinks
-- **Location**: `~/.local/share/chezmoi/`
+## Repository Context
 
-### Security
-- **SSH Keys**: Stored in 1Password, never on disk
-- **SSH Agent**: 1Password agent at `~/.1password/agent.sock`
-- **Git Signing**: GPG keys managed via GPG Suite
+**Stack:** macOS, Zsh/Prezto, Powerlevel10k prompt, chezmoi, uv (Python)  
+**Security:** 1Password for SSH/secrets, GPG for signing  
+**Philosophy:** Terminal-first, minimal dependencies, security without friction
 
-### Shell Environment
-- **Shell**: Zsh with Prezto framework
-- **Prompt**: Powerlevel10k (planning to migrate to Starship)
-- **Enhancements**: bat, eza, ripgrep, fzf
+## Specific Instructions
 
-## Working with This Repository
+### Chezmoi Operations
+- Always use `$HOME` not `/Users/username` in paths
+- Run `chezmoi diff` before `chezmoi apply`
+- Use templates (`.tmpl`) for machine-specific configs
+- Store machine variations in `.chezmoidata.yaml`
+
+### Code Standards
+- Use 2-space indentation for shell scripts
+- Comment non-obvious configuration choices
+- Group related settings with clear headers
+- Never commit secrets or credentials
+
+### Git Practices
+- Descriptive commit messages explaining "why"
+- Reference issues/PRs when applicable
+- Use conventional commits: `feat:`, `fix:`, `docs:`, `chore:`
+- Always sign commits (GPG configured)
+
+### Tool Preferences
+- Use ripgrep (`rg`) not grep
+- Use `eza` not `ls` for listings
+- Use `bat` not `cat` for file viewing
+- Verify tool docs with WebFetch before suggesting commands
+
+## Quick Reference
 
 ### Common Tasks
 
-1. **Adding new dotfiles**:
-   ```bash
-   chezmoi add ~/.config/newapp/config
-   ```
+**Quick Edit** (edit in home, sync to source):
+```bash
+vim ~/.zshrc                    # Edit actual file
+chezmoi add ~/.zshrc           # Update source
+chezmoi git commit -- -m "msg"  # Commit
+chezmoi git push               # Push
+```
 
-2. **Updating configurations**:
-   ```bash
-   chezmoi edit ~/.zshrc
-   chezmoi diff
-   chezmoi apply
-   ```
+**Structured Edit** (edit in source, test, apply):
+```bash
+chezmoi edit ~/.zshrc          # Edit source file
+chezmoi diff                   # Preview changes
+chezmoi apply                  # Apply to home
+chezmoi git commit -- -m "msg"  # Commit
+chezmoi git push               # Push
+```
 
-3. **Syncing changes**:
-   ```bash
-   chezmoi git add .
-   chezmoi git commit -m "Update configurations"
-   chezmoi git push
-   ```
+**Sync from Remote**:
+```bash
+chezmoi update                 # Pull + apply
+# OR
+chezmoi git pull              # Just pull
+chezmoi diff                  # Preview
+chezmoi apply                 # Apply
+```
 
-### Important Files
+### Key Files
+- `Brewfile` - Homebrew dependencies
+- `.chezmoidata.yaml` - Machine-specific variables
+- `dot_config/starship.toml.tmpl` - Prompt configuration
+- `.chezmoiscripts/` - Installation hooks
 
-- `Brewfile` - All Homebrew dependencies
-- `APPLICATIONS.md` - Detailed documentation of all tools
-- `homebrew-analysis.md` - Dependency analysis
-- `.zshrc` - Main shell configuration
-- `.gitconfig` - Git configuration with signing
+## Development Guidelines
 
-## Preferences and Standards
+1. **Ask before creating** - Propose new tools/scripts before implementing
+2. **Enhance, don't add** - Improve existing tools over adding new ones
+3. **Document changes** - Update relevant .md files when making changes
+4. **Test everything** - Verify commands work before suggesting
+5. **Keep it portable** - Ensure configs work across machines
 
-### Code Style
-- Clear, commented configurations
-- Group related settings with headers
-- Document non-obvious choices
+## MCP Integrations
 
-### Git Commits
-- Descriptive commit messages
-- Include what changed and why
-- Reference issues when applicable
+### GitHub MCP Server
+**Purpose:** Direct GitHub integration within Claude Code  
+**Capabilities:**
+- Repository browsing and file access
+- Issue and PR management (create, update, close)
+- Code review assistance and PR descriptions
+- CI/CD status monitoring
+- Release management and notes generation
 
-### Documentation
-- Keep README concise but complete
-- Detailed docs in separate files
-- Include examples and use cases
+**Usage Examples:**
+```bash
+# Direct GitHub operations in Claude
+"Create a GitHub issue for this bug"
+"Show me open PRs in my dotfiles repo"
+"Help write a PR description for these changes"
+"Check the latest release of any GitHub repo"
+```
 
-## System Context
+**Configuration:** Added via `claude mcp add github github.com/github/github-mcp-server`
 
-### Development Focus
-- **Languages**: Python, JavaScript/Node.js, Shell scripting
-- **Tools**: Docker, Git, GitHub CLI
-- **Editors**: VS Code, Cursor (AI-assisted), Emacs
-
-### Workflow Preferences
-- Terminal-first approach
-- Keyboard shortcuts over GUI
-- Automation where sensible
-- Security without friction
-
-## AI Assistant Guidelines
-
-When helping with this repository:
-
-1. **Maintain existing patterns** - Follow established conventions
-2. **Document changes** - Update relevant documentation files
-3. **Test before applying** - Use `chezmoi diff` to preview
-4. **Security first** - Never expose secrets or credentials
-5. **Explain decisions** - Document why changes were made
-6. **Verify before suggesting** - Always check documentation before suggesting commands
-   - Use WebFetch to verify tool documentation
-   - Provide clickable URLs for references (iTerm2 will make them clickable!)
-   - Ground suggestions in actual documentation, not assumptions
-   - Example: https://iterm2.com/documentation-shell-integration.html
-7. **Consult before creating tools** - Always ask before building new tools or scripts
-   - Use existing tools (especially chezmoi) as the primary interface
-   - Leverage chezmoi's built-in features (hooks, scripts, templates)
-   - Avoid creating separate management tools
-8. **Chezmoi-first approach** - Use chezmoi's native capabilities
-   - Hooks for automation (e.g., checking Brewfile updates)
-   - Scripts for complex workflows
-   - Templates for dynamic configuration
-9. **Present proposals before implementing** - Always explain the approach first
-   - Describe what you plan to do and why
-   - Wait for approval before implementing
-   - Avoid over-engineering - simpler is better
-   - Question if additional tools/functions are truly needed
-10. **Keep code portable** - Never use hardcoded paths
-   - Always use `$HOME` instead of `/Users/username`
-   - This ensures dotfiles work for any user
-   - Check all documentation for hardcoded references
-11. **Always leverage existing workflows** - Don't recreate what chezmoi already does
-   - Use `chezmoi apply` - it runs all hooks automatically (e.g., Brewfile sync)
-   - Never manually run hook scripts - they execute on their own
-   - Trust chezmoi's automation - hooks run after every `chezmoi apply`
-   - When installing new tools via brew, the Brewfile hook will auto-detect on next `chezmoi apply`
-   - Example: After `brew install lazygit`, just continue working. The next `chezmoi apply` will detect and prompt to sync
-12. **ALWAYS check paths in documentation** - Never use hardcoded usernames
-   - WRONG: `/Users/nehalecky/docs/file.md`
-   - RIGHT: `~/.docs/file.md` or `.docs/file.md` (relative)
-   - RIGHT: `$HOME/.docs/file.md` (when full path needed)
-   - Check ALL documentation updates for hardcoded paths
-   - This includes README, docs, and any generated content
-   - The user has specifically requested this multiple times
-
-### Helpful Context
-
-- User prefers minimal dependencies
-- Performance and security are priorities
-- Documentation should be comprehensive
-- Changes should be version controlled
-
-### Common Improvements
-
-When asked to enhance the setup, consider:
-- Terminal productivity tools
-- Security hardening
+## Current Focus Areas
+- Terminal productivity enhancements
+- Security hardening without friction
 - Development workflow optimization
-- Documentation updates
-- Dependency minimization
+- Cross-platform compatibility prep
+- GitHub integration workflow enhancement
 
-## Future Enhancements Under Consideration
-
-1. **Starship configuration** - Custom prompt setup
-2. **Neovim migration** - Potential editor change
-3. **Tmux configuration** - Terminal multiplexing
-4. **Automated testing** - Validate dotfiles work correctly
-5. **Cross-platform support** - Linux compatibility
-
-## Notes for Claude
-
-- The user values clean, well-documented code
-- Prefer enhancing existing tools over adding new ones
-- Always consider security implications
-- Keep backups before major changes
-- Test commands before suggesting them
+## Workflow Principles
+- Always leverage existing workflows, including chezmoi apply, so we don't unnessarily complicate things
+- Use MCP integrations to reduce context switching between tools
 
 ---
-
-*This file helps Claude understand the repository structure and user preferences for more effective assistance.*
+@docs/important-instruction-reminders.md
