@@ -327,8 +327,8 @@ uv add package1 package2 package3
 
 ## See Also
 
-- **[APPLICATIONS.md](APPLICATIONS.md)** - Complete list of development tools including uv
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture showing Python tooling integration
+- **[applications.md](applications.md)** - Complete list of development tools including uv
+- **[architecture.md](architecture.md)** - System architecture showing Python tooling integration
 - **[claude-code-emacs-guide.md](claude-code-emacs-guide.md)** - AI-assisted Python development in Emacs
 
 ## Resources
