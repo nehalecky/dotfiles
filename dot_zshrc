@@ -59,7 +59,7 @@ export FZF_KEY_BINDS_SCRIPT=/opt/local/share/fzf/shell/key-bindings.zsh
 
 # Prompt configuration - Toggle between Starship and Powerlevel10k
 # Set PROMPT_THEME to "starship" or "p10k" (defaults to p10k for safety during migration)
-export PROMPT_THEME="${PROMPT_THEME:-{{ .starship.prompt_theme }}}"
+export PROMPT_THEME="${PROMPT_THEME:-p10k}"
 
 if [[ "$PROMPT_THEME" == "starship" ]]; then
   # Initialize Starship
@@ -87,3 +87,6 @@ prompt_switch() {
 
 # GH completion
 eval "$(gh completion -s zsh)"
+
+# Doom Emacs alias
+alias doom="~/.config/emacs/bin/doom"
