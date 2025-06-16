@@ -30,7 +30,7 @@ This document provides a comprehensive overview of all applications and command-
 |------|----------|-------------|-------------------|
 | [git](https://git-scm.com/) | Version Control | Distributed version control system | Stock macOS git (older) |
 | [gh](https://cli.github.com/) | GitHub Integration | GitHub's official CLI for pull requests, issues, and more | Web-based GitHub workflow |
-| [docker](https://www.docker.com/) | Containerization | Container platform (CLI only, requires Docker Desktop) | Virtual machines |
+| [Apple Container](https://github.com/apple/container) | Containerization | Native macOS containerization with lightweight VMs on Apple silicon | Docker Desktop |
 | [node](https://nodejs.org/) | JavaScript Runtime | JavaScript runtime built on Chrome's V8 engine | System node (if any) |
 | [jq](https://stedolan.github.io/jq/) | JSON Processing | Lightweight JSON processor with powerful filters | Manual JSON parsing |
 | [pdm](https://pdm.fming.dev/) | Python Development | Modern Python package manager with PEP 582 support | pip/pipenv/poetry |

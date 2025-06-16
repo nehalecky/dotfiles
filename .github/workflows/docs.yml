@@ -1,0 +1,201 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  push:
+    branches: [master, main]
+    paths: ['docs/**', '.github/workflows/docs.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Build documentation site
+        run: |
+          # Create site structure
+          mkdir -p _site
+          
+          # Copy documentation files
+          cp -r docs/* _site/
+          
+          # Create index.html
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Nehal Ecky - Development Documentation</title>
+              <style>
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      line-height: 1.6;
+                      max-width: 800px;
+                      margin: 0 auto;
+                      padding: 2rem;
+                      color: #333;
+                  }
+                  h1, h2 { color: #2c3e50; }
+                  .doc-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 2rem 0; }
+                  .doc-card { 
+                      border: 1px solid #ddd; 
+                      border-radius: 8px; 
+                      padding: 1.5rem; 
+                      text-decoration: none; 
+                      color: inherit;
+                      transition: transform 0.2s, box-shadow 0.2s;
+                  }
+                  .doc-card:hover { 
+                      transform: translateY(-2px); 
+                      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+                  }
+                  .doc-card h3 { margin-top: 0; color: #3498db; }
+                  .meta { color: #666; font-size: 0.9em; }
+                  footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee; text-align: center; color: #666; }
+              </style>
+          </head>
+          <body>
+              <header>
+                  <h1>🔧 Development Documentation</h1>
+                  <p>My development practices, system architecture, and workflow documentation.</p>
+              </header>
+              
+              <main>
+                  <section class="doc-links">
+                      <a href="development-practices.html" class="doc-card">
+                          <h3>📋 Development Practices</h3>
+                          <p>Coding standards, testing strategies, security requirements, and tooling preferences including Apple Container usage.</p>
+                      </a>
+                      
+                      <a href="python-development.html" class="doc-card">
+                          <h3>🐍 Python Development</h3>
+                          <p>Modern Python workflow using uv for package management, virtual environments, and project setup.</p>
+                      </a>
+                      
+                      <a href="architecture.html" class="doc-card">
+                          <h3>🏗️ System Architecture</h3>
+                          <p>Visual diagrams and technical overview of my development environment and tool integration.</p>
+                      </a>
+                      
+                      <a href="claude-code-emacs-guide.html" class="doc-card">
+                          <h3>🤖 AI-Assisted Development</h3>
+                          <p>Comprehensive guide for using Claude Code with Doom Emacs for enhanced development workflow.</p>
+                      </a>
+                      
+                      <a href="applications.html" class="doc-card">
+                          <h3>🛠️ Tools & Applications</h3>
+                          <p>Complete catalog of development tools, CLI utilities, and desktop applications with usage context.</p>
+                      </a>
+                      
+                      <a href="secrets-management.html" class="doc-card">
+                          <h3>🔐 Secrets Management</h3>
+                          <p>Hybrid approach using 1Password and age encryption for secure credential management across environments.</p>
+                      </a>
+                  </section>
+                  
+                  <section>
+                      <h2>🎯 Quick Links</h2>
+                      <ul>
+                          <li><a href="https://github.com/nehalecky/dotfiles">📁 Dotfiles Repository</a></li>
+                          <li><a href="project-history.html">📜 Project History</a></li>
+                          <li><a href="terminal-setup.html">💻 Terminal Setup</a></li>
+                      </ul>
+                  </section>
+              </main>
+              
+              <footer>
+                  <p class="meta">
+                      Last updated: $(date +"%B %Y") • 
+                      <a href="https://github.com/nehalecky/dotfiles">Source</a> • 
+                      Generated with ❤️ and automation
+                  </p>
+              </footer>
+          </body>
+          </html>
+          EOF
+          
+          # Convert markdown files to HTML (basic conversion)
+          for md_file in _site/*.md; do
+              if [ -f "$md_file" ]; then
+                  base_name=$(basename "$md_file" .md)
+                  html_file="_site/${base_name}.html"
+                  
+                  # Simple markdown to HTML conversion
+                  cat > "$html_file" << 'HTML_HEADER'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Development Documentation</title>
+              <style>
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      line-height: 1.6;
+                      max-width: 800px;
+                      margin: 0 auto;
+                      padding: 2rem;
+                      color: #333;
+                  }
+                  h1, h2, h3 { color: #2c3e50; }
+                  code { background: #f4f4f4; padding: 0.2em 0.4em; border-radius: 3px; }
+                  pre { background: #f4f4f4; padding: 1rem; border-radius: 5px; overflow-x: auto; }
+                  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+                  th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+                  th { background: #f8f9fa; }
+                  a { color: #3498db; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+                  .nav { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+              </style>
+          </head>
+          <body>
+              <nav class="nav">
+                  <a href="index.html">← Back to Documentation Index</a>
+              </nav>
+              <div class="content">
+          HTML_HEADER
+                  
+                  # Convert markdown to HTML (simple approach - you could use a proper converter)
+                  sed 's/^# \(.*\)/<h1>\1<\/h1>/' "$md_file" | \
+                  sed 's/^## \(.*\)/<h2>\1<\/h2>/' | \
+                  sed 's/^### \(.*\)/<h3>\1<\/h3>/' | \
+                  sed 's/^\*\*\([^*]*\)\*\*/<strong>\1<\/strong>/g' | \
+                  sed 's/^\*\([^*]*\)\*/<em>\1<\/em>/g' | \
+                  sed 's/`\([^`]*\)`/<code>\1<\/code>/g' | \
+                  sed 's/^- \(.*\)/<li>\1<\/li>/' | \
+                  sed 's/^\([0-9]\+\)\. \(.*\)/<li>\2<\/li>/' >> "$html_file"
+                  
+                  echo '</div></body></html>' >> "$html_file"
+              fi
+          done
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
