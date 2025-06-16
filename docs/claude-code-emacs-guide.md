@@ -246,9 +246,9 @@ If Claude Code doesn't respond:
 
 ## See Also
 
-- **[APPLICATIONS.md](APPLICATIONS.md)** - Complete guide to Emacs and other development tools
-- **[PYTHON-DEVELOPMENT.md](PYTHON-DEVELOPMENT.md)** - Modern Python workflow that integrates well with Emacs
-- **[TERMINAL-SETUP.md](TERMINAL-SETUP.md)** - Terminal configuration for development workflow
+- **[applications.md](applications.md)** - Complete guide to Emacs and other development tools
+- **[python-development.md](python-development.md)** - Modern Python workflow that integrates well with Emacs
+- **[terminal-setup.md](terminal-setup.md)** - Terminal configuration for development workflow
 
 ---
 
