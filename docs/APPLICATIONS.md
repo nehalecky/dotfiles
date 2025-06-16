@@ -34,6 +34,7 @@ This document provides a comprehensive overview of all applications and command-
 | [node](https://nodejs.org/) | JavaScript Runtime | JavaScript runtime built on Chrome's V8 engine | System node (if any) |
 | [jq](https://stedolan.github.io/jq/) | JSON Processing | Lightweight JSON processor with powerful filters | Manual JSON parsing |
 | [pdm](https://pdm.fming.dev/) | Python Development | Modern Python package manager with PEP 582 support | pip/pipenv/poetry |
+| [uv](https://docs.astral.sh/uv/) | Python Development | Extremely fast Python package installer and resolver | pip, pip-tools, conda |
 
 ### Terminal Enhancement
 
@@ -41,7 +42,7 @@ This document provides a comprehensive overview of all applications and command-
 |------|----------|-------------|-------------------|
 | [zsh](https://www.zsh.org/) | Shell | Z shell - powerful shell with better completion | bash (default macOS shell) |
 | [bash](https://www.gnu.org/software/bash/) | Shell | GNU Bourne Again Shell | macOS bash (v3.x, outdated) |
-| [starship](https://starship.rs/) | Shell Prompt | Fast, customizable, cross-shell prompt | prezto prompts, powerlevel10k |
+| [starship](https://starship.rs/) | Shell Prompt | Fast, customizable, cross-shell prompt (available but not active) | prezto prompts |
 | [bat](https://github.com/sharkdp/bat) | File Viewer | cat clone with syntax highlighting and Git integration | cat |
 | [eza](https://eza.rocks/) | Directory Listing | Modern ls replacement with colors, icons, and Git status | ls |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | Text Search | Blazingly fast recursive grep with smart defaults | grep, ag, ack |
@@ -80,7 +81,6 @@ This document provides a comprehensive overview of all applications and command-
 | [WezTerm](https://wezfurlong.org/wezterm/) | Terminal Emulator | GPU-accelerated terminal with built-in multiplexing | iTerm2/Terminal.app |
 | [Docker Desktop](https://www.docker.com/products/docker-desktop/) | Containerization | Docker with GUI, Kubernetes, and development tools | Container development and management |
 | [Julia](https://julialang.org/) | Scientific Computing | High-performance language for technical computing | Scientific computing, data science |
-| [Miniconda](https://docs.conda.io/en/latest/miniconda.html) | Python Environment | Minimal conda installer for Python environments | Python version and package management |
 | [TeXShop](https://pages.uoregon.edu/koch/texshop/) | LaTeX Editor | LaTeX editor and PDF previewer for macOS | Academic writing, technical documents |
 | [GitHub Desktop](https://desktop.github.com/) | Git GUI | Visual Git client by GitHub | Visual git workflow (optional with CLI) |
 
@@ -169,7 +169,7 @@ brew bundle check --verbose
 
 **Optional Tools:**
 - Specialized editors: Emacs, TeXShop
-- Scientific computing: Julia, Miniconda
+- Scientific computing: Julia
 - Entertainment: Spotify, Steam, VLC
 - Additional browsers: Arc, Firefox
 

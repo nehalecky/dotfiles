@@ -10,10 +10,18 @@ This directory contains all documentation for the dotfiles repository.
 
 ## Technical Documentation
 
-- **[homebrew-analysis.md](homebrew-analysis.md)** - Detailed analysis of Homebrew dependencies
-- **[conda-to-uv-migration.md](conda-to-uv-migration.md)** - Migration guide from Miniconda to uv
-- **[XDG-MIGRATION-STATUS.md](XDG-MIGRATION-STATUS.md)** - XDG Base Directory migration tracking
-- **[HOME_CLEANUP_PLAN.md](HOME_CLEANUP_PLAN.md)** - Original XDG migration plan
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture and visual diagrams
+- **[SECRETS-MANAGEMENT.md](SECRETS-MANAGEMENT.md)** - Hybrid 1Password + age encryption strategy
+- **[TERMINAL-SETUP.md](TERMINAL-SETUP.md)** - WezTerm configuration and workflows
+- **[PYTHON-DEVELOPMENT.md](PYTHON-DEVELOPMENT.md)** - Modern Python workflow with uv
+- **[claude-code-emacs-guide.md](claude-code-emacs-guide.md)** - AI-assisted development in Doom Emacs
+
+## Archive Documentation
+
+- **[homebrew-analysis.md](archive/homebrew-analysis.md)** - Detailed analysis of Homebrew dependencies
+- **[conda-to-uv-migration.md](archive/conda-to-uv-migration.md)** - Migration guide from Miniconda to uv
+- **[XDG-MIGRATION-STATUS.md](archive/XDG-MIGRATION-STATUS.md)** - XDG Base Directory migration tracking
+- **[HOME_CLEANUP_PLAN.md](archive/HOME_CLEANUP_PLAN.md)** - Original XDG migration plan
 
 ## Documentation Philosophy
 
