@@ -1,0 +1,9 @@
+# External dependencies managed by chezmoi
+# These are automatically cloned/updated when running chezmoi apply
+
+# Prezto - Zsh framework
+".zprezto":
+  type: "git-repo"
+  url: "https://github.com/sorin-ionescu/prezto.git"
+  recursive: true
+  refreshPeriod: "168h" # Weekly updates

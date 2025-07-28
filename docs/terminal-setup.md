@@ -161,6 +161,18 @@ To set Starship as default, add to your shell config:
 export PROMPT_THEME="starship"
 ```
 
+## Shell Setup (Zsh + Prezto)
+
+This setup uses Zsh with the Prezto framework. Prezto is installed from the official upstream repository with all customizations managed through the `.zpreztorc` configuration file (managed by chezmoi).
+
+### Prezto Configuration
+The `.zpreztorc` file manages all customizations including:
+- Module loading order
+- Powerlevel10k prompt theme
+- Terminal auto-title
+- SSH agent settings
+- Syntax highlighting preferences
+
 ## Philosophy
 
 This configuration follows the terminal-first approach:
