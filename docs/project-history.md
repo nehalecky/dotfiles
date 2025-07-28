@@ -2,7 +2,21 @@
 
 This document tracks the evolution of this dotfiles repository in reverse chronological order.
 
-## 2025-07-28: Prezto Installation Clarification
+## 2025-07-28: SSH Commit Signing Implementation
+- **Goal**: Enable verified commits using existing 1Password SSH infrastructure
+- **Decision**: Use SSH commit signing instead of GPG
+- **Rationale**:
+  - Leverages existing 1Password SSH setup (keys already configured)
+  - Simpler than GPG key management and distribution
+  - Consistent with existing authentication workflow
+  - Supported natively by GitHub since 2022
+- **Changes Made**:
+  - Created `dot_config/git/config` with SSH signing configuration
+  - Configured `gpg.format = ssh` and 1Password SSH signing program
+  - Used existing "Github Signing Key (Nico Personal)" from 1Password
+- **Benefits**: Single key management system, consistent with auth workflow
+
+## 2025-07-28: Prezto Installation Automation
 - **Goal**: Document prezto setup approach and add automation
 - **Issue**: Prezto installation was manual, not automated in chezmoi setup
 - **Decision**: Use upstream prezto repository, not a fork
@@ -12,8 +26,8 @@ This document tracks the evolution of this dotfiles repository in reverse chrono
   - Cleaner updates - pull directly from source
   - Follows best practice of separating framework from configuration
 - **Changes Made**:
-  - Added prezto installation to README quick setup
-  - Will add chezmoi external for automatic installation
+  - Added `.chezmoiexternal.yaml` for automatic prezto installation
+  - Updated documentation to reflect automated approach
 - **Lesson Learned**: Manual steps should be automated in chezmoi
 
 ## 2025-05-24: Architecture Documentation & Chezmoi-First Workflows

@@ -263,9 +263,40 @@ cat .secrets/file.age | chezmoi age decrypt
 chezmoi execute-template < template.tmpl
 ```
 
+## SSH Commit Signing
+
+This setup uses SSH commit signing with 1Password instead of GPG for verified commits.
+
+### Configuration
+The git configuration uses SSH signing with the 1Password SSH agent:
+
+```toml
+[commit]
+    gpgsign = true
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[user]
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6
+```
+
+### Benefits
+- **Unified Key Management**: Same 1Password vault manages SSH auth and signing keys
+- **Simpler Setup**: No GPG key generation, distribution, or expiration management
+- **Consistent Workflow**: Leverages existing SSH infrastructure
+- **GitHub Native Support**: Full verification support since 2022
+
+### Usage
+Once configured, all commits are automatically signed. The SSH public key must be added to GitHub as a "Signing Key" (separate from authentication keys).
+
 ## References
 
 - [Chezmoi Password Managers](https://www.chezmoi.io/user-guide/password-managers/)
 - [Chezmoi 1Password Integration](https://www.chezmoi.io/user-guide/password-managers/1password/)
 - [Chezmoi Encryption](https://www.chezmoi.io/user-guide/encryption/)
 - [1Password CLI](https://developer.1password.com/docs/cli/)
+- [GitHub SSH Commit Signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#ssh-commit-signature-verification)

@@ -72,8 +72,8 @@ cask "font-meslo-for-powerlevel10k"
 # cask "garmin-express" # Requires manual installation due to sudo requirement
 # Desktop client for GitHub repositories
 cask "github"
-# Tools to protect your emails and files
-# cask "gpg-suite" # Requires manual installation due to sudo requirement
+# Tools to protect your emails and files - using SSH signing instead of GPG
+# cask "gpg-suite" # Not needed - using SSH commit signing with 1Password
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Knowledge base that works on top of a local folder of plain text Markdown files
