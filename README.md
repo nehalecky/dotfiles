@@ -81,7 +81,7 @@ See [Dependency Analysis](.docs/archive/homebrew-analysis.md) for detailed packa
 ### Security & Authentication
 - **Password Manager**: [1Password](https://1password.com/) with CLI integration
 - **SSH**: 1Password SSH agent at `$HOME/.1password/agent.sock`
-- **Git Signing**: GPG via [GPG Suite](https://gpgtools.org/)
+- **Git Signing**: SSH commit signing via 1Password (no GPG needed)
 
 ### Development Tools
 - **Version Control**: [Git](https://git-scm.com/) + [GitHub CLI](https://cli.github.com/)
