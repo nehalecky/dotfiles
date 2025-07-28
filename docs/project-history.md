@@ -2,6 +2,20 @@
 
 This document tracks the evolution of this dotfiles repository in reverse chronological order.
 
+## 2025-07-28: Prezto Installation Clarification
+- **Goal**: Document prezto setup approach and add automation
+- **Issue**: Prezto installation was manual, not automated in chezmoi setup
+- **Decision**: Use upstream prezto repository, not a fork
+- **Rationale**:
+  - No need to maintain a fork in sync with upstream
+  - All customizations managed through `.zpreztorc` (chezmoi-managed)
+  - Cleaner updates - pull directly from source
+  - Follows best practice of separating framework from configuration
+- **Changes Made**:
+  - Added prezto installation to README quick setup
+  - Will add chezmoi external for automatic installation
+- **Lesson Learned**: Manual steps should be automated in chezmoi
+
 ## 2025-05-24: Architecture Documentation & Chezmoi-First Workflows
 - **Goal**: Create clear architecture visualization and leverage chezmoi for workflows
 - **Changes Made**:

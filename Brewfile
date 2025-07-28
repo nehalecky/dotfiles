@@ -1,6 +1,3 @@
-tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/services"
 tap "romkatv/powerlevel10k"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
@@ -30,6 +27,8 @@ brew "git"
 brew "glow"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Access large language models from the command-line
 brew "llm"
 # Platform built on V8 to build network applications
@@ -60,6 +59,8 @@ cask "1password-cli"
 cask "arc"
 # Anthropic's official Claude AI desktop app
 cask "claude"
+# Terminal-based AI coding assistant
+cask "claude-code"
 # Write, edit, and chat about your code with AI
 cask "cursor"
 # Web browser
@@ -68,11 +69,11 @@ cask "font-awesome-terminal-fonts"
 # Nerd Font specifically patched for Powerlevel10k
 cask "font-meslo-for-powerlevel10k"
 # Update maps and software, sync with Garmin Connect and register your device
-cask "garmin-express"
+# cask "garmin-express" # Requires manual installation due to sudo requirement
 # Desktop client for GitHub repositories
 cask "github"
 # Tools to protect your emails and files
-cask "gpg-suite"
+# cask "gpg-suite" # Requires manual installation due to sudo requirement
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Knowledge base that works on top of a local folder of plain text Markdown files
@@ -82,7 +83,7 @@ cask "openmtp"
 # Play the Pokémon Trading Card Game
 cask "pokemon-tcg-live"
 # Play the Pokemon TCG online
-cask "pokemon-trading-card-game-online"
+# cask "pokemon-trading-card-game-online" # No longer available in Homebrew
 # VPN client focusing on security
 cask "protonvpn"
 # Allows users with an iSight (or compatible) camera to read QR codes
