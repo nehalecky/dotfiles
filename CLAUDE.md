@@ -30,9 +30,10 @@
 
 ## Repository Context
 
-**Stack:** macOS, Zsh/Prezto, Powerlevel10k prompt, chezmoi, uv (Python)  
-**Security:** 1Password for SSH/secrets, GPG for signing  
-**Philosophy:** Terminal-first, minimal dependencies, security without friction
+**Stack:** macOS, Zsh/Prezto, Starship prompt, WezTerm, chezmoi, uv (Python)  
+**TUI Tools:** yazi, helix, k9s, lazydocker, delta, dust, procs, bandwhich, atac, zellij  
+**Security:** 1Password for SSH/secrets, SSH commit signing  
+**Philosophy:** Ultra-modern terminal-first development, aggressive performance optimization
 
 ## Specific Instructions
 
@@ -90,10 +91,24 @@ chezmoi diff                  # Preview
 chezmoi apply                 # Apply
 ```
 
+**Modern TUI Workflow** (WezTerm leader key shortcuts):
+```bash
+Ctrl+a f                      # File manager (yazi)
+Ctrl+a e                      # Editor (helix)
+Ctrl+a g                      # Git (lazygit)
+Ctrl+a k                      # Kubernetes (k9s)
+Ctrl+a d                      # Docker (lazydocker)
+Ctrl+a a                      # API client (atac)
+Ctrl+a w                      # Launch 4-tile development workspace
+dev-workspace [project]       # Automated project setup
+```
+
 ### Key Files
-- `Brewfile` - Homebrew dependencies
+- `Brewfile` - Homebrew dependencies (67+ packages including modern TUI tools)
 - `.chezmoidata.yaml` - Machine-specific variables
-- `dot_config/starship.toml.tmpl` - Prompt configuration
+- `dot_config/starship.toml.tmpl` - Ultra-fast prompt configuration
+- `.wezterm.lua` - Terminal multiplexer with leader key shortcuts
+- `dot_local/bin/executable_dev-workspace` - Automated workspace setup
 - `.chezmoiscripts/` - Installation hooks
 
 ## Development Guidelines
