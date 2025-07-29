@@ -274,6 +274,99 @@ config.keys = {
     mods = 'OPT',
     action = wezterm.action.SendString '\x1bd',
   },
+  
+  -- === Modern TUI Tools (Phase 1 Aggressive) ===
+  
+  -- File Management
+  {
+    key = 'f',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/yazi' },
+      cwd = wezterm.home_dir,
+    },
+  },
+  
+  -- Text Editor (Helix)
+  {
+    key = 'e',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/helix', '.' },
+    },
+  },
+  
+  -- Git Management (lazygit already mapped, adding to new tab)
+  {
+    key = 'g',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/lazygit' },
+    },
+  },
+  
+  -- Docker Management
+  {
+    key = 'D',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/lazydocker' },
+    },
+  },
+  
+  -- Kubernetes Management
+  {
+    key = 'k',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/k9s' },
+    },
+  },
+  
+  -- API Testing
+  {
+    key = 'a',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/atac' },
+    },
+  },
+  
+  -- System Process Monitor (modern procs)
+  {
+    key = 'p',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/procs' },
+    },
+  },
+  
+  -- Network Monitor
+  {
+    key = 'n',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/bandwhich' },
+    },
+  },
+  
+  -- Disk Usage Analyzer
+  {
+    key = 'u',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/dust' },
+    },
+  },
+  
+  -- Modern Session Manager (Zellij)
+  {
+    key = 's',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/zellij' },
+    },
+  },
 }
 
 -- Mouse configuration

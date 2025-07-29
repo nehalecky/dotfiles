@@ -1,0 +1,44 @@
+#!/bin/bash
+# Ultra-modern development workspace automation
+# Usage: dev-workspace [project-name]
+
+set -euo pipefail
+
+# Get project name (default to current directory name)
+PROJECT_NAME=${1:-$(basename "$PWD")}
+PROJECT_DIR=${PROJECT_DIR:-$PWD}
+
+echo "🚀 Launching development workspace for: $PROJECT_NAME"
+echo "📁 Working directory: $PROJECT_DIR"
+
+# Create new WezTerm window for the project
+WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$PROJECT_DIR" -- zsh)
+
+# Split for editor (right side, 60% width)  
+EDITOR_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 60 -- helix .)
+
+# Split bottom of left pane for git
+GIT_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --below --percent 50 -- lazygit)
+
+# Split bottom of right pane for monitoring
+MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+
+# Set window title
+wezterm cli set-tab-title --pane-id "$WINDOW_ID" "Dev: $PROJECT_NAME"
+
+# Optional: Auto-detect and start development servers
+if [[ -f "$PROJECT_DIR/package.json" ]] && command -v npm >/dev/null; then
+    echo "📦 Node.js project detected - consider running 'npm run dev'"
+elif [[ -f "$PROJECT_DIR/Cargo.toml" ]] && command -v cargo >/dev/null; then
+    echo "🦀 Rust project detected - consider running 'cargo watch -x run'"
+elif [[ -f "$PROJECT_DIR/docker-compose.yml" ]] && command -v docker-compose >/dev/null; then
+    echo "🐳 Docker Compose project detected - consider running 'docker-compose up'"
+elif [[ -f "$PROJECT_DIR/Makefile" ]]; then
+    echo "🔨 Makefile detected - consider running 'make dev' or 'make'"
+fi
+
+echo "✅ Development workspace ready!"
+echo "💡 Use Ctrl+a to access leader key shortcuts:"
+echo "   f = File manager (yazi)    g = Git (lazygit)      k = Kubernetes (k9s)"
+echo "   e = Editor (helix)         d = Docker (lazydocker) a = API client (atac)"
+echo "   m = System monitor (btop)  n = Network (bandwhich) u = Disk usage (dust)"
