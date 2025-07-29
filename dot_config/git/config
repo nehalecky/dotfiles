@@ -13,6 +13,7 @@
 
 [gpg "ssh"]
     allowedSignersFile = /Users/nehalecky/.ssh/allowed_signers
+    program = "/usr/bin/ssh-keygen"
 
 [user]
     signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6
