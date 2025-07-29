@@ -3,11 +3,11 @@
 Host github.com
 HostName github.com
 User git
-IdentityAgent "~/.1password/agent.sock"
+IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 PreferredAuthentications publickey
 
 Host *
-IdentityAgent "~/.1password/agent.sock"
+IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 AddKeysToAgent yes
 IgnoreUnknown UseKeychain
 UseKeychain yes
