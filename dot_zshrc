@@ -30,19 +30,19 @@ test -e "${HOME}/.config/iterm2/shell_integration.zsh" && source "${HOME}/.confi
 # Using chezmoi for dotfile management now
 # Old bare repo archived to ~/Repos/dotfiles-config-bare-repo-archive
 
-# 1password op cli 
-source ~/.config/op/plugins.sh
-# op command line completion
-eval "$(op completion zsh)"; compdef _op op
-# Ensure correctly set for 1Password's agent
-export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+# CLI completions
+eval "$(op completion zsh)"; compdef _op op        # 1Password CLI
+eval "$(gh completion -s zsh)"                     # GitHub CLI
+eval "$(chezmoi completion zsh)"                   # chezmoi
+eval "$(uv generate-shell-completion zsh)"         # uv Python manager
 
-# fzf configs
-# installed from macports, via
-# sudo port install fzf
-export FZF_KEY_BINDS_SCRIPT=/opt/local/share/fzf/shell/key-bindings.zsh
-[ -f  $FZF_KEY_BINDS_SCRIPT ] && source $FZF_KEY_BINDS_SCRIPT
-#[ -f ~/.config/fzf/fzf.zsh ] && source ~/.config/fzf/fzf.zsh
+# npm completion (if available)
+if command -v npm >/dev/null 2>&1; then
+  eval "$(npm completion)"
+fi
+
+# fzf - fuzzy finder integration and completion
+source <(fzf --zsh)  # Homebrew fzf integration
 
 
 # Google Cloud SDK setup
