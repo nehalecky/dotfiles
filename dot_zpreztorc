@@ -43,9 +43,8 @@ zstyle ':prezto:load' pmodule \
   'osx' \
   'macports' \
   'syntax-highlighting' \
-  'history-substring-search' \
-  'history-substring-search' \
-  'prompt'
+  'history-substring-search'
+  # 'prompt' - EXCLUDED: Using Starship for ultra-modern prompt
 
 #
 # Autosuggestions
@@ -137,7 +136,7 @@ zstyle ':prezto:module:editor' key-bindings 'emacs'
 # Setting it to 'random' loads a random theme.
 # Auto set to 'off' on dumb terminals.
 #zstyle ':prezto:module:prompt' theme 'paradox'
-zstyle :prezto:module:prompt theme powerlevel10k
+# zstyle :prezto:module:prompt theme powerlevel10k  # DISABLED: Using Starship
 
 # Set the working directory prompt display length.
 # By default, it is set to 'short'. Set it to 'long' (without '~' expansion)

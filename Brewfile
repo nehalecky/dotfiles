@@ -47,6 +47,28 @@ brew "tealdeer"
 brew "uv"
 # Internet file retriever
 brew "wget"
+
+# === Modern TUI Development Tools ===
+# Blazing fast terminal file manager with image previews
+brew "yazi"
+# Post-modern modal editor with built-in LSP
+brew "helix"
+# Kubernetes cluster management TUI
+brew "k9s"
+# Docker/compose management TUI
+brew "lazydocker"
+# Syntax-highlighting git diff viewer
+brew "delta"
+# Modern disk usage analyzer
+brew "dust"
+# Modern process viewer
+brew "procs"
+# Network utilization monitor by process
+brew "bandwhich"
+# Terminal API client (Postman-like)
+brew "atac"
+# Modern session manager alternative to tmux
+brew "zellij"
 # GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
 # UNIX shell (command interpreter)
@@ -72,8 +94,8 @@ cask "font-meslo-for-powerlevel10k"
 # cask "garmin-express" # Requires manual installation due to sudo requirement
 # Desktop client for GitHub repositories
 cask "github"
-# Tools to protect your emails and files - using SSH signing instead of GPG
-# cask "gpg-suite" # Not needed - using SSH commit signing with 1Password
+# Tools to protect your emails and files
+# cask "gpg-suite" # Requires manual installation due to sudo requirement
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Knowledge base that works on top of a local folder of plain text Markdown files
