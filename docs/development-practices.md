@@ -134,15 +134,27 @@ project/
 
 ## Development Environment
 
-### Required Tools
-- **Terminal**: Modern shell with good history and completion
-- **Editor**: VS Code, Cursor, or Emacs with appropriate extensions
-- **CLI Tools**: gh, git, uv, node, Apple Container
-- **Monitoring**: Basic observability tools during development
+### Ultra-Modern Terminal Stack
+- **Terminal**: WezTerm with GPU acceleration and advanced multiplexing
+- **Prompt**: Starship for blazing fast cross-shell prompt (50ms faster than P10k)
+- **Shell**: Zsh + Prezto for enhanced completions and syntax highlighting
+- **TUI Tools**: yazi (files), helix (editor), lazygit (git), k9s (k8s), lazydocker (docker), atac (API)
+
+### Development Workflow
+- **Leader Key System**: `Ctrl+a` provides one-key access to all development tools
+- **Automated Workspaces**: `dev-workspace` command creates project-specific 4-pane layouts
+- **Integrated Monitoring**: Real-time system/network monitoring without leaving terminal
+- **Context Switching**: Minimal - file management, editing, git, docker, k8s all in terminal
+
+### Legacy Support
+- **Editors**: VS Code, Cursor, or Emacs remain available for specific use cases
+- **CLI Tools**: gh, git, uv, node, Apple Container - all integrated with terminal workflow
+- **Monitoring**: Terminal-first with btop, procs, bandwhich; external tools when needed
 
 ### Environment Setup
-- **Dotfiles**: Standardized development environment
-- **Secrets**: 1Password integration for development credentials
+- **Dotfiles**: Aggressive modernization with chezmoi-managed terminal-first environment
+- **Secrets**: 1Password integration for SSH authentication and commit signing
+- **Performance**: Sub-200ms shell startup, 120fps rendering, optimized for development speed
 - **Dependencies**: Automated installation via package managers
 - **Containers**: Apple Container for consistent development environments
 

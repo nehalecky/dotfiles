@@ -11,7 +11,6 @@ This document tracks the evolution of this dotfiles repository in reverse chrono
   - **WezTerm Integration**: Configured leader key shortcuts for instant tool access
   - **Workspace Automation**: Created `dev-workspace` script for automated project setup
   - **Prezto Optimization**: Removed prompt module, kept complementary features (syntax highlighting, completions)
-  - **SSH Agent Fix**: Resolved 1Password SSH signing to work through agent properly
 - **Architecture Benefits**:
   - **Performance**: Sub-200ms shell startup, ~50% faster prompt rendering
   - **Productivity**: One-key access to file manager, editor, git, docker, kubernetes tools
@@ -24,6 +23,28 @@ This document tracks the evolution of this dotfiles repository in reverse chrono
   - `Ctrl+a p` = Process monitor, `Ctrl+a n` = Network monitor
   - `Ctrl+a u` = Disk usage, `Ctrl+a s` = Session manager
 - **Philosophy**: Aggressive modernization while maintaining 100% compatibility
+
+## 2025-07-29: SSH Commit Signing Resolution
+- **Goal**: Fix persistent SSH commit signing issues with 1Password agent
+- **Issue**: Initial configuration attempts failed with "communication with agent failed" errors
+- **Root Cause**: Confusion between different SSH signing approaches and 1Password integration
+- **Solution Journey**:
+  1. Initially tried using `op-ssh-sign` directly - failed due to incorrect key format
+  2. Removed signing program config to use SSH agent - commits succeeded but weren't signed
+  3. Switched to `ssh-keygen` as signing program - worked but not 1Password's recommended approach
+  4. Finally aligned with 1Password documentation using `op-ssh-sign` correctly
+- **Final Configuration**:
+  ```
+  [gpg "ssh"]
+      program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+      allowedSignersFile = /Users/nehalecky/.ssh/allowed_signers
+  ```
+- **Key Learnings**:
+  - 1Password's `op-ssh-sign` is the official recommended approach
+  - SSH config `IdentityAgent` path was already correct
+  - Both authentication and signing now work through 1Password agent
+  - Always check official documentation for integration guidance
+- **Result**: All commits now properly signed with "Github Signing Key (Nico Personal)"
 
 ## 2025-07-28: SSH Commit Signing Implementation
 - **Goal**: Enable verified commits using existing 1Password SSH infrastructure
