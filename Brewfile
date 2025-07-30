@@ -15,8 +15,6 @@ brew "emacs", restart_service: :changed
 brew "eza"
 # Open-source framework for augmenting humans using AI
 brew "fabric-ai"
-# Lightweight scripting language for querying databases
-brew "flux", link: false
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GitHub command-line tool
@@ -33,8 +31,6 @@ brew "lazygit"
 brew "llm"
 # Platform built on V8 to build network applications
 brew "node"
-# Modern Python package and dependency manager supporting the latest PEP standards
-brew "pdm"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Command-line interface for https://speedtest.net bandwidth tests
@@ -88,28 +84,15 @@ cask "cursor"
 # Web browser
 cask "firefox"
 cask "font-awesome-terminal-fonts"
-# Nerd Font specifically patched for Powerlevel10k
-cask "font-meslo-for-powerlevel10k"
 # Update maps and software, sync with Garmin Connect and register your device
-# cask "garmin-express" # Requires manual installation due to sudo requirement
 # Desktop client for GitHub repositories
 cask "github"
-# Tools to protect your emails and files
-# cask "gpg-suite" # Requires manual installation due to sudo requirement
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# Android file transfer
-cask "openmtp"
 # Play the Pokémon Trading Card Game
 cask "pokemon-tcg-live"
-# Play the Pokemon TCG online
-# cask "pokemon-trading-card-game-online" # No longer available in Homebrew
 # VPN client focusing on security
 cask "protonvpn"
-# Allows users with an iSight (or compatible) camera to read QR codes
-cask "qr-journal"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Instant messaging application focusing on security
@@ -124,8 +107,6 @@ cask "spotify"
 cask "steam"
 # Messaging app with a focus on speed and security
 cask "telegram"
-# LaTeX and TeX editor and previewer
-cask "texshop"
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
