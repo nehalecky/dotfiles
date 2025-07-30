@@ -292,7 +292,7 @@ config.keys = {
     key = 'e',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/helix', '.' },
+      args = { '/opt/homebrew/bin/hx', '.' },
     },
   },
   
