@@ -21,9 +21,11 @@ This document outlines the development standards, tools, and practices used acro
 ## Technology Stack
 
 ### Core Development Tools
-- **Language-specific**: Python (uv), JavaScript/Node.js, Swift
-- **Version Control**: Git with conventional commits
-- **CI/CD**: GitHub Actions
+- **Languages**: Python (uv), JavaScript/Node.js, Swift
+- **Version Control**: Git + GitHub CLI with SSH signing
+- **Terminal**: WezTerm with leader key multiplexing and TUI tool integration
+- **Authentication**: 1Password SSH agent with biometric unlock
+- **CI/CD**: GitHub Actions with MCP integration for Claude Code
 - **Package Management**: Homebrew (system), uv (Python), npm (Node.js)
 
 ### Containerization
@@ -72,10 +74,14 @@ This document outlines the development standards, tools, and practices used acro
 - **Cryptography**: Use vetted libraries, never roll your own
 
 ### Secrets Management
-- **Development**: 1Password CLI integration
+- **Primary**: 1Password CLI with SSH agent integration
+  - Development secrets pulled directly from 1Password vaults
+  - SSH authentication via 1Password (Touch ID/Apple Watch)
+  - Git commit signing through 1Password SSH agent
+- **Fallback**: Age-encrypted files for restricted environments
 - **Production**: Environment variables and managed secret services
-- **Git**: Never commit secrets, use pre-commit hooks to prevent
-- **Rotation**: Regular secret rotation procedures
+- **Git**: Never commit secrets, automated detection prevents leaks
+- **Authentication**: GitHub CLI manages GitHub operations securely
 
 ### Dependencies
 - **Updates**: Regular dependency updates
@@ -84,6 +90,17 @@ This document outlines the development standards, tools, and practices used acro
 - **Minimal**: Only include necessary dependencies
 
 ## Git Workflow
+
+### Authentication & Security
+- **GitHub Operations**: GitHub CLI (`gh`) handles all authentication
+  - No keychain prompts - uses secure token storage
+  - Command: `gh auth setup-git` configures git to use GitHub CLI
+- **SSH Signing**: 1Password SSH agent for commit signing
+  - Touch ID/Apple Watch authentication
+  - No GPG complexity or key management
+- **MCP Integration**: GitHub MCP server for Claude Code GitHub operations
+  - Direct repository access within AI conversations
+  - Issue/PR management without context switching
 
 ### Commit Standards
 - **Format**: [Conventional Commits](https://conventionalcommits.org/)
@@ -94,6 +111,7 @@ This document outlines the development standards, tools, and practices used acro
   - `test:` - Test additions or modifications
 - **Messages**: Descriptive, explain "why" not just "what"
 - **Atomic**: One logical change per commit
+- **Signing**: All commits automatically signed via 1Password SSH agent
 
 ### Branch Strategy
 - **Main**: Always deployable
@@ -152,11 +170,20 @@ project/
 - **Monitoring**: Terminal-first with btop, procs, bandwhich; external tools when needed
 
 ### Environment Setup
-- **Dotfiles**: Aggressive modernization with chezmoi-managed terminal-first environment
-- **Secrets**: 1Password integration for SSH authentication and commit signing
-- **Performance**: Sub-200ms shell startup, 120fps rendering, optimized for development speed
-- **Dependencies**: Automated installation via package managers
-- **Containers**: Apple Container for consistent development environments
+- **Dotfiles**: Ultra-modern terminal-first environment managed by chezmoi
+  - Hidden system files (`.Brewfile`, `.docs`) for clean home directory
+  - Symlinked configurations maintain single source of truth
+  - Automated keyboard shortcuts reminder for learning curve
+- **Authentication**: Complete 1Password integration
+  - SSH agent with Touch ID/Apple Watch unlock
+  - GitHub CLI handles all git operations (no keychain prompts)
+  - Commit signing via SSH (no GPG complexity)
+- **Performance**: Aggressive optimization for development speed
+  - Sub-200ms shell startup with optimized Starship prompt
+  - 120fps terminal rendering with WezTerm GPU acceleration
+  - Leader key (`Ctrl+a`) system for instant tool access
+- **Dependencies**: Automated via Homebrew with 67+ modern tools
+- **Containers**: Apple Container for native macOS development environments
 
 ## Performance Considerations
 
