@@ -1,6 +1,8 @@
-# Global Development Practices
+# Development Practices & Modern Workflows
 
-This document outlines the development standards, tools, and practices used across all my projects and repositories.
+*Standards, tools, and practices for ultra-modern terminal-first development*
+
+> **See Also**: [Modern Terminal Tools Guide](modern-terminal-tools.md) for detailed tool usage instructions
 
 ## Code Standards
 
@@ -150,40 +152,48 @@ project/
 - **Setup Instructions**: Clear development environment setup
 - **Deployment Guide**: How to deploy and configure
 
-## Development Environment
+## Modern Development Workflows
 
-### Ultra-Modern Terminal Stack
-- **Terminal**: WezTerm with GPU acceleration and advanced multiplexing
-- **Prompt**: Starship for blazing fast cross-shell prompt (50ms faster than P10k)
-- **Shell**: Zsh + Prezto for enhanced completions and syntax highlighting
-- **TUI Tools**: yazi (files), helix (editor), lazygit (git), k9s (k8s), lazydocker (docker), atac (API)
+### Terminal-First Philosophy
+- **Single Interface**: All development tasks accessible through unified terminal environment
+- **Leader Key System**: `Ctrl+a` + key provides instant access to any tool
+- **Zero Context Switching**: File management, editing, git, containers, monitoring all integrated
+- **Performance Optimized**: Sub-200ms startup, 120fps rendering, instant tool switching
 
-### Development Workflow
-- **Leader Key System**: `Ctrl+a` provides one-key access to all development tools
-- **Automated Workspaces**: `dev-workspace` command creates project-specific 4-pane layouts
-- **Integrated Monitoring**: Real-time system/network monitoring without leaving terminal
-- **Context Switching**: Minimal - file management, editing, git, docker, k8s all in terminal
+### Daily Development Patterns
 
-### Legacy Support
-- **Editors**: VS Code, Cursor, or Emacs remain available for specific use cases
-- **CLI Tools**: gh, git, uv, node, Apple Container - all integrated with terminal workflow
-- **Monitoring**: Terminal-first with btop, procs, bandwhich; external tools when needed
+**Morning Startup Routine:**
+```bash
+Ctrl+a w                    # Launch 4-pane workspace
+# Main pane: cd project && npm run dev  
+# Git pane: lazygit for commits
+# Monitor pane: btop for system resources
+# Extra pane: tests, logs, or scratch work
+```
 
-### Environment Setup
-- **Dotfiles**: Ultra-modern terminal-first environment managed by chezmoi
-  - Hidden system files (`.Brewfile`, `.docs`) for clean home directory
-  - Symlinked configurations maintain single source of truth
-  - Automated keyboard shortcuts reminder for learning curve
-- **Authentication**: Complete 1Password integration
-  - SSH agent with Touch ID/Apple Watch unlock
-  - GitHub CLI handles all git operations (no keychain prompts)
-  - Commit signing via SSH (no GPG complexity)
-- **Performance**: Aggressive optimization for development speed
-  - Sub-200ms shell startup with optimized Starship prompt
-  - 120fps terminal rendering with WezTerm GPU acceleration
-  - Leader key (`Ctrl+a`) system for instant tool access
-- **Dependencies**: Automated via Homebrew with 67+ modern tools
-- **Containers**: Apple Container for native macOS development environments
+**Code → Commit → Deploy Cycle:**
+```bash
+Ctrl+a f                    # Navigate files (yazi)
+Ctrl+a e                    # Edit code (helix)
+Ctrl+a g                    # Stage & commit (lazygit)
+Ctrl+a d                    # Check containers (lazydocker)
+```
+
+**Debugging Workflow:**
+```bash
+Ctrl+a p                    # Check system resources (procs)
+Ctrl+a d                    # Container logs (lazydocker)
+Ctrl+a a                    # Test APIs (atac)
+Ctrl+a g                    # Review recent changes (lazygit)
+```
+
+### Tool Integration Patterns
+- **File → Edit**: `Ctrl+a f` → find file → `Ctrl+a e` → edit
+- **Edit → Git**: Write code → `Ctrl+a g` → stage → commit → push
+- **Monitor → Debug**: `Ctrl+a p/d` → identify issue → `Ctrl+a e` → fix
+- **API → Code**: `Ctrl+a a` → test endpoint → `Ctrl+a e` → implement
+
+> **Detailed Usage**: See [Modern Terminal Tools Guide](modern-terminal-tools.md) for comprehensive tool instructions
 
 ## Performance Considerations
 
