@@ -90,3 +90,13 @@ eval "$(gh completion -s zsh)"
 
 # Doom Emacs alias
 alias doom="~/.config/emacs/bin/doom"
+
+# Show WezTerm shortcuts on terminal startup (for learning curve)
+# Only show in interactive shells and not in sub-shells
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -z "$VSCODE_TERM" ]] && [[ "$SHLVL" -eq 1 ]]; then
+  if command -v wezterm-shortcuts >/dev/null 2>&1; then
+    echo ""
+    wezterm-shortcuts
+    echo ""
+  fi
+fi
