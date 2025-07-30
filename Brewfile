@@ -67,6 +67,8 @@ brew "atac"
 brew "zellij"
 # GPU-accelerated cross-platform terminal emulator and multiplexer
 cask "wezterm"
+# MesloLGS Nerd Font for terminal (includes powerline glyphs)
+cask "font-meslo-lg-nerd-font"
 # UNIX shell (command interpreter)
 brew "zsh"
 # Password manager that keeps all passwords secure behind one password
