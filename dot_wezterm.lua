@@ -5,7 +5,7 @@ local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
 -- Font configuration
-config.font = wezterm.font('MesloLGS NF', {weight='Regular', stretch='Normal', style='Normal'})
+config.font = wezterm.font('MesloLGS Nerd Font', {weight='Regular', stretch='Normal', style='Normal'})
 config.font_size = 12.0
 config.line_height = 1.0
 
