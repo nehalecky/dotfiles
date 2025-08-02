@@ -214,11 +214,11 @@ config.keys = {
     key = 'w',
     mods = 'LEADER',
     action = wezterm.action_callback(function(window, pane)
-      -- Split right for btop (50/50)
+      -- Split right for procs (50/50)
       window:perform_action(
         wezterm.action.SplitPane {
           direction = 'Right',
-          command = { args = { '/opt/homebrew/bin/btop' } },
+          command = { args = { '/opt/homebrew/bin/procs' } },
         },
         pane
       )
@@ -251,23 +251,6 @@ config.keys = {
     end),
   },
   
-  -- Quick launch system monitoring
-  {
-    key = 'm',
-    mods = 'LEADER',
-    action = wezterm.action.SplitPane {
-      direction = 'Right',
-      size = { Percent = 50 },
-      command = { args = { '/opt/homebrew/bin/btop' } },
-    },
-  },
-  {
-    key = 'M',
-    mods = 'LEADER|SHIFT',
-    action = wezterm.action.SpawnCommandInNewWindow {
-      args = { '/opt/homebrew/bin/btop' },
-    },
-  },
   -- Option+Delete to delete word forward
   {
     key = 'Delete',
