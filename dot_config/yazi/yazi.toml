@@ -1,0 +1,29 @@
+[manager]
+show_hidden = false
+
+[preview]
+tab_size = 2
+max_width = 600
+max_height = 900
+
+# Custom preview commands
+[preview.previewers]
+# Use glow for Markdown files
+md = { exec = "glow", args = ["-s", "dark", "$1"] }
+markdown = { exec = "glow", args = ["-s", "dark", "$1"] }
+
+# Use bat for code files with syntax highlighting
+py = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+js = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+ts = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+rs = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+go = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+sh = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+yaml = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+yml = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+json = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+xml = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+toml = { exec = "bat", args = ["--color=always", "--style=plain", "$1"] }
+
+# Use specific tools for other file types
+pdf = { exec = "pdftotext", args = ["-l", "10", "-nopgbrk", "-q", "$1", "-"] }

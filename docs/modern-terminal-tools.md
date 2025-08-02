@@ -48,15 +48,17 @@ r         # Rename file
 # Views & Modes
 Tab       # Toggle preview
 t         # Toggle selection mode
-z         # Toggle hidden files
+.         # Toggle hidden files (period key)
 s         # Sort options menu
 ```
 
 ### Power Features
+- **Smart Previews**: Markdown files rendered with glow, code with syntax highlighting
 - **Image Previews**: Thumbnails for images, PDFs, videos
 - **Quick Selection**: `Space` to select multiple files
 - **Bulk Operations**: Select files then `d/y/p` for bulk cut/copy/paste
 - **Smart Search**: `/` then type filename
+- **Hidden Files**: `.` (period) to toggle visibility (not `z` which opens fzf)
 
 ### Common Workflows
 ```bash
@@ -270,8 +272,8 @@ Ctrl+a d
 ```
 ┌─────────────┬─────────────┐
 │             │             │
-│   MAIN      │    BTOP     │
-│ (terminal)  │ (monitor)   │  
+│   MAIN      │   PROCS     │
+│ (terminal)  │ (processes) │  
 │             │             │
 ├─────────────┼─────────────┤
 │             │             │
@@ -296,14 +298,14 @@ Ctrl+a z          # Toggle pane zoom
 Ctrl+a w
 → Main pane: cd to project, start dev server
 → Git pane: already running lazygit for commits
-→ Monitor pane: btop showing system resources
+→ Process pane: procs showing running processes
 → Extra pane: run tests, logs, or additional terminal
 ```
 
 ### Pro Tips
 - **Main pane**: Your primary work area (coding, running commands)
 - **Git pane**: Quick commits without leaving your workflow
-- **Monitor pane**: Keep an eye on CPU/memory during development
+- **Process pane**: Lightweight process monitoring (sort with c/m/p)
 - **Extra pane**: Perfect for running tests, tailing logs, or quick commands
 
 ---
@@ -456,7 +458,7 @@ Ctrl+a u → see directory sizes in current location
 1. Ctrl+a w                    # Launch 4-pane workspace
 2. Main pane: cd project && npm run dev
 3. Git pane: already has lazygit open
-4. Monitor pane: watching system resources
+4. Process pane: watching running processes
 5. Extra pane: npm test --watch
 ```
 
