@@ -65,21 +65,21 @@
 
 ### Common Tasks
 
-**Quick Edit** (edit in home, sync to source):
+**Primary Workflow** (HOME → Source - always use this):
 ```bash
-vim ~/.zshrc                    # Edit actual file
-chezmoi add ~/.zshrc           # Update source
-chezmoi git commit -- -m "msg"  # Commit
-chezmoi git push               # Push
+vim ~/.zshrc                    # Edit actual file in HOME
+chezmoi add ~/.zshrc           # Sync changes to source
+chezmoi git -- commit -m "msg" # Commit
+chezmoi git -- push           # Push
 ```
 
-**Structured Edit** (edit in source, test, apply):
+**Advanced Workflow** (Source → HOME - only for complex batch changes):
 ```bash
-chezmoi edit ~/.zshrc          # Edit source file
-chezmoi diff                   # Preview changes
-chezmoi apply                  # Apply to home
-chezmoi git commit -- -m "msg"  # Commit
-chezmoi git push               # Push
+chezmoi edit ~/.zshrc          # Edit source file directly
+chezmoi diff                   # Preview changes  
+chezmoi apply                  # Apply to HOME (verify success!)
+chezmoi git -- commit -m "msg" # Commit
+chezmoi git -- push           # Push
 ```
 
 **Sync from Remote**:
@@ -149,7 +149,9 @@ dev-workspace [project]       # Automated project setup
 - GitHub integration workflow enhancement
 
 ## Workflow Principles
-- Always leverage existing workflows, including chezmoi apply, so we don't unnessarily complicate things
+- **HOME → Source workflow**: Always edit files in HOME directory, then sync to source with `chezmoi add`
+- **Verify apply success**: When using source → HOME workflow, always verify `chezmoi apply` succeeds
+- Always leverage existing workflows, including chezmoi apply, so we don't unnecessarily complicate things
 - Use MCP integrations to reduce context switching between tools
 
 ---
