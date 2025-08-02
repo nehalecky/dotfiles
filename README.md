@@ -1,6 +1,6 @@
 # 🎮 myTUI
 
-*Your personal terminal user interface - because clicking is so last decade*
+*Your personal terminal user interface*
 
 **🚀 One Terminal**: All your dev tools in one place  
 **⚡ Lightning Fast**: Sub-200ms startup, 120fps rendering  
@@ -11,7 +11,7 @@
 
 ## 🤔 Why myTUI?
 
-**The Problem**: Your development workflow is a hot mess of GUI apps:
+**The Problem**: Development workflows are fragmented across multiple applications:
 - Finder for files 
 - GitHub Desktop for git
 - Docker Desktop eating your RAM
