@@ -1,218 +1,186 @@
-# ⚡ Ultra-Modern Terminal Development Environment
+# 🎮 myTUI
 
-*A terminal-first development setup that eliminates context switching and maximizes productivity*
+*Your personal terminal user interface - because clicking is so last decade*
 
-**🚀 Performance**: Sub-200ms startup • 120fps rendering • Instant tool access  
-**🔐 Security**: 1Password integration • SSH signing • Zero secrets on disk  
-**🎯 Productivity**: Leader key system • Automated workspaces • 10+ integrated TUI tools
+**🚀 One Terminal**: All your dev tools in one place  
+**⚡ Lightning Fast**: Sub-200ms startup, 120fps rendering  
+**🔐 Fort Knox Security**: 1Password + SSH signing, zero secrets on disk  
+**🎯 Zero Context Switching**: Leader key (`Ctrl+a`) → instant tool access
 
-> Transform your development workflow from fragmented GUI apps to a unified terminal powerhouse
+> Transform from app-hopping chaos to terminal zen 🧘‍♂️
 
-## 🎯 Why This Setup?
+## 🤔 Why myTUI?
 
-**The Problem**: Traditional development environments are fragmented across multiple apps, slow to start, and require constant context switching between terminal, file manager, git GUI, Docker Desktop, etc.
+**The Problem**: Your development workflow is a hot mess of GUI apps:
+- Finder for files 
+- GitHub Desktop for git
+- Docker Desktop eating your RAM
+- Postman for APIs
+- Activity Monitor for debugging
+- *Switch, switch, switch... context lost* 😵‍💫
 
-**The Solution**: A unified terminal-first environment where everything is accessible via a single leader key (`Ctrl+a`):
+**The myTUI Solution**: One terminal, leader key shortcuts, pure productivity:
 
 ```bash
-Ctrl+a f  →  📁 File manager (yazi) with image previews
-Ctrl+a e  →  ✏️  Modern editor (helix) with built-in LSP
-Ctrl+a g  →  🔄 Git interface (lazygit) - no more GUI apps
-Ctrl+a d  →  🐳 Docker management (lazydocker) - bye Docker Desktop
-Ctrl+a k  →  ☸️  Kubernetes (k9s) - cluster management in terminal
-Ctrl+a a  →  🌐 API testing (atac) - Postman in your terminal
-Ctrl+a w  →  🚀 Launch 4-pane development workspace instantly
+Ctrl+a f  →  📁 yazi (file manager with image previews)
+Ctrl+a e  →  ✏️  helix (editor with built-in LSP)  
+Ctrl+a g  →  🔄 lazygit (git without the GUI)
+Ctrl+a d  →  🐳 lazydocker (bye bye Docker Desktop)
+Ctrl+a k  →  ☸️  k9s (Kubernetes in your terminal)
+Ctrl+a a  →  🌐 atac (Postman? More like... not-man)
+Ctrl+a w  →  🚀 4-pane dev workspace (instant productivity)
 ```
 
 **The Result**: 
-- **10x faster** workflow switching between tools
-- **Zero context switching** - everything in one interface
-- **Blazing performance** - GPU-accelerated terminal, optimized prompt
-- **Bulletproof security** - 1Password handles all authentication
+- **10x faster** workflow switching
+- **Zero context loss** from app switching  
+- **Your RAM is happy** (no more Electron apps)
+- **Terminal street cred** 😎
 
 ## 🚀 Quick Setup
 
-**⏱️ 5-minute setup to transform your terminal**
+**⏱️ 5 minutes to terminal enlightenment**
 
 ```bash
-# 1. Install Homebrew (if needed)
+# 1. Install Homebrew (if you're still living in the stone age)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 2. Install and initialize dotfiles
+# 2. Clone the magic
 brew install chezmoi
 chezmoi init --apply nehalecky/dotfiles
 
-# 3. Install all tools and apps (67+ packages)
+# 3. Install ALL the tools (130+ packages of pure joy)
 brew bundle
 
-# 4. Restart your terminal and press Ctrl+a f to explore!
+# 4. Restart terminal, press Ctrl+a f, and prepare to be amazed 🤯
 ```
 
-**🎉 That's it!** Your terminal now has:
-- **Instant access** to file manager, editor, git, docker, kubernetes
-- **Leader key shortcuts** displayed on startup to help you learn
-- **1Password integration** for secure authentication
-- **Modern TUI tools** replacing slow GUI applications
+**🎉 That's it!** Your terminal now has shortcuts displayed on startup to help you learn.
 
-## 🛠️ What's Included
+## 🛠️ What You Get
 
-### 🔥 Ultra-Modern Terminal Stack
+### 🔥 Modern Terminal Stack
+- **WezTerm** - GPU-accelerated, 120fps terminal 
+- **Starship** - Blazing fast prompt (50ms faster than alternatives)
+- **Zsh + Prezto** - Advanced shell with intelligent completions
 
-**Terminal & Shell**
-- [**WezTerm**](https://wezfurlong.org/wezterm/) - GPU-accelerated terminal with 120fps rendering
-- [**Starship**](https://starship.rs/) - Blazing fast prompt (50ms faster than Powerlevel10k)
-- [**Zsh + Prezto**](https://github.com/sorin-ionescu/prezto) - Advanced shell with intelligent completions
+### 🎮 Leader Key TUI Tools (`Ctrl+a` + key)
+- **yazi** `f` - File manager with image previews and vim keys
+- **helix** `e` - Post-modern editor with built-in LSP (no config needed!)
+- **lazygit** `g` - Git interface that makes sense
+- **lazydocker** `d` - Container management without the desktop bloat
+- **k9s** `k` - Kubernetes cluster management
+- **atac** `a` - API testing (terminal Postman)
+- **procs** `p` - Modern process viewer 
+- **btop** `m` - Beautiful system monitor
+- **bandwhich** `n` - Network monitor by process
+- **dust** `u` - Disk usage that doesn't suck
+- **zellij** `s` - Session manager for pros
 
-**Leader Key TUI Tools** (`Ctrl+a` + key)
-- [**yazi**](https://github.com/sxyazi/yazi) `f` - File manager with image previews and modern navigation
-- [**helix**](https://github.com/helix-editor/helix) `e` - Post-modern modal editor with built-in LSP
-- [**lazygit**](https://github.com/jesseduffield/lazygit) `g` - Intuitive git interface (replace Git GUI apps)
-- [**lazydocker**](https://github.com/jesseduffield/lazydocker) `d` - Container management (replace Docker Desktop)
-- [**k9s**](https://github.com/derailed/k9s) `k` - Kubernetes cluster management and monitoring
-- [**atac**](https://github.com/Julien-cpsn/ATAC) `a` - API client (replace Postman)
-- [**procs**](https://github.com/dalance/procs) `p` - Modern process viewer (replace Activity Monitor)
-- [**bandwhich**](https://github.com/imsnif/bandwhich) `n` - Network monitor by process
-- [**dust**](https://github.com/bootandy/dust) `u` - Disk usage analyzer (replace Disk Utility)
-- [**zellij**](https://github.com/zellij-org/zellij) `s` - Modern session manager
+### 🔐 Security & Authentication  
+- **1Password SSH Agent** - Touch ID/Apple Watch authentication
+- **SSH Commit Signing** - All commits cryptographically signed
+- **GitHub CLI Integration** - No more keychain prompts
+- **Zero Secrets on Disk** - Everything handled securely
 
-### 🔐 Security & Authentication
+### 📦 130+ Modern Development Tools
+**Enhanced Unix**: `bat`, `eza`, `ripgrep`, `fzf`, `delta`, `glow`  
+**Development**: `uv` (Python), `node`, `gh`, `git`, `chezmoi`  
+**TUI Everything**: File management, editing, git, docker, kubernetes, APIs  
+**Apps**: Arc, Claude, Cursor, 1Password, Raycast, and more
 
-- [**1Password**](https://1password.com/) - SSH agent with Touch ID/Apple Watch authentication
-- [**GitHub CLI**](https://cli.github.com/) - GitHub operations without keychain prompts
-- **SSH Commit Signing** - All commits signed via 1Password (no GPG complexity)
-- **Zero Secrets on Disk** - All credentials managed securely
-
-### 📦 67+ Modern Development Tools
-
-**Enhanced Unix Utilities**
-- [**bat**](https://github.com/sharkdp/bat) - Better `cat` with syntax highlighting
-- [**eza**](https://github.com/eza-community/eza) - Modern `ls` replacement
-- [**ripgrep**](https://github.com/BurntSushi/ripgrep) - Ultra-fast search (replace `grep`)
-- [**fzf**](https://github.com/junegunn/fzf) - Fuzzy finder for everything
-- [**delta**](https://github.com/dandavison/delta) - Beautiful git diffs
-
-**Development Stack**
-- [**uv**](https://github.com/astral-sh/uv) - Blazing fast Python package manager
-- **Node.js & npm** - JavaScript development
-- [**chezmoi**](https://chezmoi.io/) - Dotfiles management across machines
-
-## ⚡ Performance & Philosophy
-
-### 🚀 Aggressive Performance Optimization
-- **Sub-200ms shell startup** - Optimized Starship prompt and lazy loading
-- **120fps terminal rendering** - WezTerm GPU acceleration for smooth experience  
-- **Instant tool switching** - Leader key system eliminates menu navigation
-- **Zero latency authentication** - 1Password biometric unlock (Touch ID/Apple Watch)
-
-### 🧠 Terminal-First Philosophy
-- **One Interface Rule All** - File management, editing, git, docker, kubernetes all in terminal
-- **Keyboard-Driven Workflow** - Mouse usage minimized, everything accessible via shortcuts
-- **Context Preservation** - No app switching means no mental context loss
-- **Tool Integration** - Everything works together instead of isolated applications
-
-### 🔒 Security Without Friction
-- **1Password Integration** - All authentication through secure biometric unlock
-- **SSH Signing** - Git commits signed via SSH (no GPG key management complexity)  
-- **GitHub CLI Authentication** - No keychain prompts, secure token management
-- **Zero Secrets on Disk** - All credentials managed by 1Password or encrypted storage
-
-## 🔧 Daily Workflows  
+## ⚡ Daily Workflow
 
 ### 🎮 Development Workspace Setup
 ```bash
-# Launch 4-pane development workspace
-Ctrl+a w
-# Creates: main terminal, btop monitor, lazygit, and extra pane
-
-# Or create project-specific workspace
+Ctrl+a w    # Launch 4-pane workspace (main + btop + git + extra)
+# Or for project-specific setup:
 dev-workspace my-project
-# Auto-sets up project directory structure and tools
-```
-
-### ⚡ Instant Tool Access (Leader Key System)
-```bash
-Ctrl+a f    # 📁 Browse files with yazi (image previews, quick nav)
-Ctrl+a e    # ✏️  Edit with helix (built-in LSP, no config needed)
-Ctrl+a g    # 🔄 Git operations with lazygit (replace GUI apps)
-Ctrl+a d    # 🐳 Docker management with lazydocker
-Ctrl+a k    # ☸️  Kubernetes with k9s (real-time cluster monitoring)
-Ctrl+a a    # 🌐 API testing with atac (terminal Postman)
-Ctrl+a p    # 📊 Process monitoring with procs
-Ctrl+a n    # 🌐 Network monitoring with bandwhich
 ```
 
 ### 🔄 Configuration Management (chezmoi)
-
-**Quick Config Edit**
 ```bash
-# Edit live config → sync to source → commit
-vim ~/.zshrc
-chezmoi add ~/.zshrc
+# Quick config edit → sync → commit  
+vim ~/.zshrc && chezmoi add ~/.zshrc && chezmoi git -- commit -m "Update shell"
+
+# Safe config development
+chezmoi edit ~/.zshrc    # Edit source
+chezmoi diff            # Preview changes  
+chezmoi apply           # Apply to home
 chezmoi git -- commit -m "Update shell config"
+
+# Sync across machines
+chezmoi update          # Pull latest + apply
 ```
 
-**Safe Config Development**  
-```bash
-# Edit source → preview → apply → commit
-chezmoi edit ~/.zshrc
-chezmoi diff                    # Preview changes
-chezmoi apply                   # Apply to home
-chezmoi git -- commit -m "Update shell config"
-```
+### 🔐 Authentication Workflow
+- **Git operations**: Automatic via GitHub CLI (no prompts!)
+- **SSH connections**: 1Password agent with biometric unlock
+- **New repos**: `gh repo create` integrates seamlessly
 
-**Sync Across Machines**
-```bash
-chezmoi update                  # Pull latest and apply
-```
-
-### 🔐 Secure Authentication Workflow
-- **Git operations**: Handled automatically by GitHub CLI (no prompts)
-- **SSH connections**: 1Password agent with Touch ID/Apple Watch
-- **New repositories**: `gh repo create` integrates with chezmoi workflow
-
-## 🆘 Quick Troubleshooting
+## 🆘 Getting Help
 
 ```bash
-# Leader key shortcuts not showing?
-wezterm-shortcuts                   # Display shortcuts manually
+# Display shortcuts anytime
+wezterm-shortcuts
 
-# Tools not working?
-brew bundle check                   # Check missing dependencies
-brew bundle install                 # Install missing tools
+# Check what's missing  
+brew bundle check
 
-# Authentication issues?
-gh auth status                      # Check GitHub CLI auth
-op signin                          # Sign in to 1Password
-
-# Chezmoi sync issues?
-chezmoi doctor                      # Diagnose chezmoi problems  
-chezmoi status                      # Check file differences
+# Diagnose issues
+chezmoi doctor
+gh auth status
+op signin
 ```
 
-## 📚 Documentation & Resources
+## 🎯 Philosophy
 
-### 📖 Detailed Guides
-- **[CLAUDE.md](CLAUDE.md)** - AI assistant context and development guidelines
-- **[Development Practices](docs/development-practices.md)** - Coding standards and workflows
-- **[Architecture](docs/architecture.md)** - System design and structure
-- **[Secrets Management](docs/secrets-management.md)** - 1Password integration details
+### Why Terminal-First?
+- **One Interface Rule All** - File management, editing, git, containers, kubernetes all in terminal
+- **Keyboard > Mouse** - Your hands never leave the keyboard
+- **Speed of Thought** - Tools appear instantly via leader key
+- **Context Preservation** - No app switching = no mental context loss
 
-### 🔗 External Resources
-- [**Chezmoi Docs**](https://www.chezmoi.io/) - Dotfiles management
-- [**WezTerm Guide**](https://wezfurlong.org/wezterm/) - Terminal configuration
-- [**1Password CLI**](https://developer.1password.com/docs/cli/) - Authentication setup
-- [**GitHub CLI**](https://cli.github.com/manual/) - Git operations
+### Why myTUI?
+- **Personal** - Your customized terminal interface  
+- **Approachable** - Fun learning curve, not intimidating
+- **Integrated** - Tools work together, not in isolation
+- **Powerful** - Professional capabilities with personality
+
+## 📚 Documentation
+
+- **[~/.docs/](file://$HOME/.docs/)** - Complete guides and references
+- **[Modern Terminal Tools](file://$HOME/.docs/modern-terminal-tools.md)** - Usage guide for all TUI tools
+- **[Development Practices](file://$HOME/.docs/development-practices.md)** - Workflows and patterns
+- **[CLAUDE.md](CLAUDE.md)** - AI assistant context and guidelines
+
+## 🚨 Troubleshooting
+
+**Tools not working?**
+```bash
+brew bundle install    # Install missing tools
+```
+
+**Authentication issues?**
+```bash
+gh auth status         # Check GitHub CLI
+op signin             # 1Password CLI
+```
+
+**Config sync issues?**
+```bash
+chezmoi status        # Check differences
+chezmoi apply         # Apply pending changes
+```
 
 ---
 
-## 🚀 Ready to Transform Your Development Workflow?
+## 🎉 Welcome to myTUI!
 
-```bash
-brew install chezmoi && chezmoi init --apply nehalecky/dotfiles && brew bundle
-```
+*Where productivity meets personality in terminal form* 
 
-*Experience the future of terminal-first development*
+**Ready to ditch the GUI life?** Start with `Ctrl+a f` and explore your new terminal universe! 🚀
 
 ---
-**Stack**: WezTerm • Starship • 1Password • GitHub CLI • 67+ Modern Tools  
-**Philosophy**: Terminal-first • Security-focused • Performance-optimized
+**Stack**: WezTerm • Starship • 1Password • 130+ Modern Tools  
+**Vibe**: Terminal-first • Security-focused • Performance-obsessed • Actually fun
