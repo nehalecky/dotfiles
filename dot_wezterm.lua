@@ -214,11 +214,11 @@ config.keys = {
     key = 'w',
     mods = 'LEADER',
     action = wezterm.action_callback(function(window, pane)
-      -- Split right for procs (50/50)
+      -- Split right for btop (50/50)
       window:perform_action(
         wezterm.action.SplitPane {
           direction = 'Right',
-          command = { args = { '/opt/homebrew/bin/procs' } },
+          command = { args = { '/opt/homebrew/bin/btop' } },
         },
         pane
       )
@@ -321,6 +321,24 @@ config.keys = {
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
       args = { '/opt/homebrew/bin/procs' },
+    },
+  },
+  
+  -- System Monitor (btop)
+  {
+    key = 'm',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/opt/homebrew/bin/btop' },
+    },
+  },
+  
+  -- System Monitor btop (uppercase for new window)
+  {
+    key = 'M',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewWindow {
+      args = { '/opt/homebrew/bin/btop' },
     },
   },
   
