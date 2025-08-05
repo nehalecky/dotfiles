@@ -88,6 +88,9 @@ prompt_switch() {
 # GH completion
 eval "$(gh completion -s zsh)"
 
+# Direnv hook for automatic environment activation
+eval "$(direnv hook zsh)"
+
 # Doom Emacs alias
 alias doom="~/.config/emacs/bin/doom"
 

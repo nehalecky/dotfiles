@@ -121,25 +121,26 @@ dev-workspace [project]       # Automated project setup
 
 ## MCP Integrations
 
-### GitHub MCP Server
-**Purpose:** Direct GitHub integration within Claude Code  
-**Capabilities:**
-- Repository browsing and file access
-- Issue and PR management (create, update, close)
-- Code review assistance and PR descriptions
-- CI/CD status monitoring
-- Release management and notes generation
+### MCP Server Installation Process
+**CRITICAL: Always start with a general search first - MCP integration is straightforward and shouldn't be confusing after proper research.**
 
-**Usage Examples:**
-```bash
-# Direct GitHub operations in Claude
-"Create a GitHub issue for this bug"
-"Show me open PRs in my dotfiles repo"
-"Help write a PR description for these changes"
-"Check the latest release of any GitHub repo"
-```
+**Required Process:**
+1. **General Search First**: Search "[service] MCP server" to understand what's available
+2. **Find Official Documentation**: Look for official installation instructions (e.g., service.com/settings/mcp)
+3. **Use Standard Tooling**: Apply `claude mcp add` with appropriate transport and authentication
+4. **Validate Properly**: Only claim success when `claude mcp list` shows "✓ Connected"
 
-**Configuration:** Added via `claude mcp add github github.com/github/github-mcp-server`
+**Never:**
+- Skip the initial general search
+- Use custom npm packages when official servers exist
+- Claim success without proper validation
+- Overcomplicate what should be simple
+
+### Example MCP Servers
+**GitHub:** `claude mcp add github github.com/github/github-mcp-server`
+**Hugging Face:** `claude mcp add hf-mcp-server -t http "https://huggingface.co/mcp" -H "Authorization:Bearer $(op read 'op://Private/[token]/credential')"`
+
+*Note: These are examples only - the process applies to any MCP server installation.*
 
 ## Current Focus Areas
 - Terminal productivity enhancements
