@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ultra-modern development workspace automation
+# myTUI development workspace automation
 # Usage: dev-workspace [project-name]
 
 set -euo pipefail
@@ -11,6 +11,22 @@ PROJECT_DIR=${PROJECT_DIR:-$PWD}
 echo "🚀 Launching development workspace for: $PROJECT_NAME"
 echo "📁 Working directory: $PROJECT_DIR"
 
+# Detect project type
+PROJECT_TYPE="generic"
+if [[ -f "$PROJECT_DIR/pyproject.toml" ]]; then
+    PROJECT_TYPE="python"
+    echo "🐍 Python project detected (uv managed)"
+elif [[ -f "$PROJECT_DIR/package.json" ]]; then
+    PROJECT_TYPE="node"
+    echo "📦 Node.js project detected"
+elif [[ -f "$PROJECT_DIR/Cargo.toml" ]]; then
+    PROJECT_TYPE="rust"
+    echo "🦀 Rust project detected"
+elif [[ -f "$PROJECT_DIR/go.mod" ]]; then
+    PROJECT_TYPE="go"
+    echo "🐹 Go project detected"
+fi
+
 # Create new WezTerm window for the project
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$PROJECT_DIR" -- zsh)
 
@@ -20,21 +36,67 @@ EDITOR_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 60
 # Split bottom of left pane for git
 GIT_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --below --percent 50 -- lazygit)
 
-# Split bottom of right pane for monitoring
-MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+# Split bottom of right pane based on project type
+case "$PROJECT_TYPE" in
+    python)
+        # For Python projects, show dependency tree
+        if command -v uv >/dev/null; then
+            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- zsh -c "uv tree; exec zsh")
+        else
+            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+        fi
+        ;;
+    node)
+        # For Node projects, could show npm list
+        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+        ;;
+    *)
+        # Default to system monitor
+        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+        ;;
+esac
 
 # Set window title
 wezterm cli set-tab-title --pane-id "$WINDOW_ID" "Dev: $PROJECT_NAME"
 
-# Optional: Auto-detect and start development servers
-if [[ -f "$PROJECT_DIR/package.json" ]] && command -v npm >/dev/null; then
-    echo "📦 Node.js project detected - consider running 'npm run dev'"
-elif [[ -f "$PROJECT_DIR/Cargo.toml" ]] && command -v cargo >/dev/null; then
-    echo "🦀 Rust project detected - consider running 'cargo watch -x run'"
-elif [[ -f "$PROJECT_DIR/docker-compose.yml" ]] && command -v docker-compose >/dev/null; then
-    echo "🐳 Docker Compose project detected - consider running 'docker-compose up'"
-elif [[ -f "$PROJECT_DIR/Makefile" ]]; then
-    echo "🔨 Makefile detected - consider running 'make dev' or 'make'"
+# Project-specific hints based on type
+case "$PROJECT_TYPE" in
+    python)
+        echo "💡 Python hints:"
+        echo "   - Virtual environment will auto-activate with direnv"
+        echo "   - Use 'uv run <command>' to run in virtual environment"
+        echo "   - Use 'uv add <package>' to add dependencies"
+        if [[ -f "$PROJECT_DIR/manage.py" ]]; then
+            echo "   - Django detected: 'uv run python manage.py runserver'"
+        elif [[ -f "$PROJECT_DIR/main.py" ]] && grep -q "FastAPI" "$PROJECT_DIR/main.py" 2>/dev/null; then
+            echo "   - FastAPI detected: 'uv run uvicorn main:app --reload'"
+        fi
+        ;;
+    node)
+        echo "💡 Node.js hints:"
+        echo "   - Run 'npm install' to install dependencies"
+        echo "   - Run 'npm run dev' to start development server"
+        ;;
+    rust)
+        echo "💡 Rust hints:"
+        echo "   - Run 'cargo build' to build project"
+        echo "   - Run 'cargo watch -x run' for auto-rebuild"
+        ;;
+    go)
+        echo "💡 Go hints:"
+        echo "   - Run 'go mod download' to fetch dependencies"
+        echo "   - Run 'go run .' to run the project"
+        ;;
+esac
+
+# Docker compose hint if exists
+if [[ -f "$PROJECT_DIR/docker-compose.yml" ]]; then
+    echo "🐳 Docker Compose detected - consider running 'docker-compose up'"
+fi
+
+# Makefile hint if exists
+if [[ -f "$PROJECT_DIR/Makefile" ]]; then
+    echo "🔨 Makefile detected - consider running 'make' or 'make help'"
 fi
 
 echo "✅ Development workspace ready!"
