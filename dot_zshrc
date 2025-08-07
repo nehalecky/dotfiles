@@ -91,6 +91,24 @@ eval "$(gh completion -s zsh)"
 # Direnv hook for automatic environment activation
 eval "$(direnv hook zsh)"
 
+# Smart lazygit function for chezmoi integration
+lg() {
+    # Special handling for chezmoi-managed directories
+    local current_dir="$PWD"
+    
+    # Check if we're in a directory with chezmoi-managed files
+    if [[ "$current_dir" == "$HOME" ]] || [[ "$current_dir" == "$HOME/.config"* ]] || [[ "$current_dir" == "$HOME/.local"* ]]; then
+        if chezmoi managed --path-style=relative 2>/dev/null | grep -q "^${current_dir#$HOME/}"; then
+            echo "🏠 Detected chezmoi-managed files - opening lazygit in source directory"
+            lazygit -p ~/.local/share/chezmoi
+            return
+        fi
+    fi
+    
+    # Otherwise, use lazygit normally
+    lazygit
+}
+
 # Doom Emacs alias
 alias doom="~/.config/emacs/bin/doom"
 
