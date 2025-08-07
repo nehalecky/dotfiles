@@ -91,6 +91,20 @@ eval "$(gh completion -s zsh)"
 # Direnv hook for automatic environment activation
 eval "$(direnv hook zsh)"
 
+# Chezmoi directory notification
+_chezmoi_chpwd_hook() {
+    # Check if current directory has chezmoi-managed files
+    if [[ "$PWD" == "$HOME" ]] || [[ "$PWD" == "$HOME/.config"* ]] || [[ "$PWD" == "$HOME/.local"* ]]; then
+        if chezmoi managed --path-style=relative 2>/dev/null | grep -q "^${PWD#$HOME/}" 2>/dev/null; then
+            echo "📂 \033[36mChezmoi-managed directory\033[0m (use \033[33mlg\033[0m for git operations on source)"
+        fi
+    fi
+}
+
+# Add to chpwd hooks (runs when directory changes)
+autoload -U add-zsh-hook
+add-zsh-hook chpwd _chezmoi_chpwd_hook
+
 # Smart lazygit function for chezmoi integration
 lg() {
     # Special handling for chezmoi-managed directories

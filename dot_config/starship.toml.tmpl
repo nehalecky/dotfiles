@@ -1,166 +1,178 @@
-# Starship prompt configuration - Migrated from Powerlevel10k
-# https://starship.rs/config/
-# Matches P10k two-line layout with context on line 1, cursor on line 2
+# Starship Pastel Powerline preset with chezmoi integration
+# https://starship.rs/presets/pastel-powerline
 
-# Global format - defines the prompt layout
 format = """
-$os$directory$git_branch$git_status$fill$status$cmd_duration$jobs{{ if .starship.show_kubernetes }}$kubernetes{{ end }}$time
-$character"""
+[](#9A348E)\
+$os\
+$username\
+[](bg:#DA627D fg:#9A348E)\
+$directory\
+[](fg:#DA627D bg:#C6A0F6)\
+$custom.chezmoi\
+[](fg:#C6A0F6 bg:#FCA17D)\
+$git_branch\
+$git_status\
+[](fg:#FCA17D bg:#86BBD8)\
+$c\
+$elixir\
+$elm\
+$golang\
+$gradle\
+$haskell\
+$java\
+$julia\
+$nodejs\
+$nim\
+$rust\
+$scala\
+$python\
+[](fg:#86BBD8 bg:#06969A)\
+$docker_context\
+[](fg:#06969A bg:#33658A)\
+$time\
+[ ](fg:#33658A)\
+"""
 
-# Timeout for commands (in milliseconds)
-command_timeout = 500
-
-# Scan timeout for files (in milliseconds)
-scan_timeout = 30
-
-# Don't add newline at start of prompt
+# Disable the blank line at the start of the prompt
 add_newline = false
 
-# Enable two-line prompt
-[line_break]
+# You can also replace your username with a neat symbol like   or disable this
+# and use the os module below
+[username]
+show_always = true
+style_user = "bg:#9A348E"
+style_root = "bg:#9A348E"
+format = '[$user ]($style)'
 disabled = false
 
-# OS Module - Apple icon (matches P10k os_icon)
+# An alternative to the username module which displays a symbol that
+# represents the current operating system
 [os]
-disabled = false
-format = "[$symbol]($style) "
+style = "bg:#9A348E"
+disabled = true # Disabled by default
 
-[os.symbols]
-Macos = ""  # Nerd Font Apple logo
-
-# Directory module - with smart truncation (matches P10k dir)
 [directory]
-format = "[$path]($style)[$read_only]($read_only_style) "
-style = "31 bold"  # P10k color 31 (cyan)
+style = "bg:#DA627D"
+format = "[ $path ]($style)"
 truncation_length = 3
-truncate_to_repo = true
 truncation_symbol = "…/"
-home_symbol = "~"
 
-# Fancy icons for special directories
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
 [directory.substitutions]
-"Documents" = " "
+"Documents" = "󰈙 "
 "Downloads" = " "
 "Music" = " "
 "Pictures" = " "
-"Developer" = " "
 {{ if eq .starship.profile "work" -}}
 "~/work" = " "
 {{ end }}
+# Keep in mind that the order matters. For example:
+# "Important Documents" = " 󰈙 "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important 󰈙 " = " 󰈙 "
 
-# Git branch (matches P10k vcs branch icon)
-[git_branch]
-format = "[$symbol$branch(:$remote_branch)]($style) "
-symbol = " "  # Same as P10k \uF126
-style = "bold green"  # P10k uses color 76
-truncation_length = 20
-truncation_symbol = "…"
+# Custom module for chezmoi-managed directories - fits pastel theme
+[custom.chezmoi]
+description = "Shows when in a chezmoi-managed directory"
+command = """
+if [[ "$PWD" == "$HOME" ]] || [[ "$PWD" == "$HOME/.config"* ]] || [[ "$PWD" == "$HOME/.local"* ]]; then
+    if chezmoi managed --path-style=relative 2>/dev/null | grep -q "^${PWD#$HOME/}" 2>/dev/null; then
+        echo "⚙"
+    fi
+fi
+"""
+when = "true"
+shell = ["zsh"]
+format = "[ $output ]($style)"
+style = "bg:#C6A0F6"
 
-# Git status (matches P10k vcs status indicators)
-[git_status]
-format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "76 bold"  # P10k color 76 (green)
-conflicted = "="
-ahead = "⇡${count}"
-behind = "⇣${count}"
-diverged = "⇕⇡${ahead_count}⇣${behind_count}"
-untracked = "?${count}"
-stashed = "$${count}"
-modified = "!${count}"
-staged = "+${count}"
-renamed = "»${count}"
-deleted = "✘${count}"
-
-# Fill module - pushes everything after it to the right
-[fill]
+[c]
 symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Status module - exit code of last command (matches P10k status)
-[status]
-format = '[$symbol$status]($style) '
-symbol = "✘"
-success_symbol = ""  # Don't show anything on success
-not_executable_symbol = "🚫"
-not_found_symbol = "🔍"
-sigint_symbol = "🧱"
-signal_symbol = "⚡"
-style = "bold red"
-map_symbol = true
-disabled = false
+[cpp]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Python virtual environment
+[docker_context]
+symbol = " "
+style = "bg:#06969A"
+format = '[ $symbol $context ]($style)'
+
+[elixir]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[elm]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[git_branch]
+symbol = ""
+style = "bg:#FCA17D"
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style = "bg:#FCA17D"
+format = '[$all_status$ahead_behind ]($style)'
+
+[golang]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[gradle]
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[java]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[julia]
+symbol = " "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[nim]
+symbol = "󰆥 "
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
 [python]
 symbol = " "
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-style = "yellow"
-detect_extensions = ["py"]
-detect_files = ["requirements.txt", "pyproject.toml", "Pipfile", "tox.ini", "setup.py", "setup.cfg"]
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Conda environment
-[conda]
+[rust]
+symbol = ""
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
+
+[scala]
 symbol = " "
-format = "[$symbol$environment]($style) "
-style = "green"
+style = "bg:#86BBD8"
+format = '[ $symbol ($version) ]($style)'
 
-# Node.js version
-[nodejs]
-symbol = " "
-format = "[$symbol($version )]($style)"
-style = "green"
-detect_extensions = ["js", "mjs", "cjs", "ts", "mts", "cts"]
-detect_files = ["package.json", ".node-version", ".nvmrc"]
-detect_folders = ["node_modules"]
-
-# Command duration (matches P10k command_execution_time)
-[cmd_duration]
-min_time = 0  # Show always, like P10k
-format = "took [$duration]($style) "
-style = "bold yellow"
-show_milliseconds = false
-show_notifications = false
-
-# Background jobs (matches P10k background_jobs)
-[jobs]
-format = "[$symbol$number]($style) "
-symbol = "✦"
-style = "bold blue"
-number_threshold = 1
-symbol_threshold = 1
-
-# Time module - 24h format with seconds (matches P10k time)
 [time]
 disabled = false
-format = '[$time]($style)'
-style = "244"  # P10k color 244 (grey)
-time_format = "%H:%M:%S"  # 24h format matching P10k
-use_12hr = false
-
-# Character module - the prompt symbol (matches P10k prompt_char)
-[character]
-format = "$symbol "
-success_symbol = "[❯](76 bold)"  # P10k color 76 (green)
-error_symbol = "[❯](196 bold)"   # P10k red
-vimcmd_symbol = "[❮](76 bold)"   # P10k green
-vimcmd_visual_symbol = "[❮](178 bold)"  # P10k yellow
-vimcmd_replace_symbol = "[❮](176 bold)"  # P10k purple
-
-# Optional: Docker context (uncomment to enable)
-# [docker_context]
-# symbol = " "
-# format = "[$symbol$context]($style) "
-# style = "blue"
-
-# Optional: Show current shell (useful for testing)
-# [shell]
-# disabled = false
-# format = "[$indicator]($style) "
-# style = "dimmed white"
-
-# Optional: Battery indicator (for laptops)
-# [battery]
-# full_symbol = "🔋"
-# charging_symbol = "⚡️"
-# discharging_symbol = "💀"
-# [[battery.display]]
-# threshold = 20
-# style = "bold red"
+time_format = "%R" # Hour:Minute Format
+style = "bg:#33658A"
+format = '[ ♥ $time ]($style)'
