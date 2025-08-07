@@ -121,6 +121,8 @@ dev-workspace [project]       # Automated project setup
 6. **Test before committing** - Always test scripts/commands fully before committing
 7. **Clean commit history** - Amend commits for small fixes; comprehensive messages
 8. **Use chezmoi commands** - Always use `chezmoi git` from $HOME, not `cd && git`
+9. **Research FIRST for config issues** - Don't guess/iterate with configs; search docs immediately
+10. **Test configurations immediately** - Always validate config changes before claiming success
 
 ## MCP Integrations
 
@@ -168,6 +170,27 @@ claude mcp add hf-mcp-server -t http "https://huggingface.co/mcp" -H "Authorizat
 - Connection status: `claude mcp list` 
 - Server details: `claude mcp get [server-name]`
 - Debug mode: `claude --mcp-debug mcp list`
+
+## Configuration Best Practices
+
+### Starship Prompt Configuration
+**CRITICAL: Simple solutions for simple problems - don't overcomplicate**
+
+**For newline input cursor:**
+- Use `\n$character` at the end of format string
+- Example: `format = "...[ ](fg:#color)\n$character"`
+- DO NOT use complex line_break modules or external modifications
+
+**Process:**
+1. **Research documentation FIRST** - Don't guess configuration syntax
+2. **Use official presets** - `starship preset [name] -o ~/.config/starship.toml`
+3. **Test immediately** - `starship print-config` to validate syntax
+4. **Simple modifications only** - Add `\n$character` for newlines, done
+
+**Never:**
+- Iterate through complex format modifications without researching
+- Use sed/awk for configuration that has documented syntax
+- Claim success without testing the actual result
 
 ## Current Focus Areas
 - Terminal productivity enhancements
