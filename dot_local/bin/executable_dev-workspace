@@ -31,28 +31,28 @@ fi
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$PROJECT_DIR" -- zsh)
 
 # Split for editor (right side, 60% width)  
-EDITOR_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 60 -- helix .)
+EDITOR_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 60 -- hx .)
 
 # Split bottom of left pane for git
-GIT_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --below --percent 50 -- lazygit)
+GIT_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --bottom --percent 50 -- lazygit)
 
 # Split bottom of right pane based on project type
 case "$PROJECT_TYPE" in
     python)
         # For Python projects, show dependency tree
         if command -v uv >/dev/null; then
-            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- zsh -c "uv tree; exec zsh")
+            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- zsh -c "uv tree; exec zsh")
         else
-            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- btop)
         fi
         ;;
     node)
         # For Node projects, could show npm list
-        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- btop)
         ;;
     *)
         # Default to system monitor
-        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --below --percent 30 -- btop)
+        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- btop)
         ;;
 esac
 
