@@ -139,11 +139,35 @@ dev-workspace [project]       # Automated project setup
 - Claim success without proper validation
 - Overcomplicate what should be simple
 
-### Example MCP Servers
-**GitHub:** `claude mcp add github github.com/github/github-mcp-server`
-**Hugging Face:** `claude mcp add hf-mcp-server -t http "https://huggingface.co/mcp" -H "Authorization:Bearer $(op read 'op://Private/[token]/credential')"`
+### Configured MCP Servers
 
-*Note: These are examples only - the process applies to any MCP server installation.*
+**GitHub (Remote):**
+```bash
+# Add GitHub remote MCP server
+claude mcp add github -t http "https://api.githubcopilot.com/mcp/" -H "Authorization:Bearer $(op read 'op://Private/jxl22cpv4ajpeyerljnye77vga/token')"
+
+# Verify connection
+claude mcp list
+```
+- **URL:** `https://api.githubcopilot.com/mcp/`
+- **Auth:** GitHub PAT from 1Password item `jxl22cpv4ajpeyerljnye77vga` (field: `token`)
+- **Provides:** 122 tools for repositories, issues, PRs, code review, Copilot, workflows, security scanning
+- **Benefits:** Remote server (no Docker), auto-updates, comprehensive GitHub integration
+
+**Hugging Face:**
+```bash
+# Add Hugging Face MCP server  
+claude mcp add hf-mcp-server -t http "https://huggingface.co/mcp" -H "Authorization:Bearer $(op read 'op://Private/ayeipvfasflfph3jn25lb6n2ku/credential')"
+```
+- **URL:** `https://huggingface.co/mcp`
+- **Auth:** HF token from 1Password item `ayeipvfasflfph3jn25lb6n2ku` (field: `credential`)
+- **Provides:** Model/dataset search, paper search, FLUX image generation, model inference
+
+### MCP Troubleshooting
+- If `/mcp` shows "(no content)", use `claude -p "List available MCP tools"` instead
+- Connection status: `claude mcp list` 
+- Server details: `claude mcp get [server-name]`
+- Debug mode: `claude --mcp-debug mcp list`
 
 ## Current Focus Areas
 - Terminal productivity enhancements
