@@ -118,6 +118,9 @@ dev-workspace [project]       # Automated project setup
 3. **Document changes** - Update relevant .md files when making changes
 4. **Test everything** - Verify commands work before suggesting
 5. **Keep it portable** - Ensure configs work across machines
+6. **Test before committing** - Always test scripts/commands fully before committing
+7. **Clean commit history** - Amend commits for small fixes; comprehensive messages
+8. **Use chezmoi commands** - Always use `chezmoi git` from $HOME, not `cd && git`
 
 ## MCP Integrations
 

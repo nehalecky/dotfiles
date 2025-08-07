@@ -1,0 +1,25 @@
+# Lazygit configuration for myTUI
+gui:
+  # Show command log by default for learning
+  showCommandLog: false
+  # Use nerd fonts icons
+  nerdFontsVersion: "3"
+
+# Custom commands to work with chezmoi
+customCommands:
+  - key: 'C'
+    command: 'chezmoi apply'
+    context: 'files'
+    description: 'Apply changes to home directory'
+    
+git:
+  # Paging for diffs
+  paging:
+    colorArg: always
+    pager: delta
+
+# Key bindings aligned with myTUI
+keybinding:
+  universal:
+    quit: 'q'
+    quit-alt1: '<c-c>'
