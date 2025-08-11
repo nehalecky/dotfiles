@@ -23,6 +23,9 @@ fi
 # Homebrew
 eval $(/opt/homebrew/bin/brew shellenv)
 
+# Add ~/.local/bin to PATH for user scripts
+export PATH="$HOME/.local/bin:$PATH"
+
 ## iTerm2 Shell Integration
 test -e "${HOME}/.config/iterm2/shell_integration.zsh" && source "${HOME}/.config/iterm2/shell_integration.zsh"
 

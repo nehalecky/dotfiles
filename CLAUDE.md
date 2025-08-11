@@ -118,11 +118,6 @@ dev-workspace [project]       # Automated project setup
 3. **Document changes** - Update relevant .md files when making changes
 4. **Test everything** - Verify commands work before suggesting
 5. **Keep it portable** - Ensure configs work across machines
-6. **Test before committing** - Always test scripts/commands fully before committing
-7. **Clean commit history** - Amend commits for small fixes; comprehensive messages
-8. **Use chezmoi commands** - Always use `chezmoi git` from $HOME, not `cd && git`
-9. **Research FIRST for config issues** - Don't guess/iterate with configs; search docs immediately
-10. **Test configurations immediately** - Always validate config changes before claiming success
 
 ## MCP Integrations
 
@@ -141,56 +136,11 @@ dev-workspace [project]       # Automated project setup
 - Claim success without proper validation
 - Overcomplicate what should be simple
 
-### Configured MCP Servers
+### Example MCP Servers
+**GitHub:** `claude mcp add github github.com/github/github-mcp-server`
+**Hugging Face:** `claude mcp add hf-mcp-server -t http "https://huggingface.co/mcp" -H "Authorization:Bearer $(op read 'op://Private/[token]/credential')"`
 
-**GitHub (Remote):**
-```bash
-# Add GitHub remote MCP server
-claude mcp add github -t http "https://api.githubcopilot.com/mcp/" -H "Authorization:Bearer $(op read 'op://Private/jxl22cpv4ajpeyerljnye77vga/token')"
-
-# Verify connection
-claude mcp list
-```
-- **URL:** `https://api.githubcopilot.com/mcp/`
-- **Auth:** GitHub PAT from 1Password item `jxl22cpv4ajpeyerljnye77vga` (field: `token`)
-- **Provides:** 122 tools for repositories, issues, PRs, code review, Copilot, workflows, security scanning
-- **Benefits:** Remote server (no Docker), auto-updates, comprehensive GitHub integration
-
-**Hugging Face:**
-```bash
-# Add Hugging Face MCP server  
-claude mcp add hf-mcp-server -t http "https://huggingface.co/mcp" -H "Authorization:Bearer $(op read 'op://Private/ayeipvfasflfph3jn25lb6n2ku/credential')"
-```
-- **URL:** `https://huggingface.co/mcp`
-- **Auth:** HF token from 1Password item `ayeipvfasflfph3jn25lb6n2ku` (field: `credential`)
-- **Provides:** Model/dataset search, paper search, FLUX image generation, model inference
-
-### MCP Troubleshooting
-- If `/mcp` shows "(no content)", use `claude -p "List available MCP tools"` instead
-- Connection status: `claude mcp list` 
-- Server details: `claude mcp get [server-name]`
-- Debug mode: `claude --mcp-debug mcp list`
-
-## Configuration Best Practices
-
-### Starship Prompt Configuration
-**CRITICAL: Simple solutions for simple problems - don't overcomplicate**
-
-**For newline input cursor:**
-- Use `\n$character` at the end of format string
-- Example: `format = "...[ ](fg:#color)\n$character"`
-- DO NOT use complex line_break modules or external modifications
-
-**Process:**
-1. **Research documentation FIRST** - Don't guess configuration syntax
-2. **Use official presets** - `starship preset [name] -o ~/.config/starship.toml`
-3. **Test immediately** - `starship print-config` to validate syntax
-4. **Simple modifications only** - Add `\n$character` for newlines, done
-
-**Never:**
-- Iterate through complex format modifications without researching
-- Use sed/awk for configuration that has documented syntax
-- Claim success without testing the actual result
+*Note: These are examples only - the process applies to any MCP server installation.*
 
 ## Current Focus Areas
 - Terminal productivity enhancements
