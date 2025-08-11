@@ -258,6 +258,26 @@ config.keys = {
     action = wezterm.action.SendString '\x1bd',
   },
   
+  -- === Workspace Launchers ===
+  
+  -- Home Command Center (dotfiles management)
+  {
+    key = 'h',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewWindow {
+      args = { '/Users/nehalecky/.local/bin/workspace-home' },
+    },
+  },
+  
+  -- Project Development Workspace
+  {
+    key = 'W',
+    mods = 'LEADER|SHIFT',
+    action = wezterm.action.SpawnCommandInNewWindow {
+      args = { '/Users/nehalecky/.local/bin/workspace-dev' },
+    },
+  },
+  
   -- === Modern TUI Tools (Phase 1 Aggressive) ===
   
   -- File Management
