@@ -8,6 +8,18 @@ set -euo pipefail
 PROJECT_NAME=${1:-$(basename "$PWD")}
 PROJECT_DIR=${PROJECT_DIR:-$PWD}
 
+# Special handling for HOME directory - provide guidance
+if [[ "$PROJECT_DIR" == "$HOME" ]] && [[ -z "${1:-}" ]]; then
+    echo "⚠️  No project detected in HOME directory"
+    echo ""
+    echo "Options:"
+    echo "  • workspace-home     - Launch Home Command Center (dotfiles)"
+    echo "  • workspace-dev foo  - Create 'foo' project workspace here"
+    echo "  • cd /path/to/project && workspace-dev"
+    echo ""
+    exit 0
+fi
+
 echo "🚀 Launching development workspace for: $PROJECT_NAME"
 echo "📁 Working directory: $PROJECT_DIR"
 
@@ -104,3 +116,4 @@ echo "💡 Use Ctrl+a to access leader key shortcuts:"
 echo "   f = File manager (yazi)    g = Git (lazygit)      k = Kubernetes (k9s)"
 echo "   e = Editor (helix)         d = Docker (lazydocker) a = API client (atac)"
 echo "   m = System monitor (btop)  n = Network (bandwhich) u = Disk usage (dust)"
+echo "   h = Home workspace         W = New dev workspace"

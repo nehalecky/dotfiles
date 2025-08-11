@@ -1,0 +1,69 @@
+#!/bin/bash
+# Home Command Center - Daily operations workspace
+# A persistent workspace for dotfiles management, AI assistance, and task tracking
+
+set -euo pipefail
+
+echo "🏠 Launching Home Command Center workspace"
+echo "📁 Chezmoi source: ~/.local/share/chezmoi"
+
+# Start in chezmoi source directory for dotfiles management
+CHEZMOI_DIR="$HOME/.local/share/chezmoi"
+cd "$CHEZMOI_DIR"
+
+# Create new WezTerm window
+WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$CHEZMOI_DIR" -- zsh)
+
+# Upper right: File manager (yazi) - 50% width
+FILE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 50 -- yazi "$CHEZMOI_DIR")
+
+# Lower left: Claude Code - 50% height of left side
+CLAUDE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --bottom --percent 50 -- zsh -c "echo '🤖 Claude Code Ready'; echo 'Run: claude -p \"...\" to start'; exec zsh")
+
+# Lower right: Task dashboard - 50% height of right side
+# For now, using a terminal with task management hints
+# Can be replaced with taskwarrior-tui, gh dash, or custom solution
+TASK_PANE=$(wezterm cli split-pane --pane-id "$FILE_PANE" --bottom --percent 50 -- zsh -c "
+echo '📋 Task Management Center'
+echo '────────────────────────'
+echo ''
+echo 'Quick Commands:'
+echo '  gh dash          - GitHub dashboard for issues/PRs'
+echo '  chezmoi status   - Check dotfile changes'
+echo '  chezmoi diff     - Review pending changes'
+echo '  brew outdated    - Check for updates'
+echo ''
+echo 'Workspace Shortcuts (Ctrl+a):'
+echo '  W = Launch project workspace'
+echo '  h = Return to home workspace'
+echo ''
+if command -v task >/dev/null 2>&1; then
+    echo 'Taskwarrior detected! Commands:'
+    echo '  task list        - Show all tasks'
+    echo '  task add <desc>  - Add new task'
+    echo '  taskwarrior-tui  - Interactive task manager'
+    echo ''
+    task list 2>/dev/null || true
+fi
+exec zsh
+")
+
+# Set window title
+wezterm cli set-tab-title --pane-id "$WINDOW_ID" "🏠 Home Command Center"
+
+echo "✅ Home Command Center ready!"
+echo ""
+echo "Layout:"
+echo "┌─────────────────┬─────────────────┐"
+echo "│ Terminal (zsh)  │ Files (yazi)    │"
+echo "│ Chezmoi source  │ Dotfiles browse │"
+echo "├─────────────────┼─────────────────┤"
+echo "│ Claude Code     │ Tasks/Status    │"
+echo "│ AI assistance   │ Management      │"
+echo "└─────────────────┴─────────────────┘"
+echo ""
+echo "💡 Tips:"
+echo "  • Terminal is in chezmoi source directory"
+echo "  • Use 'chezmoi edit <file>' to modify configs"
+echo "  • Run 'workspace-dev <project>' to launch project workspace"
+echo "  • This workspace is for system management, not project development"
