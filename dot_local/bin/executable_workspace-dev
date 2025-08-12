@@ -39,7 +39,7 @@ elif [[ -f "$PROJECT_DIR/go.mod" ]]; then
     echo "🐹 Go project detected"
 fi
 
-# Create new WezTerm window for the project
+# Create new WezTerm window for the project (fullscreen via manual Cmd+Enter if desired)
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$PROJECT_DIR" -- zsh)
 
 # Split for editor (right side, 60% width)  

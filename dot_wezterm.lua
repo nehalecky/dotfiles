@@ -257,6 +257,13 @@ config.keys = {
     mods = 'OPT',
     action = wezterm.action.SendString '\x1bd',
   },
+
+  -- Fullscreen toggle (macOS standard)
+  {
+    key = 'Enter',
+    mods = 'CMD',
+    action = wezterm.action.ToggleFullScreen,
+  },
   
   -- === Workspace Launchers ===
   
@@ -278,13 +285,11 @@ config.keys = {
     },
   },
   
-  -- Refresh workspace-home 
+  -- Refresh current workspace
   {
     key = 'r',
     mods = 'LEADER',
-    action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/Users/nehalecky/.local/bin/workspace-refresh' },
-    },
+    action = wezterm.action.SendString('workspace-refresh\r'),
   },
   
   -- === Modern TUI Tools (Phase 1 Aggressive) ===
