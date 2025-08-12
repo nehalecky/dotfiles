@@ -1,0 +1,56 @@
+#!/bin/bash
+# Weather script with your favorite locations
+# Usage: weather [location]
+
+case ${1:-} in
+  ""|local|home)
+    echo "🏠 La Lucila (Home):"
+    curl -s "wttr.in/La_Lucila,Buenos_Aires?format=3"
+    echo
+    ;;
+  auto|detect)
+    echo "📍 Auto-detected location:"
+    curl -s "wttr.in?format=3"
+    echo
+    ;;
+  reno|nv)
+    echo "🎰 Reno, Nevada:"
+    curl -s "wttr.in/Reno,NV?format=3"
+    echo
+    ;;
+  futaleufu|chile|patagonia)
+    echo "🏔️ Futaleufú, Chile:"
+    curl -s "wttr.in/Futaleufu,Chile?format=3"
+    echo
+    ;;
+  forecast|f)
+    echo "📊 Hourly forecast for La Lucila:"
+    curl -s "wttr.in/La_Lucila,Buenos_Aires?0"
+    ;;
+  hourly|h)
+    echo "⏰ Detailed hourly breakdown for La Lucila:"
+    curl -s "wttr.in/La_Lucila,Buenos_Aires"
+    ;;
+  all|summary)
+    echo "🌍 Weather Summary:"
+    echo -n "🏠 Home: "; curl -s "wttr.in/La_Lucila,Buenos_Aires?format=3"
+    echo -n "🎰 Reno: "; curl -s "wttr.in/Reno,NV?format=3"
+    echo -n "🏔️ Futaleufú: "; curl -s "wttr.in/Futaleufu,Chile?format=3"
+    echo
+    ;;
+  help|h)
+    echo "Weather command usage:"
+    echo "  weather          # La Lucila (default/home)"
+    echo "  weather reno     # Reno, Nevada"
+    echo "  weather futaleufu # Futaleufú, Chile"
+    echo "  weather auto     # Auto-detected (Ituzaingo)"
+    echo "  weather forecast # 3-day forecast"
+    echo "  weather all      # All locations summary"
+    echo "  weather [city]   # Any other city"
+    ;;
+  *)
+    echo "🌍 Weather for: $1"
+    curl -s "wttr.in/$1?format=3"
+    echo
+    ;;
+esac

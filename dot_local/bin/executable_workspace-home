@@ -13,7 +13,18 @@ cd "$HOME"
 # Create new WezTerm window
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
 
-# Upper right: File manager (yazi) - 50% width
+# Top weather strip - small horizontal pane (10% height)
+WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --percent 10 -- zsh -c "
+echo '🌍 Current Weather: La Lucila, Reno, Futaleufú'
+while true; do
+    echo -n '🏠 '; curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=%t+%h+%w' | tr -d '\n'
+    echo -n '  🎰 '; curl -s 'wttr.in/Reno,NV?format=%t+%h+%w' | tr -d '\n'  
+    echo -n '  🏔️ '; curl -s 'wttr.in/Futaleufu,Chile?format=%t+%h+%w'
+    sleep 300  # Update every 5 minutes
+done
+")
+
+# Upper right: File manager (yazi) - 50% width of remaining space
 FILE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 50 -- yazi "$HOME")
 
 # Lower left: Claude Code - 50% height of left side
