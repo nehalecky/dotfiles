@@ -1,0 +1,129 @@
+# Taskwarrior Configuration
+# A modern, color-rich configuration for task management
+
+# Data & Files
+data.location=~/.task
+
+# Color theme - Modern and vibrant
+color=on
+color.header=color255 on_color239
+color.footer=color255 on_color239
+color.label=color255
+color.label.sort=color255
+color.alternate=on gray2
+color.tagged=
+color.due=color9
+color.due.today=color196
+color.overdue=color255 on_color196
+color.active=color255 on_color33
+color.scheduled=color0 on_color214
+color.until=color249
+color.blocked=color250 on_color52
+color.blocking=color255 on_color130
+color.uda.priority.H=color196
+color.uda.priority.M=color214
+color.uda.priority.L=color245
+color.project.none=color245
+color.tag.next=color255 on_color27
+color.tag.work=color255 on_color130
+color.tag.personal=color255 on_color33
+color.tag.urgent=color255 on_color196
+
+# Status colors
+color.completed=color242
+color.deleted=color238
+color.pending=color255
+
+# Burndown chart colors
+color.burndown.done=color0 on_color2
+color.burndown.pending=color0 on_color196
+color.burndown.started=color0 on_color214
+
+# Calendar colors
+color.calendar.due=color196
+color.calendar.due.today=color196 on_color255
+color.calendar.holiday=color255 on_color33
+color.calendar.overdue=color255 on_color196
+color.calendar.today=color255 on_color33
+color.calendar.weekend=color245
+color.calendar.weeknumber=color249
+
+# Defaults
+default.command=list
+default.priority=M
+confirmation=yes
+recurrence=yes
+recurrence.indicator=R
+recurrence.limit=1
+
+# List formatting
+list.all.projects=yes
+list.all.tags=yes
+
+# Urgency coefficients (customize task sorting)
+urgency.user.tag.urgent.coefficient=10.0
+urgency.user.tag.work.coefficient=8.0
+urgency.user.tag.personal.coefficient=5.0
+urgency.due.coefficient=12.0
+urgency.priority.coefficient=6.0
+urgency.age.coefficient=1.0
+urgency.tags.coefficient=1.0
+urgency.project.coefficient=1.0
+urgency.blocking.coefficient=8.0
+urgency.scheduled.coefficient=5.0
+urgency.active.coefficient=4.0
+
+# Reports - Customize the default list view
+report.list.description=Most urgent tasks
+report.list.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.list.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.list.sort=urgency-
+report.list.filter=status:pending
+
+# Next report - For most immediate tasks
+report.next.description=Most urgent tasks (limited to 10)
+report.next.columns=id,start.age,entry.age,depends,priority,project,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.next.labels=ID,Active,Age,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Urg
+report.next.sort=urgency-
+report.next.filter=status:pending limit:10
+
+# Custom report for work tasks
+report.work.description=Work tasks
+report.work.columns=id,priority,project,tags,due.relative,description
+report.work.labels=ID,Pri,Project,Tags,Due,Description
+report.work.sort=priority-,due+
+report.work.filter=status:pending +work
+
+# Custom report for personal tasks
+report.personal.description=Personal tasks
+report.personal.columns=id,priority,project,tags,due.relative,description
+report.personal.labels=ID,Pri,Project,Tags,Due,Description
+report.personal.sort=priority-,due+
+report.personal.filter=status:pending +personal
+
+# Week numbers
+weekstart=monday
+displayweeknumber=yes
+
+# Date formats
+dateformat=Y-M-D
+dateformat.report=Y-M-D
+dateformat.holiday=YMD
+dateformat.annotation=Y-M-D
+
+# Aliases for common commands
+alias.in=add
+alias.rm=delete
+alias.mod=modify
+alias.done=done
+alias.undo=undo
+
+# Hooks
+hooks=on
+
+# Sync (if using taskserver)
+# taskd.server=
+# taskd.credentials=
+# taskd.certificate=
+# taskd.key=
+# taskd.ca=
