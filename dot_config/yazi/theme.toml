@@ -1,0 +1,38 @@
+# Custom theme configuration for yazi
+# Icons for directories and projects
+
+[icon]
+# Custom directory icons
+dirs = [
+    { name = "projects",      text = "󰈙" },  # Project folder icon
+    { name = ".git",          text = "󰊢" },  # Git folder
+    { name = ".github",       text = "󰊤" },  # GitHub folder
+    { name = "node_modules",  text = "󰎙" },  # Node modules
+    { name = ".vscode",       text = "󰨞" },  # VS Code
+    { name = "docs",          text = "󰈙" },  # Documentation
+    { name = "scripts",       text = "󰉿" },  # Scripts
+    { name = "config",        text = "󰒓" },  # Config
+    { name = ".config",       text = "󰒓" },  # Config (hidden)
+]
+
+# File extensions with custom icons
+exts = [
+    { name = "md",     text = "󰍔" },  # Markdown
+    { name = "py",     text = "󰌠" },  # Python
+    { name = "js",     text = "󰛦" },  # JavaScript
+    { name = "ts",     text = "󰛦" },  # TypeScript
+    { name = "rs",     text = "󱘗" },  # Rust
+    { name = "go",     text = "󰟓" },  # Go
+    { name = "sh",     text = "󱆃" },  # Shell
+    { name = "toml",   text = "󰒓" },  # TOML
+    { name = "json",   text = "󰘦" },  # JSON
+    { name = "yaml",   text = "󰈙" },  # YAML
+    { name = "yml",    text = "󰈙" },  # YAML
+]
+
+# Conditional icons for project types
+conds = [
+    { if = "dir", name = "*-project", text = "󰈙" },
+    { if = "dir", name = "*-repo",    text = "" },
+    { if = "dir", name = "*-app",     text = "󰏗" },
+]
