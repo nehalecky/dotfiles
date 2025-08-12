@@ -1,5 +1,24 @@
 # Claude Code Instructions - Dotfiles Repository
 
+## CRITICAL WORKFLOW ENFORCEMENT
+
+**YOU MUST follow this decision tree before ANY file operation:**
+
+### MANDATORY PRE-ACTION CHECK:
+**IMPORTANT:** Read this section EVERY TIME before creating/editing files.
+
+1. **FILE LOCATION CHECK**:
+   - Am I about to create/edit in `~/.local/share/chezmoi/`? → **STOP! WRONG WORKFLOW**
+   - Am I editing in HOME directory first? → **CONTINUE**
+
+2. **WORKFLOW VERIFICATION**:  
+   - New file: Create in HOME → Test → `chezmoi add` → Commit
+   - Existing file: Edit in HOME → Test → `chezmoi add` → Commit
+
+**Unexpected Project Behavior:** Claude frequently violates the HOME→Source workflow by creating files directly in the chezmoi source directory. This breaks the established pattern and creates sync issues.
+
+**Course Correction:** When you catch yourself about to write to `/Users/nehalecky/.local/share/chezmoi/`, STOP and use the HOME→Source workflow instead.
+
 ## Primary Development Workflows
 
 ### 1. Discovery-First Development
