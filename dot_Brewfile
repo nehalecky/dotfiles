@@ -7,6 +7,8 @@ brew "bat"
 brew "btop"
 # Manage your dotfiles across multiple diverse machines, securely
 brew "chezmoi"
+# Core Location CLI tool for macOS to get current location coordinates
+brew "corelocationcli"
 # Container Signing
 brew "cosign"
 # GNU Emacs text editor
@@ -37,6 +39,10 @@ brew "ripgrep"
 brew "speedtest-cli"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Feature-rich task management command-line todo list
+brew "task"
+# Terminal User Interface for Taskwarrior
+brew "taskwarrior-tui"
 # Very fast implementation of tldr in Rust
 brew "tealdeer"
 # Extremely fast Python package installer and resolver, written in Rust

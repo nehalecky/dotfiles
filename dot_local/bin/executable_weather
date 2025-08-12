@@ -24,12 +24,12 @@ case ${1:-} in
     echo
     ;;
   forecast|f)
-    echo "📊 Hourly forecast for La Lucila:"
-    curl -s "wttr.in/La_Lucila,Buenos_Aires?0"
-    ;;
-  hourly|h)
-    echo "⏰ Detailed hourly breakdown for La Lucila:"
+    echo "📊 3-day forecast for La Lucila:"
     curl -s "wttr.in/La_Lucila,Buenos_Aires"
+    ;;
+  today|t)
+    echo "⏰ Today's hourly breakdown for La Lucila:"
+    curl -s "wttr.in/La_Lucila,Buenos_Aires?0"
     ;;
   all|summary)
     echo "🌍 Weather Summary:"
@@ -45,6 +45,7 @@ case ${1:-} in
     echo "  weather futaleufu # Futaleufú, Chile"
     echo "  weather auto     # Auto-detected (Ituzaingo)"
     echo "  weather forecast # 3-day forecast"
+    echo "  weather today    # Today's hourly breakdown"
     echo "  weather all      # All locations summary"
     echo "  weather [city]   # Any other city"
     ;;

@@ -118,16 +118,81 @@ Ctrl+a g                      # Git (lazygit)
 Ctrl+a k                      # Kubernetes (k9s)
 Ctrl+a d                      # Docker (lazydocker)
 Ctrl+a a                      # API client (atac)
-Ctrl+a w                      # Launch 4-tile development workspace
-dev-workspace [project]       # Automated project setup
+Ctrl+a w                      # Launch 4-tile development workspace (legacy)
+Ctrl+a h                      # Launch Home Command Center
+Ctrl+a Shift+W               # Launch project workspace
+Ctrl+a r                      # Refresh current workspace
+Cmd+Enter                     # Toggle fullscreen
+
+# Modern Workspace Commands (tab-completion friendly)
+workspace-home                # Home Command Center (dotfiles/daily ops)
+workspace-dev [project]       # Project development environment
+workspace-refresh            # Refresh workspace data
+weather [location]           # Weather command system
+```
+
+## Workspace Architecture
+
+### Dual Workspace System
+**Philosophy:** Separate concerns between daily operations and focused development.
+
+#### Home Command Center (`workspace-home`)
+**Purpose:** Daily operations, dotfiles management, system monitoring
+**Layout:** 4-panel fullscreen workspace with weather integration
+```
+┌─Weather Strip (5% height)─────────────────────────┐
+│ 🌍 Current: Location | Favorites: La Lucila, Reno │
+│ 🏠 +21°C 43% ↘17km/h  🎰 +24°C 31% ↘4km/h         │
+│ ⏰ Next 24hrs: Morning +21°C | Noon +21°C...      │
+├─────────────────┬─────────────────────────────────┤
+│ Terminal (zsh)  │ File Manager (yazi)             │
+│ Chezmoi source  │ Browse dotfiles                 │
+├─────────────────┼─────────────────────────────────┤
+│ Claude Code     │ TaskWarrior-TUI                 │
+│ Auto-launch AI  │ Task management                 │
+└─────────────────┴─────────────────────────────────┘
+```
+
+#### Project Development (`workspace-dev`)
+**Purpose:** Focused development on specific projects
+**Layout:** 4-panel environment optimized for coding
+```
+┌─────────────────┬─────────────────────────────────┐
+│ Terminal/REPL   │ Editor (Helix)                  │
+│ Project context │ Smart language detection        │
+├─────────────────┼─────────────────────────────────┤
+│ Git (lazygit)   │ Monitor/Tests                   │
+│ Version control │ Project-specific tools          │
+└─────────────────┴─────────────────────────────────┘
+```
+
+### Weather Integration System
+**Technology:** CoreLocationCLI + wttr.in API
+**Features:**
+- **Precise WiFi positioning** (no GPS required on MacBook)
+- **Multi-location tracking** (current + 3 favorites)
+- **Auto-updating** every 5 minutes
+- **Graceful fallbacks** (CoreLocation → IP detection)
+
+**Commands:**
+```bash
+weather                       # La Lucila (home default)
+weather reno                  # Reno, Nevada
+weather futaleufu             # Futaleufú, Chile  
+weather forecast              # 3-day detailed forecast
+weather today                 # Today's hourly breakdown
+weather all                   # All locations summary
 ```
 
 ### Key Files
-- `Brewfile` - Homebrew dependencies (67+ packages including modern TUI tools)
+- `Brewfile` - Homebrew dependencies (70+ packages including CoreLocationCLI)
 - `.chezmoidata.yaml` - Machine-specific variables
-- `dot_config/starship.toml.tmpl` - Ultra-fast prompt configuration
-- `.wezterm.lua` - Terminal multiplexer with leader key shortcuts
-- `dot_local/bin/executable_dev-workspace` - Automated workspace setup
+- `dot_config/starship.toml` - Ultra-fast prompt with chezmoi integration
+- `.wezterm.lua` - Terminal multiplexer with workspace shortcuts
+- `dot_local/bin/executable_workspace-home` - Home Command Center
+- `dot_local/bin/executable_workspace-dev` - Project development workspace
+- `dot_local/bin/executable_workspace-refresh` - Workspace refresh utility
+- `dot_local/bin/executable_weather` - Weather command system
 - `.chezmoiscripts/` - Installation hooks
 
 ## Development Guidelines

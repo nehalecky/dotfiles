@@ -4,37 +4,44 @@
 
 echo "🔄 Refreshing workspace..."
 
-# Detect workspace type from current tab title
-CURRENT_TAB=$(wezterm cli list | grep "TAB" | grep "true" | head -1)
-TAB_TITLE=$(echo "$CURRENT_TAB" | awk '{for(i=4;i<=NF;i++) printf "%s ", $i; print ""}' | sed 's/[[:space:]]*$//')
+# Detect workspace type from current window title
+# Note: We'll look for Home Command Center or Dev workspace patterns
+WORKSPACE_TYPE="unknown"
+if wezterm cli list | grep -q "Home Command Center"; then
+    WORKSPACE_TYPE="home"
+elif wezterm cli list | grep -q "Dev:"; then
+    WORKSPACE_TYPE="dev"
+fi
 
-if [[ "$TAB_TITLE" == *"Home Command Center"* ]]; then
+if [[ "$WORKSPACE_TYPE" == "home" ]]; then
     echo "🏠 Detected Home Command Center workspace"
     
-    # Refresh weather pane if it exists
-    WEATHER_PANE_ID=$(wezterm cli list | grep "PANE" | grep "🌍" | awk '{print $2}' | head -1)
+    # Refresh weather pane if it exists (look for weather-related text)
+    WEATHER_PANE_ID=$(wezterm cli list | grep "🌍\|Weather" | awk '{print $3}' | head -1)
     if [[ -n "$WEATHER_PANE_ID" ]]; then
         echo "  🌤️ Refreshing weather data..."
-        wezterm cli send-text --pane-id "$WEATHER_PANE_ID" "clear" && wezterm cli send-text --pane-id "$WEATHER_PANE_ID" ""
+        wezterm cli send-text --pane-id "$WEATHER_PANE_ID" $'\003'  # Ctrl+C to interrupt
+        sleep 1
+        wezterm cli send-text --pane-id "$WEATHER_PANE_ID" "clear\r"
     fi
     
-elif [[ "$TAB_TITLE" == *"Dev:"* ]]; then
+elif [[ "$WORKSPACE_TYPE" == "dev" ]]; then
     echo "💻 Detected Development workspace"
     
     # Refresh git pane if lazygit is running
-    GIT_PANE_ID=$(wezterm cli list | grep "PANE" | grep -E "(lazygit|git)" | awk '{print $2}' | head -1)
+    GIT_PANE_ID=$(wezterm cli list | grep -E "lazygit|git" | awk '{print $3}' | head -1)
     if [[ -n "$GIT_PANE_ID" ]]; then
         echo "  📦 Refreshing git status..."
         wezterm cli send-text --pane-id "$GIT_PANE_ID" "R"  # 'R' refreshes in lazygit
     fi
     
-    # Refresh any btop/monitor panes
-    MONITOR_PANE_ID=$(wezterm cli list | grep "PANE" | grep -E "(btop|monitor)" | awk '{print $2}' | head -1)
+    # Refresh any btop/monitor panes  
+    MONITOR_PANE_ID=$(wezterm cli list | grep -E "btop|monitor" | awk '{print $3}' | head -1)
     if [[ -n "$MONITOR_PANE_ID" ]]; then
         echo "  📊 Refreshing system monitor..."
-        wezterm cli send-text --pane-id "$MONITOR_PANE_ID" "q"
+        wezterm cli send-text --pane-id "$MONITOR_PANE_ID" "q\r"
         sleep 0.5
-        wezterm cli send-text --pane-id "$MONITOR_PANE_ID" "btop"
+        wezterm cli send-text --pane-id "$MONITOR_PANE_ID" "btop\r"
     fi
     
 else
@@ -45,14 +52,14 @@ fi
 echo "  🔄 Performing universal refreshes..."
 
 # Refresh taskwarrior-tui if it's running anywhere
-TASK_PANE_ID=$(wezterm cli list | grep "PANE" | grep -E "(taskwarrior|Task Management)" | awk '{print $2}' | head -1)
+TASK_PANE_ID=$(wezterm cli list | grep "taskwarrior" | awk '{print $3}' | head -1)
 if [[ -n "$TASK_PANE_ID" ]]; then
     echo "  ✅ Refreshing task data..."
     wezterm cli send-text --pane-id "$TASK_PANE_ID" "r"  # 'r' refreshes in taskwarrior-tui
 fi
 
 # Refresh any yazi file manager panes
-YAZI_PANE_ID=$(wezterm cli list | grep "PANE" | grep "yazi" | awk '{print $2}' | head -1)
+YAZI_PANE_ID=$(wezterm cli list | grep "Yazi:" | awk '{print $3}' | head -1)
 if [[ -n "$YAZI_PANE_ID" ]]; then
     echo "  📁 Refreshing file manager..."
     wezterm cli send-text --pane-id "$YAZI_PANE_ID" "R"  # 'R' refreshes in yazi
