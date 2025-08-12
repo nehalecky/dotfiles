@@ -127,3 +127,7 @@ hooks=on
 # taskd.certificate=
 # taskd.key=
 # taskd.ca=
+
+# GitHub integration
+# Set your default repository for #123 patterns (format: owner/repo)
+# github.default_repo=nehalecky/dotfiles
