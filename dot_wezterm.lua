@@ -278,6 +278,15 @@ config.keys = {
     },
   },
   
+  -- Refresh workspace-home 
+  {
+    key = 'r',
+    mods = 'LEADER',
+    action = wezterm.action.SpawnCommandInNewTab {
+      args = { '/Users/nehalecky/.local/bin/workspace-refresh' },
+    },
+  },
+  
   -- === Modern TUI Tools (Phase 1 Aggressive) ===
   
   -- File Management
