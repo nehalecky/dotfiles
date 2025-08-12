@@ -13,13 +13,19 @@ cd "$HOME"
 # Create new WezTerm window
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
 
-# Top weather strip - small horizontal pane (10% height)
-WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --percent 10 -- zsh -c "
+# Top weather strip - small horizontal pane (15% height for current + hourly)
+WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --percent 15 -- zsh -c "
 echo '🌍 Current Weather: La Lucila, Reno, Futaleufú'
 while true; do
+    # Current weather for all locations
     echo -n '🏠 '; curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=%t+%h+%w' | tr -d '\n'
     echo -n '  🎰 '; curl -s 'wttr.in/Reno,NV?format=%t+%h+%w' | tr -d '\n'  
     echo -n '  🏔️ '; curl -s 'wttr.in/Futaleufu,Chile?format=%t+%h+%w'
+    
+    # Hourly forecast for La Lucila (home location)
+    echo -n '⏰ Today: '
+    curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=Morning+%t+|+Noon+%t+|+Evening+%t+|+Night+%t'
+    
     sleep 300  # Update every 5 minutes
 done
 ")
@@ -27,8 +33,12 @@ done
 # Upper right: File manager (yazi) - 50% width of remaining space
 FILE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 50 -- yazi "$HOME")
 
-# Lower left: Claude Code - 50% height of left side
-CLAUDE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --bottom --percent 50 -- zsh -c "echo '🤖 Claude Code Ready'; echo 'Run: claude -p \"...\" to start'; exec zsh")
+# Lower left: Claude Code - 50% height of left side, auto-launch
+CLAUDE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --bottom --percent 50 -- zsh -c "
+echo '🤖 Launching Claude Code...'
+sleep 1
+claude
+")
 
 # Lower right: Task dashboard - 50% height of right side
 # Launch taskwarrior-tui if available, otherwise show task hints

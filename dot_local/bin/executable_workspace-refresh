@@ -1,0 +1,47 @@
+#!/bin/bash
+# Refresh workspace-home weather and task data without relaunching
+# Usage: workspace-refresh
+
+# Kill and restart the weather pane
+WEATHER_PANE_ID=$(wezterm cli list-panes | grep "🌍" | awk '{print $1}' | head -1)
+if [[ -n "$WEATHER_PANE_ID" ]]; then
+    echo "🔄 Refreshing weather data..."
+    wezterm cli kill-pane --pane-id "$WEATHER_PANE_ID"
+    
+    # Find the main window ID (assuming it's the Home Command Center)
+    WINDOW_ID=$(wezterm cli list-tabs | grep "🏠 Home Command Center" | awk '{print $1}' | head -1)
+    
+    if [[ -n "$WINDOW_ID" ]]; then
+        # Recreate weather pane at top
+        wezterm cli split-pane --pane-id "$WINDOW_ID" --top --percent 15 -- zsh -c "
+        echo '🌍 Current Weather: La Lucila, Reno, Futaleufú'
+        while true; do
+            # Current weather for all locations
+            echo -n '🏠 '; curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=%t+%h+%w' | tr -d '\n'
+            echo -n '  🎰 '; curl -s 'wttr.in/Reno,NV?format=%t+%h+%w' | tr -d '\n'  
+            echo -n '  🏔️ '; curl -s 'wttr.in/Futaleufu,Chile?format=%t+%h+%w'
+            
+            # Hourly forecast for La Lucila (home location)
+            echo -n '⏰ Today: '
+            curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=Morning+%t+|+Noon+%t+|+Evening+%t+|+Night+%t'
+            
+            sleep 300  # Update every 5 minutes
+        done
+        "
+        echo "✅ Weather pane refreshed!"
+    else
+        echo "❌ Could not find Home Command Center window"
+    fi
+else
+    echo "❌ Could not find weather pane to refresh"
+fi
+
+# Refresh taskwarrior-tui if it's running
+TASK_PANE_ID=$(wezterm cli list-panes | grep -E "(taskwarrior|Task Management)" | awk '{print $1}' | head -1)
+if [[ -n "$TASK_PANE_ID" ]]; then
+    echo "🔄 Refreshing task data..."
+    wezterm cli send-text --pane-id "$TASK_PANE_ID" "r"  # 'r' refreshes in taskwarrior-tui
+    echo "✅ Task pane refreshed!"
+fi
+
+echo "🏠 Workspace refresh complete!"
