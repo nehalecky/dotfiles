@@ -10,21 +10,40 @@ echo "📁 Working directory: $HOME"
 # Start in HOME directory
 cd "$HOME"
 
-# Create new WezTerm window
+# Create new WezTerm window (fullscreen via manual Cmd+Enter if desired)
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
 
-# Top weather strip - small horizontal pane (15% height for current + hourly)
-WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --percent 15 -- zsh -c "
-echo '🌍 Current Weather: La Lucila, Reno, Futaleufú'
+# Top weather strip - 3 lines (8% height - just enough for 3 text lines)
+WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --percent 8 -- zsh -c "
 while true; do
-    # Current weather for all locations
+    # Get current location using CoreLocationCLI (more accurate than IP)
+    if command -v CoreLocationCLI >/dev/null 2>&1; then
+        COORDS=\$(CoreLocationCLI -format '%latitude,%longitude' 2>/dev/null | tr ' ' ',')
+        if [[ -n \"\$COORDS\" && \"\$COORDS\" != \",\" ]]; then
+            CURRENT_LOC=\$(curl -s \"wttr.in/\$COORDS?format=%l\" | tr -d '\n' | sed 's/^[0-9.-]*,[0-9.-]*$/Precise Location/')
+            [[ \"\$CURRENT_LOC\" =~ ^-?[0-9] ]] && CURRENT_LOC=\"Precise Location\"
+        else
+            CURRENT_LOC=\$(curl -s 'wttr.in/?format=%l' | tr -d '\n')
+        fi
+    else
+        CURRENT_LOC=\$(curl -s 'wttr.in/?format=%l' | tr -d '\n')
+    fi
+    
+    # Line 1: Title with dynamic location
+    echo \"🌍 Current: \$CURRENT_LOC | Favorites: La Lucila, Reno, Futaleufú\"
+    
+    # Line 2: Current weather for all favorite locations
     echo -n '🏠 '; curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=%t+%h+%w' | tr -d '\n'
     echo -n '  🎰 '; curl -s 'wttr.in/Reno,NV?format=%t+%h+%w' | tr -d '\n'  
     echo -n '  🏔️ '; curl -s 'wttr.in/Futaleufu,Chile?format=%t+%h+%w'
     
-    # Hourly forecast for La Lucila (home location)
-    echo -n '⏰ Today: '
-    curl -s 'wttr.in/La_Lucila,Buenos_Aires?format=Morning+%t+|+Noon+%t+|+Evening+%t+|+Night+%t'
+    # Line 3: 24-hour forecast for current detected location
+    echo -n '⏰ Next 24hrs: '
+    if command -v CoreLocationCLI >/dev/null 2>&1 && [[ -n \"\$COORDS\" && \"\$COORDS\" != \",\" ]]; then
+        curl -s \"wttr.in/\$COORDS?format=Morning+%t+|+Noon+%t+|+Evening+%t+|+Night+%t+|+Tomorrow+AM+%t\"
+    else
+        curl -s 'wttr.in/?format=Morning+%t+|+Noon+%t+|+Evening+%t+|+Night+%t+|+Tomorrow+AM+%t'
+    fi
     
     sleep 300  # Update every 5 minutes
 done
