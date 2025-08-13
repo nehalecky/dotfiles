@@ -11,10 +11,10 @@ echo "📁 Working directory: $HOME"
 cd "$HOME"
 
 # Create new WezTerm window (fullscreen via manual Cmd+Enter if desired)
-WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
+ROOT_PANE=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
 
 # Top weather strip - Rich-formatted enhanced display  
-WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --cells 3 -- zsh -c "
+WEATHER_PANE=$(wezterm cli split-pane --pane-id "$ROOT_PANE" --top --cells 3 -- zsh -c "
 while true; do
     # Use Rich-based weather display (now with global Rich install)
     ~/.local/bin/weather-display || {
@@ -29,10 +29,10 @@ done
 ")
 
 # Upper right: File manager (yazi) - 50% width of remaining space
-FILE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 50 -- yazi "$HOME")
+FILE_PANE=$(wezterm cli split-pane --pane-id "$ROOT_PANE" --right --percent 50 -- yazi "$HOME")
 
 # Lower left: Claude Code - 50% height of left side, auto-launch
-CLAUDE_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --bottom --percent 50 -- zsh -c "
+CLAUDE_PANE=$(wezterm cli split-pane --pane-id "$ROOT_PANE" --bottom --percent 50 -- zsh -c "
 echo '🤖 Launching Claude Code...'
 sleep 1
 claude
@@ -70,7 +70,7 @@ else
 fi
 
 # Set window title
-wezterm cli set-tab-title --pane-id "$WINDOW_ID" "🏠 Home Command Center"
+wezterm cli set-tab-title --pane-id "$ROOT_PANE" "🏠 Home Command Center"
 
 echo "✅ Home Command Center ready!"
 echo ""
