@@ -13,18 +13,16 @@ cd "$HOME"
 # Create new WezTerm window (fullscreen via manual Cmd+Enter if desired)
 WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
 
-# Top weather strip - Rich-formatted enhanced display
+# Top weather strip - Rich-formatted enhanced display  
 WEATHER_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --top --cells 3 -- zsh -c "
 while true; do
-    # Use new Rich-based weather display (foundation for future TUI app)
-    if command -v uv >/dev/null 2>&1; then
-        uv run --with rich ~/.local/bin/weather-display
-    else
-        # Fallback to simple display if UV not available
-        echo '🌍 Weather system initializing...'
-        echo '💡 Install UV for enhanced weather display'
-        echo '📍 Basic location: \$(curl -s \"wttr.in/?format=%l\" | tr -d \'\n\') | Temp: \$(curl -s \"wttr.in/?format=%t\")'
-    fi
+    # Use Rich-based weather display (now with global Rich install)
+    ~/.local/bin/weather-display || {
+        # Fallback to simple display if weather-display fails
+        echo '⚠️ Weather display error, using basic fallback'
+        echo '📍 \$(curl -s \"wttr.in/?format=%l\" 2>/dev/null | tr -d \'\n\' || echo \"Location unknown\"): \$(curl -s \"wttr.in/?format=%t\" 2>/dev/null || echo \"?°C\")'
+        echo '🔄 Retrying in 5 minutes...'
+    }
     
     sleep 300  # Update every 5 minutes
 done
