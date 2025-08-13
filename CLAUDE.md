@@ -140,10 +140,10 @@ weather [location]           # Weather command system
 **Purpose:** Daily operations, dotfiles management, system monitoring
 **Layout:** 4-panel fullscreen workspace with weather integration
 ```
-┌─Weather Strip (5% height)─────────────────────────┐
+┌─Weather Strip (3 cells)───────────────────────────┐
 │ 🌍 Current: Location | Favorites: La Lucila, Reno │
-│ 🏠 +21°C 43% ↘17km/h  🎰 +24°C 31% ↘4km/h         │
-│ ⏰ Next 24hrs: Morning +21°C | Noon +21°C...      │
+│ 🏠 +17°C 59% →7km/h  🎰 +33°C 26% →15km/h         │
+│ ⏰ Next hours: 3AM:13°C | 12PM:13°C | 9PM:11°C    │
 ├─────────────────┬─────────────────────────────────┤
 │ Terminal (zsh)  │ File Manager (yazi)             │
 │ Chezmoi source  │ Browse dotfiles                 │
