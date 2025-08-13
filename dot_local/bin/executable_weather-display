@@ -171,20 +171,20 @@ def format_location_line(weather_data: Dict, coords: str) -> Text:
     text.append(f"{emoji} {temp}°C", style="red bold")
     text.append(f" (feels {feels_like}°C)", style="yellow")
     text.append(f" | {humidity}% ", style="blue")
-    text.append(f"{wind_arrow}{wind_speed}km/h", style="green")
+    text.append(f"{wind_arrow} {wind_speed}km/h", style="green")
     
     return text
 
 def format_hourly_line(weather_data: Dict) -> Text:
-    """Format line 2: Next 24 hours in 6-hour increments"""
+    """Format line 2: Next 24 hours in 3-hour increments with precipitation"""
     hourly = weather_data.get("weather", [{}])[0].get("hourly", [])
     
     text = Text()
     text.append("⏰ Next 24h: ", style="magenta")
     
-    # Select 4 time periods: 6AM, 12PM, 6PM, 12AM (indices 2, 4, 6, 0 of next day)
+    # Key 3-hour intervals: 6AM, 12PM, 6PM, 12AM  
     time_slots = [
-        (2, "🌅6AM"), (4, "☀️12PM"), (6, "🌇6PM"), (0, "🌙12AM")
+        (2, "6AM"), (4, "12PM"), (6, "6PM"), (0, "12AM")
     ]
     
     for i, (idx, label) in enumerate(time_slots):
@@ -192,25 +192,33 @@ def format_hourly_line(weather_data: Dict) -> Text:
             hour_data = hourly[idx]
             temp = hour_data.get("tempC", "?")
             condition = hour_data.get("weatherDesc", [{}])[0].get("value", "")
+            precip = hour_data.get("precipMM", "0")
+            
+            emoji = get_weather_emoji(condition)
             
             if i > 0:
                 text.append(" | ", style="dim")
             text.append(f"{label} ", style="bright_cyan")
+            text.append(f"{emoji} ", style="yellow")
             text.append(f"{temp}°C", style="red")
+            
+            # Add precipitation if > 0
+            if float(precip) > 0:
+                text.append(f" ({precip}mm)", style="blue")
     
     return text
 
 def format_daily_line(weather_data: Dict) -> Text:
-    """Format line 3: Next 7 days"""
+    """Format line 3: 3-day forecast with precipitation (wttr.in limitation)"""
     weather_days = weather_data.get("weather", [])
     
     text = Text()
-    text.append("📅 Week: ", style="green")
+    text.append("📅 3-Day: ", style="green")
     
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     today = datetime.now().weekday()  # 0 = Monday
     
-    for i in range(min(6, len(weather_days))):  # Show 6 days max
+    for i in range(len(weather_days)):  # Show all available days (typically 3)
         if i > 0:
             text.append(" ", style="dim")
             
@@ -218,6 +226,9 @@ def format_daily_line(weather_data: Dict) -> Text:
         day_name = days[(today + i) % 7]
         max_temp = day_data.get("maxtempC", "?")
         min_temp = day_data.get("mintempC", "?")
+        
+        # Get total precipitation for the day
+        total_precip = day_data.get("totalPrecipMM", "0")
         
         # Use condition from middle of day (around noon)
         hourly = day_data.get("hourly", [])
@@ -228,10 +239,14 @@ def format_daily_line(weather_data: Dict) -> Text:
         emoji = get_weather_emoji(condition)
         
         text.append(f"{day_name}", style="cyan")
-        text.append(f"{emoji}", style="yellow")
+        text.append(f"{emoji} ", style="yellow")
         text.append(f"{max_temp}°", style="red bold")
         text.append("/", style="dim")
         text.append(f"{min_temp}°", style="blue")
+        
+        # Add precipitation if > 0
+        if float(total_precip) > 0:
+            text.append(f"({total_precip}mm)", style="blue")
     
     return text
 
