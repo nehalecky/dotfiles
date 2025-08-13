@@ -1,0 +1,89 @@
+#!/bin/bash
+# VS Code + Claude Code Integration Setup
+# Configures seamless Claude Code access from VS Code
+
+set -euo pipefail
+
+echo "🔧 Setting up VS Code + Claude Code integration..."
+
+# Ensure VS Code CLI is in PATH
+if ! command -v code >/dev/null 2>&1; then
+    echo "❌ VS Code CLI not found. Installing..."
+    # Install VS Code command line tools
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS: Add VS Code to PATH via shell profile
+        VSCODE_PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+        if [[ -d "$VSCODE_PATH" ]]; then
+            export PATH="$VSCODE_PATH:$PATH"
+            echo "✅ VS Code CLI added to PATH"
+        fi
+    fi
+fi
+
+# Set up MCP servers for VS Code Claude integration
+echo "🔌 Setting up MCP servers for VS Code..."
+
+# Create MCP config directory if it doesn't exist
+mkdir -p ~/.config/Code/User
+
+# Resolve 1Password tokens for MCP configuration
+echo "🔐 Resolving MCP tokens from 1Password..."
+GITHUB_TOKEN=$(op read 'op://Private/jxl22cpv4ajpeyerljnye77vga/credential' 2>/dev/null || echo "")
+HF_TOKEN=$(op read 'op://Private/ayeipvfasflfph3jn25lb6n2ku/credential' 2>/dev/null || echo "")
+
+if [[ -n "$GITHUB_TOKEN" && -n "$HF_TOKEN" ]]; then
+    # Create resolved MCP config for VS Code
+    cat > ~/.config/Code/User/claude-mcp-resolved.json << EOF
+{
+  "mcpServers": {
+    "github": {
+      "type": "stdio",
+      "command": "github.com/github/github-mcp-server",
+      "args": [],
+      "env": {
+        "GITHUB_TOKEN": "$GITHUB_TOKEN"
+      }
+    },
+    "hf-mcp-server": {
+      "type": "http", 
+      "url": "https://huggingface.co/mcp",
+      "headers": {
+        "Authorization": "Bearer $HF_TOKEN"
+      }
+    }
+  }
+}
+EOF
+    echo "✅ MCP servers configured for VS Code"
+else
+    echo "⚠️  Could not resolve 1Password tokens - MCP servers may not work"
+fi
+
+# Test Claude Code integration
+echo "🧪 Testing Claude Code integration..."
+if command -v claude >/dev/null 2>&1; then
+    echo "✅ Claude Code CLI available"
+    
+    # Test VS Code integration
+    if code --version >/dev/null 2>&1; then
+        echo "✅ VS Code CLI available"
+        echo "📝 Claude Code IDE integration ready!"
+        echo ""
+        echo "Usage:"
+        echo "  • Press Cmd+Esc in VS Code to launch Claude Code"
+        echo "  • Current file/selection automatically shared"
+        echo "  • Use 'code <file>' from Claude Code terminal"
+        echo ""
+        echo "Workflow Integration:"
+        echo "  • workspace-dev launches can include VS Code"
+        echo "  • Seamless context switching terminal ↔ GUI"
+        echo "  • Consistent AI assistance across environments"
+    else
+        echo "⚠️  VS Code CLI not available - some features limited"
+    fi
+else
+    echo "❌ Claude Code not found. Please ensure it's installed."
+    exit 1
+fi
+
+echo "🎉 VS Code + Claude Code setup complete!"
