@@ -1,6 +1,6 @@
 {
   // Editor Configuration
-  "editor.fontFamily": "MesloLGS NF, Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "'MesloLGLDZ Nerd Font', 'MesloLGS NF', Monaco, 'Courier New', monospace",
   "editor.fontSize": 14,
   "editor.lineHeight": 1.5,
   "editor.fontLigatures": true,
@@ -33,8 +33,9 @@
   "explorer.confirmDragAndDrop": false,
   
   // Terminal Integration (matches your WezTerm setup)
-  "terminal.integrated.fontFamily": "MesloLGS NF",
+  "terminal.integrated.fontFamily": "'MesloLGLDZ Nerd Font', 'MesloLGS NF', Monaco, Consolas, 'Courier New', monospace",
   "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontWeight": "normal",
   "terminal.integrated.shell.osx": "/bin/zsh",
   "terminal.integrated.env.osx": {
     "PATH": "${env:HOME}/.local/bin:${env:PATH}"
@@ -82,5 +83,6 @@
   "security.workspace.trust.enabled": false,
   
   // Claude Code Integration
-  "claude.keyboardShortcut": "cmd+esc"
+  "claude.keyboardShortcut": "cmd+esc",
+  "claude.mcp.configPath": "~/.config/Code/User/claude-mcp-resolved.json"
 }
