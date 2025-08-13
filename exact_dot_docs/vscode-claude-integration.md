@@ -14,7 +14,6 @@ Comprehensive VS Code configuration integrated with your terminal-first workflow
 
 ### Claude Code Integration
 - `~/.config/Code/User/claude-mcp.json` - MCP server configuration template
-- `~/.local/bin/setup-vscode-claude` - Setup and configuration script
 
 ## Key Features
 
@@ -39,16 +38,13 @@ Comprehensive VS Code configuration integrated with your terminal-first workflow
 ```bash
 # Apply chezmoi configuration
 chezmoi apply
-
-# Run VS Code integration setup
-~/.local/bin/setup-vscode-claude
 ```
 
-### 2. MCP Server Setup
-The setup script will:
-- Resolve 1Password tokens for GitHub/HuggingFace
-- Create `claude-mcp-resolved.json` with actual tokens
-- Configure VS Code to use the resolved MCP configuration
+### 2. Claude Code Integration
+Claude Code automatically integrates with VS Code when you:
+- Open VS Code's integrated terminal (`Ctrl+``)
+- Run `claude` command
+- The extension auto-installs and connects
 
 ### 3. Extension Installation
 Essential extensions (install manually or via sync):
@@ -112,11 +108,11 @@ code --install-extension yzhang.markdown-all-in-one
 
 ### MCP Server Issues
 ```bash
-# Re-run setup to refresh tokens
-~/.local/bin/setup-vscode-claude
-
 # Check MCP configuration
-cat ~/.config/Code/User/claude-mcp-resolved.json
+cat ~/.config/Code/User/claude-mcp.json
+
+# Test Claude Code connection
+claude mcp list
 ```
 
 ### Claude Code Integration
