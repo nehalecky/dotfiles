@@ -259,7 +259,7 @@ def format_daily_line(weather_data: Dict) -> Text:
         
         emoji = get_weather_emoji(condition)
         
-        text.append(f"{day_name}", style="cyan")
+        text.append(f"{day_name} ", style="cyan")
         text.append(f"{emoji} ", style="yellow")
         text.append(f"{max_temp}°", style="red bold")
         text.append("/", style="dim")
@@ -267,7 +267,7 @@ def format_daily_line(weather_data: Dict) -> Text:
         
         # Add precipitation if > 0
         if float(total_precip) > 0:
-            text.append(f"({total_precip}mm)", style="blue")
+            text.append(f" ({total_precip}mm)", style="blue")
     
     return text
 
