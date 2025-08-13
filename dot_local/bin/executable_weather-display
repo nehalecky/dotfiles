@@ -1,0 +1,272 @@
+#!/usr/bin/env python3
+"""
+Enhanced Weather Display for Terminal
+Uses precise location detection and Rich formatting
+
+Future TUI App Foundation:
+- Modular weather data fetching
+- Rich-based formatting components  
+- Extensible emoji/formatting system
+- Clean separation of data/display logic
+"""
+
+import json
+import subprocess
+import sys
+from datetime import datetime
+from typing import Dict, Optional, Tuple
+from urllib.request import urlopen
+from urllib.parse import quote
+
+# Graceful dependency handling for future TUI development
+def check_dependencies():
+    """Check and suggest dependency installation"""
+    missing = []
+    try:
+        from rich.console import Console
+        from rich.text import Text
+    except ImportError:
+        missing.append("rich")
+        
+    if missing:
+        print(f"🐍 Missing packages: {', '.join(missing)}")
+        print("💡 Install with UV:")
+        print(f"   uv run --with {' --with '.join(missing)} {sys.argv[0]}")
+        print("🚀 Or for development: python3 -m pip install --user --break-system-packages " + " ".join(missing))
+        print("📚 Learning UV: https://docs.astral.sh/uv/")
+        return False
+    return True
+
+if not check_dependencies():
+    sys.exit(1)
+
+from rich.console import Console
+from rich.text import Text
+
+# Country code to flag emoji (no external dependency needed!)
+def country_to_flag(country_code: str) -> str:
+    """Convert country code to flag emoji using Unicode math"""
+    if len(country_code) != 2:
+        return "🌍"
+    return "".join(chr(ord(c) + 127397) for c in country_code.upper())
+
+console = Console()
+
+# =============================================================================
+# FUTURE TUI APP FOUNDATIONS
+# =============================================================================
+# This script is designed as a foundation for a full TUI weather app
+# 
+# TUI App Architecture Ideas:
+# 1. Main Dashboard: Current + 7-day forecast with Rich tables
+# 2. Location Manager: Add/remove favorite locations
+# 3. Settings Panel: Units, refresh rate, emoji themes
+# 4. Detail Views: Hourly breakdown, weather maps, alerts
+# 5. Keyboard Navigation: vim-like keybinds for power users
+# 
+# Rich Components to explore:
+# - rich.table.Table for forecast grids
+# - rich.progress.Progress for loading weather data
+# - rich.layout.Layout for responsive panels  
+# - rich.live.Live for real-time updates
+# - rich.panel.Panel for grouped weather info
+# - rich.console.Group for complex layouts
+# =============================================================================
+
+# Weather condition to emoji mapping (TUI app will have theme support)
+WEATHER_EMOJI = {
+    "Clear": "☀️", "Sunny": "☀️", "Fair": "☀️",
+    "Partly cloudy": "🌤️", "Partly Cloudy": "🌤️", 
+    "Mostly cloudy": "🌥️", "Mostly Cloudy": "🌥️",
+    "Cloudy": "☁️", "Overcast": "☁️",
+    "Light rain": "🌦️", "Light Rain": "🌦️",
+    "Rain": "🌧️", "Heavy rain": "🌧️", "Heavy Rain": "🌧️",
+    "Light snow": "❄️", "Snow": "🌨️", "Heavy snow": "🌨️",
+    "Thunderstorm": "⛈️", "Storm": "⛈️", 
+    "Lightning": "🌩️", "Thunder": "⛈️",
+    "Fog": "🌫️", "Mist": "🌫️", "Hazy": "🌫️",
+    "Drizzle": "🌦️", "Showers": "🌧️"
+}
+
+def get_weather_emoji(condition: str) -> str:
+    """Convert weather condition to emoji"""
+    return WEATHER_EMOJI.get(condition, "🌍")
+
+def get_precise_location() -> Tuple[Optional[str], Optional[str]]:
+    """Get precise location using CoreLocationCLI"""
+    try:
+        result = subprocess.run(
+            ["CoreLocationCLI", "-format", "%latitude,%longitude"], 
+            capture_output=True, text=True, timeout=5
+        )
+        if result.returncode == 0:
+            coords = result.stdout.strip()
+            if coords and coords != ",":
+                return coords, None
+    except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):
+        pass
+    return None, "Location detection failed"
+
+def fetch_weather_data(coords: str) -> Optional[Dict]:
+    """Fetch comprehensive weather data from wttr.in (foundation for future TUI app)"""
+    try:
+        url = f"https://wttr.in/{quote(coords)}?format=j1"
+        with urlopen(url, timeout=10) as response:
+            return json.loads(response.read().decode('utf-8'))
+    except (Exception,):  # Broad catch for network/JSON errors
+        return None
+
+def format_location_line(weather_data: Dict, coords: str) -> Text:
+    """Format line 1: Location with flag and current conditions"""
+    current = weather_data.get("current_condition", [{}])[0]
+    location = weather_data.get("nearest_area", [{}])[0]
+    
+    # Extract location details
+    area_name = location.get("areaName", [{}])[0].get("value", "Unknown")
+    country = location.get("country", [{}])[0].get("value", "Unknown")
+    country_code = location.get("country", [{}])[0].get("value", "")
+    
+    # Smart country code detection for flag (TUI app will expand this)
+    country_flag = ""
+    if len(country) == 2:  # Already a country code
+        country_flag = country_to_flag(country.upper())
+    else:
+        # Map common country names to codes (future TUI will have full mapping)
+        country_map = {
+            "Argentina": "AR", "United States": "US", "Chile": "CL",
+            "Canada": "CA", "United Kingdom": "GB", "France": "FR",
+            "Germany": "DE", "Japan": "JP", "Australia": "AU"
+        }
+        for name, code in country_map.items():
+            if name in country:
+                country_flag = country_to_flag(code)
+                break
+        if not country_flag:
+            country_flag = "🌍"
+    
+    # Current conditions
+    temp = current.get("temp_C", "?")
+    feels_like = current.get("FeelsLikeC", "?")
+    condition = current.get("weatherDesc", [{}])[0].get("value", "Unknown")
+    humidity = current.get("humidity", "?")
+    wind_speed = current.get("windspeedKmph", "?")
+    wind_dir = current.get("winddir16Point", "")
+    
+    # Wind direction arrow
+    wind_arrows = {
+        "N": "↑", "NNE": "↗", "NE": "↗", "ENE": "→", "E": "→",
+        "ESE": "↘", "SE": "↘", "SSE": "↓", "S": "↓", "SSW": "↙",
+        "SW": "↙", "WSW": "←", "W": "←", "WNW": "↖", "NW": "↖", "NNW": "↑"
+    }
+    wind_arrow = wind_arrows.get(wind_dir, "")
+    
+    emoji = get_weather_emoji(condition)
+    
+    text = Text()
+    text.append("📍 ", style="blue")
+    text.append(f"{area_name}", style="cyan bold")
+    text.append(f" ({coords}) ", style="dim")
+    text.append(f"{country_flag} ", style="bright_yellow")
+    text.append("| Current: ", style="white")
+    text.append(f"{emoji} {temp}°C", style="red bold")
+    text.append(f" (feels {feels_like}°C)", style="yellow")
+    text.append(f" | {humidity}% ", style="blue")
+    text.append(f"{wind_arrow}{wind_speed}km/h", style="green")
+    
+    return text
+
+def format_hourly_line(weather_data: Dict) -> Text:
+    """Format line 2: Next 24 hours in 6-hour increments"""
+    hourly = weather_data.get("weather", [{}])[0].get("hourly", [])
+    
+    text = Text()
+    text.append("⏰ Next 24h: ", style="magenta")
+    
+    # Select 4 time periods: 6AM, 12PM, 6PM, 12AM (indices 2, 4, 6, 0 of next day)
+    time_slots = [
+        (2, "🌅6AM"), (4, "☀️12PM"), (6, "🌇6PM"), (0, "🌙12AM")
+    ]
+    
+    for i, (idx, label) in enumerate(time_slots):
+        if idx < len(hourly):
+            hour_data = hourly[idx]
+            temp = hour_data.get("tempC", "?")
+            condition = hour_data.get("weatherDesc", [{}])[0].get("value", "")
+            
+            if i > 0:
+                text.append(" | ", style="dim")
+            text.append(f"{label} ", style="bright_cyan")
+            text.append(f"{temp}°C", style="red")
+    
+    return text
+
+def format_daily_line(weather_data: Dict) -> Text:
+    """Format line 3: Next 7 days"""
+    weather_days = weather_data.get("weather", [])
+    
+    text = Text()
+    text.append("📅 Week: ", style="green")
+    
+    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    today = datetime.now().weekday()  # 0 = Monday
+    
+    for i in range(min(6, len(weather_days))):  # Show 6 days max
+        if i > 0:
+            text.append(" ", style="dim")
+            
+        day_data = weather_days[i]
+        day_name = days[(today + i) % 7]
+        max_temp = day_data.get("maxtempC", "?")
+        min_temp = day_data.get("mintempC", "?")
+        
+        # Use condition from middle of day (around noon)
+        hourly = day_data.get("hourly", [])
+        condition = ""
+        if len(hourly) >= 4:
+            condition = hourly[4].get("weatherDesc", [{}])[0].get("value", "")
+        
+        emoji = get_weather_emoji(condition)
+        
+        text.append(f"{day_name}", style="cyan")
+        text.append(f"{emoji}", style="yellow")
+        text.append(f"{max_temp}°", style="red bold")
+        text.append("/", style="dim")
+        text.append(f"{min_temp}°", style="blue")
+    
+    return text
+
+def main():
+    """Main weather display function"""
+    # Get precise location
+    coords, error = get_precise_location()
+    if error:
+        console.print(f"❌ {error}", style="red")
+        console.print("🌍 Using IP-based location...", style="yellow")
+        coords = ""  # Fallback to IP detection
+    
+    # Fetch weather data
+    weather_data = fetch_weather_data(coords)
+    if not weather_data:
+        console.print("❌ Failed to fetch weather data", style="red")
+        return
+    
+    # Format and display 3 lines
+    try:
+        line1 = format_location_line(weather_data, coords or "Auto-detected")
+        line2 = format_hourly_line(weather_data)
+        line3 = format_daily_line(weather_data)
+        
+        console.print(line1)
+        console.print(line2) 
+        console.print(line3)
+        
+    except Exception as e:
+        console.print(f"❌ Format error: {e}", style="red")
+        # Fallback simple display
+        current = weather_data.get("current_condition", [{}])[0]
+        temp = current.get("temp_C", "?")
+        condition = current.get("weatherDesc", [{}])[0].get("value", "Unknown")
+        console.print(f"🌍 Current weather: {get_weather_emoji(condition)} {temp}°C - {condition}")
+
+if __name__ == "__main__":
+    main()
