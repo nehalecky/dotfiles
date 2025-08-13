@@ -75,22 +75,43 @@ console = Console()
 
 # Weather condition to emoji mapping (TUI app will have theme support)
 WEATHER_EMOJI = {
+    # Clear conditions
     "Clear": "☀️", "Sunny": "☀️", "Fair": "☀️",
-    "Partly cloudy": "🌤️", "Partly Cloudy": "🌤️", 
+    
+    # Partly cloudy variations  
+    "Partly cloudy": "🌤️", "Partly Cloudy": "🌤️", "Partly cloudy ": "🌤️",
+    
+    # Mostly cloudy
     "Mostly cloudy": "🌥️", "Mostly Cloudy": "🌥️",
-    "Cloudy": "☁️", "Overcast": "☁️",
+    
+    # Cloudy conditions
+    "Cloudy": "☁️", "Cloudy ": "☁️", "Overcast": "☁️",
+    
+    # Rain conditions  
     "Light rain": "🌦️", "Light Rain": "🌦️",
     "Rain": "🌧️", "Heavy rain": "🌧️", "Heavy Rain": "🌧️",
+    "Moderate rain": "🌧️", "Heavy shower": "🌧️",
+    
+    # Snow conditions
     "Light snow": "❄️", "Snow": "🌨️", "Heavy snow": "🌨️",
-    "Thunderstorm": "⛈️", "Storm": "⛈️", 
+    "Light snow shower": "❄️", "Moderate snow": "🌨️",
+    
+    # Storms
+    "Thunderstorm": "⛈️", "Storm": "⛈️", "Thundery shower": "⛈️",
     "Lightning": "🌩️", "Thunder": "⛈️",
+    
+    # Fog and mist
     "Fog": "🌫️", "Mist": "🌫️", "Hazy": "🌫️",
-    "Drizzle": "🌦️", "Showers": "🌧️"
+    
+    # Light precipitation
+    "Drizzle": "🌦️", "Showers": "🌧️", "Light shower": "🌦️"
 }
 
 def get_weather_emoji(condition: str) -> str:
     """Convert weather condition to emoji"""
-    return WEATHER_EMOJI.get(condition, "🌍")
+    # Strip whitespace and normalize condition string
+    clean_condition = condition.strip()
+    return WEATHER_EMOJI.get(clean_condition, "🌍")
 
 def get_precise_location() -> Tuple[Optional[str], Optional[str]]:
     """Get precise location using CoreLocationCLI"""
