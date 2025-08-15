@@ -39,6 +39,12 @@ eval "$(gh completion -s zsh)"                     # GitHub CLI
 eval "$(chezmoi completion zsh)"                   # chezmoi
 eval "$(uv generate-shell-completion zsh)"         # uv Python manager
 
+# Taskwarrior completion
+fpath=(~/.local/share/zsh/site-functions $fpath)
+zstyle ':completion:*:*:task:*' verbose yes
+zstyle ':completion:*:*:task:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:*:task:*' group-name ''
+
 # npm completion (if available)
 if command -v npm >/dev/null 2>&1; then
   eval "$(npm completion)"
@@ -131,7 +137,7 @@ alias doom="~/.config/emacs/bin/doom"
 
 # Show WezTerm shortcuts on terminal startup (for learning curve)
 # Only show in interactive shells and not in sub-shells
-if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -z "$VSCODE_TERM" ]] && [[ "$SHLVL" -eq 1 ]]; then
+if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -z "$VSCODE_TERM" ]] && [[ -z "$TERM_PROGRAM" ]] && [[ "$SHLVL" -eq 1 ]]; then
   if command -v wezterm-shortcuts >/dev/null 2>&1; then
     echo ""
     wezterm-shortcuts

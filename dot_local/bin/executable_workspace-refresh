@@ -51,11 +51,10 @@ fi
 # Universal refreshes for any workspace type
 echo "  🔄 Performing universal refreshes..."
 
-# Refresh taskwarrior-tui if it's running anywhere
-TASK_PANE_ID=$(wezterm cli list | grep "taskwarrior" | awk '{print $3}' | head -1)
-if [[ -n "$TASK_PANE_ID" ]]; then
-    echo "  ✅ Refreshing task data..."
-    wezterm cli send-text --pane-id "$TASK_PANE_ID" "r"  # 'r' refreshes in taskwarrior-tui
+# Refresh Jira/ACLI data if available  
+if command -v acli >/dev/null 2>&1; then
+    echo "  ✅ Syncing Jira data..."
+    acli config > /dev/null 2>&1 || true  # Sync config silently
 fi
 
 # Refresh any yazi file manager panes
