@@ -39,7 +39,7 @@ Complete reference for all commands, shortcuts, and tools in the myTUI environme
 
 ```bash
 # Home workspace (4-pane layout for system management)
-workspace-home                 # Launch with file manager, claude, and tasks
+workspace-home                 # Launch with file manager, claude, and jira tasks
 
 # Development workspace (project-specific layout)
 workspace-dev                  # Launch in current directory
@@ -68,23 +68,22 @@ chezmoi status              # Check for changes
 chezmoi doctor              # Diagnose issues
 ```
 
-### Task Management
+### Jira Integration
 
 ```bash
-# Basic task operations
-task add "Description" +tag priority:H due:tomorrow
-task list                   # Show all pending tasks
-task next                  # Show most urgent tasks (limit 10)
-task done 1                # Mark task 1 as completed
+# Jira task management via ACLI
+acli issue list            # Show current issues
+acli issue create          # Create new issue
+acli issue view KEY-123    # View specific issue
 
-# Custom reports
-task work                  # Show work-tagged tasks only
-task personal              # Show personal-tagged tasks only
+# Claude-powered Jira integration
+claude jira search         # AI-powered issue search
+claude jira create         # AI-assisted issue creation
 
-# Task modification
-task 1 modify priority:L   # Change priority
-task 1 modify +urgent      # Add urgent tag
-task 1 annotate "note"     # Add annotation
+# GitHub integration
+gh dash                    # GitHub dashboard
+gh issue list              # List GitHub issues
+gh pr list                 # List pull requests
 ```
 
 ### Git Integration
@@ -162,19 +161,23 @@ git diff                  # Changes in chezmoi repo
 - **Sorting**: By size, with percentages
 - **Navigation**: Interactive directory exploration
 
-### Task Management
+### Jira Integration
 
-**taskwarrior-tui** - Interactive task manager
-- **Navigation**: `j/k` move up/down, `enter` select
-- **Actions**: `a` add task, `d` mark done, `e` edit
-- **Filtering**: `/` filter, `esc` clear filter
-- **Help**: `?` show all keybindings
+**Web Interface**: [middledata.atlassian.net](https://middledata.atlassian.net)
+- Full-featured Jira interface for comprehensive task management
+- Board views, sprint planning, and project tracking
+- Integration with GitHub via pull request links
 
-**Task Tags with Colors**:
-- `+urgent` - Red highlight for high priority items
-- `+work` - Orange highlight for work-related tasks  
-- `+personal` - Blue highlight for personal tasks
-- Custom priorities: `H` (high), `M` (medium), `L` (low)
+**ACLI Commands**:
+- **Issue Management**: Create, view, edit, and transition issues
+- **Project Access**: List projects, view boards and sprints
+- **Search**: JQL-powered advanced searching
+- **Integration**: Works with Claude Code for AI assistance
+
+**Active Projects**:
+- **INT Project** - Main integration and automation tasks
+- **GitHub Stars Migration** - Repository organization project
+- **Weather TUI Enhancement** - Terminal interface improvements
 
 ## Configuration Files
 
@@ -185,8 +188,7 @@ git diff                  # Changes in chezmoi repo
 ├── starship.toml          # Prompt configuration
 ├── wezterm/wezterm.lua    # Terminal settings and leader keys
 ├── helix/config.toml      # Editor configuration
-├── yazi/yazi.toml         # File manager settings
-└── task/taskrc            # Task management configuration
+└── yazi/yazi.toml         # File manager settings
 
 ~/.local/bin/              # Custom scripts
 ├── workspace-home         # Home workspace launcher
@@ -209,10 +211,10 @@ git diff                  # Changes in chezmoi repo
 - Timeout: 1000ms
 - Visual feedback on leader key press
 
-**Taskwarrior**:
-- Custom urgency coefficients for smart sorting
-- Color-coded priority and tag system
-- Custom reports for work/personal task filtering
+**Jira Integration**:
+- Atlassian CLI (ACLI) for command-line access
+- Claude Code MCP integration for AI-powered task management
+- Seamless web interface integration via middledata.atlassian.net
 
 *For customization details → [workflows guide](workflows.md#customization)*
 
@@ -232,7 +234,7 @@ VISUAL="hx"
 PATH="$HOME/.local/bin:$PATH"  # Custom scripts
 
 # Tool-specific
-TASKDATA="$HOME/.task"         # Taskwarrior data location
+JIRA_API_TOKEN="$(op read ...)" # Jira authentication token
 ```
 
 *Configuration management details → [workflows guide](workflows.md#configuration-management)*
