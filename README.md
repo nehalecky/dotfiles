@@ -8,9 +8,9 @@
 
 **Core Concepts:**
 - **Leader Key System** (`Ctrl+a` + key) - Instant access to any tool without context switching
-- **Workspace Automation** - Pre-configured 4-pane layouts for different project types
+- **Workspace Automation** - Pre-configured 4-pane layouts for different project types  
 - **Configuration as Code** - All settings managed via chezmoi dotfiles system
-- **HOME Integration** - Your home directory shows dotfiles git status in the prompt
+- **AI-Enhanced Development** - Modular memory system with intelligent project context
 
 ## What You Get
 
@@ -25,7 +25,7 @@
 - **Git Operations** - lazygit for intuitive git workflows
 - **Container Management** - lazydocker replacing Docker Desktop
 - **API Testing** - atac as a terminal-based Postman alternative
-- **Task Management** - taskwarrior-tui with custom color schemes
+- **Project Management** - Jira integration with ACLI
 - **System Monitoring** - btop, bandwhich, dust for system insights
 
 *See [complete tool reference →](docs/reference.md#tools)*
@@ -75,8 +75,8 @@ Press `Ctrl+a` followed by:
 
 *See [complete shortcuts reference →](docs/reference.md#shortcuts)*
 
-### HOME Directory Magic
-When in your home directory (`cd ~`), your prompt displays your dotfiles repository status:
+### Configuration Management
+Your prompt displays dotfiles repository status with visual indicators:
 
 ```bash
 ░▒▓   ~   master ✘?⇡   12:52
