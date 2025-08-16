@@ -143,4 +143,4 @@ if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ -z "$VSCODE_TERM" ]] && [[ -z "$TER
     wezterm-shortcuts
     echo ""
   fi
-fi
+fiexport DISABLE_AUTOUPDATER=1
