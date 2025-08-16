@@ -68,12 +68,12 @@ workspace-home
 │ Terminal (zsh)  │ Files (yazi)    │
 │ HOME directory  │ File browser    │
 ├─────────────────┼─────────────────┤
-│ Claude Code     │ Tasks (tw-tui)  │
-│ AI assistance   │ Task management │
+│ Claude Code     │ Jira Tasks      │
+│ AI assistance   │ & System Mgmt   │
 └─────────────────┴─────────────────┘
 ```
 
-**Purpose**: System administration, configuration management, task tracking, and AI-assisted development.
+**Purpose**: System administration, configuration management, Jira task management, and AI-assisted development.
 
 ### Development Workspace
 
@@ -253,56 +253,38 @@ command = "echo 'WORK'"
 
 ## Task Management
 
-### Daily Task Workflow
+### Jira Integration Workflow
 
-**Adding tasks**:
+**Task Management via Jira**:
+- All business and project tasks managed in Jira at **middledata.atlassian.net**
+- Access via web interface or ACLI command line tool
+- Integration with Claude Code for AI-assisted task management
+
+**Daily commands**:
 ```bash
-task add "Review PR #123" +work priority:H due:today
-task add "Grocery shopping" +personal due:weekend
-task add "Deploy feature" +work +urgent
+acli issue list              # View current Jira issues
+acli issue create            # Create new issue
+claude jira search           # AI-powered Jira search via Claude
+gh dash                      # GitHub dashboard for PRs/issues
 ```
 
-**Viewing tasks**:
-```bash
-task list                    # All pending tasks
-task next                    # Most urgent 10 tasks
-task work                    # Work tasks only
-task personal                # Personal tasks only
-```
+**Active Projects in Jira**:
+- **INT-7**: GitHub Stars Migration (26 batch tasks)
+- **INT-24**: Weather TUI Project (12 enhancement tasks)
+- **INT-35**: Omnara AI Evaluation
+- **INT-36**: Weather Forecast Enhancement
 
-**Managing tasks**:
-```bash
-task 1 done                  # Mark task 1 complete
-task 2 modify priority:L     # Lower priority
-task 3 modify +urgent        # Add urgent tag
-task 4 annotate "blocked by API issue"  # Add note
-```
+### Home Workspace Integration
 
-### Taskwarrior-TUI Usage
+The home workspace automatically displays:
+- Quick Jira commands and shortcuts
+- System management tools
+- GitHub dashboard integration
+- Migration success confirmation
 
-Launch with `taskwarrior-tui` or via home workspace (`workspace-home`).
+**Jira Web Access**: [middledata.atlassian.net](https://middledata.atlassian.net)
 
-**Key bindings**:
-- `a` - Add new task
-- `d` - Mark selected task done
-- `e` - Edit task details
-- `j/k` - Navigate up/down
-- `/` - Filter tasks by text
-- `?` - Show help
-
-### Custom Task Reports
-
-**Work tasks** (`task work`):
-- Shows only tasks tagged with `+work`
-- Sorted by priority then due date
-- Useful for focusing during work hours
-
-**Personal tasks** (`task personal`):
-- Shows only tasks tagged with `+personal`  
-- Sorted by priority then due date
-- Good for weekend/personal time planning
-
-*Complete task management reference → [reference guide](reference.md#task-management)*
+*Complete Jira integration reference → [reference guide](reference.md#jira-integration)*
 
 ## Troubleshooting
 
