@@ -216,7 +216,6 @@ Most tool configurations are in `~/.config/`:
 - `starship.toml` - Prompt appearance and modules
 - `helix/config.toml` - Editor keybindings and LSP settings
 - `yazi/yazi.toml` - File manager behavior and previews
-- `task/taskrc` - Task management rules and colors
 
 **Adding custom scripts**:
 
@@ -266,6 +265,9 @@ acli issue list              # View current Jira issues
 acli issue create            # Create new issue
 claude jira search           # AI-powered Jira search via Claude
 gh dash                      # GitHub dashboard for PRs/issues
+
+# Claude Code AI Development Integration
+python3 ~/.claude/memories/templates/generator.py .  # Generate/refresh project CLAUDE.md
 ```
 
 **Active Projects in Jira**:
@@ -285,6 +287,59 @@ The home workspace automatically displays:
 **Jira Web Access**: [middledata.atlassian.net](https://middledata.atlassian.net)
 
 *Complete Jira integration reference → [reference guide](reference.md#jira-integration)*
+
+## Memory System Management
+
+### Daily AI Context Operations
+
+**Generate/refresh project CLAUDE.md**:
+```bash
+cd /path/to/project
+python3 ~/.claude/memories/templates/generator.py .
+```
+
+**Update memory modules**:
+```bash
+# Edit shared modules that affect all projects
+vim ~/.claude/memories/tools/essential-tools.md
+vim ~/.claude/memories/stacks/python.md
+
+# Commit changes through chezmoi
+chezmoi add ~/.claude/memories/
+chezmoi git -- commit -m "update: improve memory module documentation"
+chezmoi git -- push
+```
+
+**Sync memory system across machines**:
+```bash
+chezmoi update                # Pull latest and apply
+# OR manually:
+chezmoi git pull             # Pull changes
+chezmoi diff                 # Review memory system changes  
+chezmoi apply                # Apply to ~/.claude/memories/
+```
+
+### Quick Memory System Health Check
+
+```bash
+# Verify memory system exists
+ls ~/.claude/memories/
+
+# Check project CLAUDE.md imports
+grep '^@' CLAUDE.md
+
+# Validate a project's memory imports
+python3 -c "
+from pathlib import Path
+import sys
+sys.path.append(str(Path.home() / '.claude/memories/templates'))
+from generator import ProjectDetector
+detector = ProjectDetector(Path('.'))
+print('Project type:', detector.detect().type)
+"
+```
+
+*For complete memory system guide → [Claude Memory System](claude-memory-system.md)*
 
 ## Troubleshooting
 
@@ -306,6 +361,18 @@ brew bundle install          # Install missing packages
 chezmoi doctor               # Diagnose configuration issues
 chezmoi status               # Check what's changed
 chezmoi diff                 # See specific differences
+```
+
+**Memory system issues**:
+```bash
+# Check memory system directory
+ls -la ~/.claude/memories/
+
+# Verify project generator works
+python3 ~/.claude/memories/templates/generator.py --help
+
+# Regenerate project CLAUDE.md
+python3 ~/.claude/memories/templates/generator.py .
 ```
 
 **Git authentication problems**:

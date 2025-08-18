@@ -153,7 +153,7 @@ VS Code is configured to exclude:
 ### Planned Features
 - Workspace-specific MCP server configurations
 - Custom code snippets for your workflow patterns
-- Integration with TaskWarrior for project management
+- Integration with Jira for project management
 
 ### Extension Recommendations
 - GitLens for advanced Git visualization

@@ -114,12 +114,14 @@ $HOME/
 │   ├── share/
 │   │   ├── chezmoi/            # Dotfiles repository
 │   │   │   ├── README.md       # Main documentation
-│   │   │   ├── CLAUDE.md       # AI assistant context
+│   │   │   ├── CLAUDE.md       # Global AI assistant context
 │   │   │   ├── Brewfile        # Dependency manifest
 │   │   │   ├── docs/           # Documentation
 │   │   │   │   ├── ARCHITECTURE.md
 │   │   │   │   ├── TERMINAL-SETUP.md
 │   │   │   │   └── archive/    # Historical docs
+│   │   │   ├── .claude/        # Claude Code memory system
+│   │   │   │   └── memories/   # Modular memory modules
 │   │   │   ├── scripts/        # Automation scripts
 │   │   │   ├── .secrets/       # Encrypted secrets
 │   │   │   └── *.tmpl          # Template files
@@ -136,7 +138,7 @@ $HOME/
 ├── .wezterm.lua                # WezTerm terminal config
 ├── .p10k.zsh                   # Powerlevel10k prompt config
 ├── README.md                   # Repository documentation
-├── CLAUDE.md                   # AI assistant context
+├── CLAUDE.md                   # Project-specific AI context (auto-generated)
 ├── .docs/                      # Symlink to ~/.local/share/chezmoi/docs
 └── .1password/                 # 1Password agent socket
     └── agent.sock
