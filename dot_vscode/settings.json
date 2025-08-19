@@ -1,0 +1,12 @@
+{
+    // Disable git integration specifically in HOME directory
+    // This prevents "untracked files" noise while preserving git functionality elsewhere
+    "git.enabled": false,
+    "git.autoRepositoryDetection": false,
+    "scm.showIncomingChanges": "never",
+    "scm.showOutgoingChanges": "never",
+    
+    // Hide git-related UI elements
+    "explorer.decorations.badges": false,
+    "explorer.decorations.colors": false
+}
