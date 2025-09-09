@@ -95,11 +95,89 @@ Your prompt displays dotfiles repository status with visual indicators:
 - **Something not working?** See [troubleshooting →](docs/workflows.md#troubleshooting)
 - **Want to customize?** Learn about [personalization →](docs/workflows.md#customization)
 
-## Philosophy
+## myTUI Design Philosophy
 
-**Terminal-First Development**: All development tools accessible from a single interface eliminates context switching, preserves mental state, and maximizes keyboard efficiency. Leader keys provide instant access at the speed of thought.
+### Core Design Principles
 
-**Configuration as Code**: Every setting is versioned, reproducible, and shareable. Your entire development environment can be recreated on any machine with a single command.
+**1. Cognitive Load Minimization**
+- **Single Interface Rule**: All development tools accessible through one terminal interface
+- **Consistent Navigation**: Vim-inspired keybindings across all TUI applications
+- **Context Preservation**: Mental state maintained through session management and workspace persistence
+
+**2. Performance-First Architecture**
+- **Sub-100ms Tool Launch**: Every tool must start in under 100ms for interactive responsability
+- **Memory Efficiency**: Prefer Rust/Go implementations over Python/Node.js where performance matters
+- **Intelligent Caching**: Session state, command history, and workspace context preserved across restarts
+
+**3. Composable Tool Ecosystem**
+- **Best-of-Breed Selection**: Choose the fastest, most feature-complete tool for each function
+- **Integration Over Creation**: Compose existing excellent tools rather than building from scratch  
+- **Graceful Degradation**: Fallback to traditional tools when modern alternatives unavailable
+
+**4. Configuration Immutability**
+- **Declarative Configuration**: All settings defined in version-controlled files
+- **Atomic Deployments**: Entire environment reproducible with single command
+- **Environment Isolation**: Personal, work, and project-specific configurations cleanly separated
+
+### Problem-Solution Architecture
+
+**Problem**: Context switching between GUI applications destroys flow state
+**Solution**: Leader-key system (`Ctrl+a + key`) for instant tool access within single terminal
+
+**Problem**: Inconsistent interfaces across development tools  
+**Solution**: TUI applications with unified Vim-inspired navigation patterns
+
+**Problem**: Environment drift and "works on my machine" issues
+**Solution**: Chezmoi-managed dotfiles with 1Password secret integration for reproducible environments
+
+**Problem**: Slow tool startup breaking interactive workflows
+**Solution**: Performance-optimized tool chain with sub-100ms launch requirements
+
+### Implementation Strategy
+
+**Layer 1: Terminal Foundation**
+- WezTerm (GPU acceleration, 120fps rendering)
+- Starship (fast prompt with git integration)  
+- Zsh + Prezto (intelligent completions)
+
+**Layer 2: TUI Application Suite**
+- File Management: `yazi` (image previews, vim navigation)
+- Code Editing: `helix` (built-in LSP, modal editing)
+- Version Control: `lazygit` (visual git workflows)
+- System Monitoring: `btop`, `procs`, `dust` (modern system insights)
+
+**Layer 3: Workflow Automation**
+- Workspace Templates: Project-specific 4-panel layouts
+- Session Management: Persistent development contexts  
+- Configuration Sync: Automatic dotfiles deployment
+
+**Layer 4: AI Integration**
+- Context-Aware: Claude Code with project-specific memory modules
+- MCP Integrations: GitHub, Google Workspace, Atlassian for seamless API access
+- Workflow Intelligence: Automated task management and code analysis
+
+### Claude Code Configuration
+
+This dotfiles repository includes a comprehensive [Claude Code](https://claude.ai/code) configuration with 14 specialized agents, custom hooks, and project-specific memory systems.
+
+**Based on:**
+- [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery) - Original hooks framework
+- Custom extensions for consulting and development workflows
+
+**Key Features:**
+- **Specialized Agents**: 14 focused agents for development, consulting, and research tasks
+- **Hook System**: Python hooks for notifications, tool validation, and workflow automation  
+- **Memory Modules**: Project-specific context and development methodology guides
+- **MCP Integration**: GitHub, Google Workspace, and Atlassian API access
+- **chezmoi Managed**: All configuration version-controlled and deployable
+
+**Agent Categories:**
+- **Development**: repository-manager, system-environment-manager, workflow-designer
+- **Consulting**: professional-document-architect, comprehensive-report-generator
+- **Research**: client-research-coordinator, confluence-research-agent  
+- **Utility**: meta-agent, hello-world-agent, work-completion-summary
+
+The configuration is managed directly by chezmoi in `~/.claude/`, with local runtime data (projects, todos, settings.local.json) excluded from version control via `.chezmoiignore`.
 
 ---
 
