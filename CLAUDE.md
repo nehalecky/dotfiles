@@ -17,13 +17,6 @@
 
 **Course Correction:** When you catch yourself about to write to `/Users/nehalecky/.local/share/chezmoi/`, STOP and use the HOME→Source workflow instead.
 
-## SESSION STARTUP CHECKLIST
-
-### MANDATORY: Check Tasks Upon Launch
-```bash
-task list
-```
-Address any urgent or due tasks before starting new work unless user explicitly redirects.
 
 ## Core Development Context
 
@@ -52,6 +45,7 @@ Address any urgent or due tasks before starting new work unless user explicitly 
 - **Test everything** before suggesting commands
 - **Use MCP integrations** to reduce context switching
 - **ALWAYS ASK FOR EXPLICIT REVIEW** before posting GitHub issues, PRs, or any external communications
+- **STRICT SPEC COMPLIANCE**: When implementing any tool, spec, or app based on documentation, implement EXACTLY as specified - no additional files, no assumptions, no "helpful" extras beyond what's documented
 
 ## Memory System References
 
