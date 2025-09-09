@@ -30,6 +30,7 @@
 **Package Managers:** uv (Python), Homebrew (macOS)
 **Core Tools:** rg, fd, eza, bat, delta (CLI tools Claude Code can execute)
 **Dotfiles:** chezmoi-managed (HOME→Source workflow mandatory)
+**Claude Config:** Direct chezmoi management via `dot_claude/` directory
 **Git:** SSH commit signing enforced
 
 ### Code Standards
@@ -73,8 +74,47 @@ Reference for complex development methodologies:
 python3 ~/.claude/memories/templates/generator.py /path/to/project
 ```
 
+## Claude Code Configuration Architecture
+
+### Direct Chezmoi Management
+**Claude configuration is now directly managed by chezmoi as `~/.local/share/chezmoi/dot_claude/`**
+
+**Structure:**
+```
+~/.claude/                    # Runtime directory (managed by chezmoi)
+├── agents/         (14)      # Specialized agents by category
+├── hooks/          (9)       # Python workflow automation hooks  
+├── memories/       (30+)     # Project context & methodologies
+├── commands/       (13)      # Custom slash commands
+├── output-styles/  (8)       # Response formatting styles
+├── status_lines/   (4)       # Status bar configurations
+└── settings.json             # Global configuration
+
+Local runtime data (NOT managed):
+├── data/                     # Session data
+├── projects/                 # Project configurations  
+├── todos/                    # Task management
+├── settings.local.json       # Machine-specific overrides
+└── shell-snapshots/          # Command history
+```
+
+### Agent Ecosystem (14 Specialized Agents)
+- **Development:** repository-manager, system-environment-manager, workflow-designer
+- **Consulting:** professional-document-architect, comprehensive-report-generator  
+- **Research:** client-research-coordinator, confluence-research-agent, llm-ai-agents-and-eng-research
+- **Platform:** github-operations-agent, google-workspace-agent, atlas-exec-assistant
+- **Utility:** meta-agent, hello-world-agent, work-completion-summary
+
+**Key Agent:** `comprehensive-report-generator` - Replaces fact-checking, market-intelligence, and reference-validation specialists with integrated approach.
+
+### Configuration Management
+- **Source:** `~/.local/share/chezmoi/dot_claude/`
+- **Runtime:** `~/.claude/` (automatically populated by chezmoi)
+- **Local Data:** Excluded via `.chezmoiignore` (never version controlled)
+- **Updates:** Edit source via chezmoi, then `chezmoi apply`
+
 ## Claude Code Focus Areas
-Dotfiles management, command execution, file operations, git workflows, project analysis
+Dotfiles management, command execution, file operations, git workflows, project analysis, comprehensive report generation
 
 ---
 
