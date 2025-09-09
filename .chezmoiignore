@@ -1,0 +1,14 @@
+# Claude runtime data (never manage these)
+dot_claude/data
+dot_claude/projects
+dot_claude/todos
+dot_claude/settings.local.json
+dot_claude/ide
+dot_claude/shell-snapshots
+dot_claude/statsig
+dot_claude/plugins
+dot_claude/memories_local_mcp_backup
+dot_claude/.anthropic
+
+# System files
+**/.DS_Store
