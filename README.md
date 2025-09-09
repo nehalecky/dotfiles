@@ -158,26 +158,39 @@ Your prompt displays dotfiles repository status with visual indicators:
 
 ### Claude Code Configuration
 
-This dotfiles repository includes a comprehensive [Claude Code](https://claude.ai/code) configuration with 14 specialized agents, custom hooks, and project-specific memory systems.
+This dotfiles repository includes a comprehensive [Claude Code](https://claude.ai/code) configuration with 14 specialized agents, custom hooks, and project-specific memory systems. The setup transforms Claude Code into a powerful development assistant with context-aware workflows and automated tooling.
+
+**Architecture:**
+```
+~/.claude/                    # Runtime directory (managed by chezmoi)
+├── agents/         (14)      # Specialized agents by category
+├── hooks/          (9)       # Python workflow automation hooks  
+├── memories/       (30+)     # Project context & methodologies
+├── commands/       (13)      # Custom slash commands
+├── output-styles/  (8)       # Response formatting styles
+├── status_lines/   (4)       # Status bar configurations
+└── settings.json             # Global configuration
+```
 
 **Based on:**
 - [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery) - Original hooks framework
 - Custom extensions for consulting and development workflows
 
 **Key Features:**
-- **Specialized Agents**: 14 focused agents for development, consulting, and research tasks
+- **Specialized Agents**: 14 focused agents for development, consulting, research, and platform operations
 - **Hook System**: Python hooks for notifications, tool validation, and workflow automation  
-- **Memory Modules**: Project-specific context and development methodology guides
-- **MCP Integration**: GitHub, Google Workspace, and Atlassian API access
-- **chezmoi Managed**: All configuration version-controlled and deployable
+- **Memory Modules**: Project-specific context, development methodologies (Discovery-First, Test-Driven, Visual Feedback)
+- **MCP Integration**: GitHub, Google Workspace, Atlassian, and Hugging Face API access
+- **chezmoi Managed**: All configuration version-controlled and deployable across machines
 
 **Agent Categories:**
 - **Development**: repository-manager, system-environment-manager, workflow-designer
 - **Consulting**: professional-document-architect, comprehensive-report-generator
-- **Research**: client-research-coordinator, confluence-research-agent  
+- **Research**: client-research-coordinator, confluence-research-agent, llm-ai-agents-and-eng-research
+- **Platform**: github-operations-agent, google-workspace-agent, atlas-exec-assistant
 - **Utility**: meta-agent, hello-world-agent, work-completion-summary
 
-The configuration is managed directly by chezmoi in `~/.claude/`, with local runtime data (projects, todos, settings.local.json) excluded from version control via `.chezmoiignore`.
+**Installation:** Run `brew bundle` to install all Claude Code dependencies (fd, ripgrep, marksman, etc.). The configuration is managed directly by chezmoi in `~/.claude/`, with local runtime data excluded from version control via `.chezmoiignore`.
 
 ---
 
