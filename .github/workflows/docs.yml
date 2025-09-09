@@ -33,7 +33,7 @@ jobs:
           # Copy documentation files
           cp -r docs/* _site/
           
-          # Create index.html
+          # Create dynamic index.html based on available files
           cat > _site/index.html << 'EOF'
           <!DOCTYPE html>
           <html lang="en">
@@ -65,6 +65,10 @@ jobs:
                       box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
                   }
                   .doc-card h3 { margin-top: 0; color: #3498db; }
+                  .doc-list { list-style: none; padding: 0; }
+                  .doc-list li { margin: 1rem 0; }
+                  .doc-list a { display: block; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s; }
+                  .doc-list a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
                   .meta { color: #666; font-size: 0.9em; }
                   footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee; text-align: center; color: #666; }
               </style>
@@ -76,44 +80,36 @@ jobs:
               </header>
               
               <main>
-                  <section class="doc-links">
-                      <a href="development-practices.html" class="doc-card">
-                          <h3>📋 Development Practices</h3>
-                          <p>Coding standards, testing strategies, security requirements, and tooling preferences including Apple Container usage.</p>
-                      </a>
-                      
-                      <a href="python-development.html" class="doc-card">
-                          <h3>🐍 Python Development</h3>
-                          <p>Modern Python workflow using uv for package management, virtual environments, and project setup.</p>
-                      </a>
-                      
-                      <a href="architecture.html" class="doc-card">
-                          <h3>🏗️ System Architecture</h3>
-                          <p>Visual diagrams and technical overview of my development environment and tool integration.</p>
-                      </a>
-                      
-                      <a href="claude-code-emacs-guide.html" class="doc-card">
-                          <h3>🤖 AI-Assisted Development</h3>
-                          <p>Comprehensive guide for using Claude Code with Doom Emacs for enhanced development workflow.</p>
-                      </a>
-                      
-                      <a href="applications.html" class="doc-card">
-                          <h3>🛠️ Tools & Applications</h3>
-                          <p>Complete catalog of development tools, CLI utilities, and desktop applications with usage context.</p>
-                      </a>
-                      
-                      <a href="secrets-management.html" class="doc-card">
-                          <h3>🔐 Secrets Management</h3>
-                          <p>Hybrid approach using 1Password and age encryption for secure credential management across environments.</p>
-                      </a>
+                  <section>
+                      <h2>📚 Available Documentation</h2>
+                      <ul class="doc-list">
+          EOF
+          
+          # Add links for each markdown file found
+          for md_file in _site/*.md; do
+              if [ -f "$md_file" ]; then
+                  base_name=$(basename "$md_file" .md)
+                  html_file="${base_name}.html"
+                  
+                  # Extract title from first line of markdown (remove # prefix)
+                  title=$(head -n1 "$md_file" | sed 's/^# //')
+                  
+                  # Extract description from first paragraph (skip empty lines and title)
+                  description=$(sed -n '/^$/,$p' "$md_file" | sed '/^$/d' | head -n3 | tr '\n' ' ' | cut -c1-150)
+                  
+                  echo "                          <li><a href=\"$html_file\"><strong>$title</strong><br><small>$description...</small></a></li>" >> _site/index.html
+              fi
+          done
+          
+          cat >> _site/index.html << 'EOF'
+                      </ul>
                   </section>
                   
                   <section>
                       <h2>🎯 Quick Links</h2>
                       <ul>
                           <li><a href="https://github.com/nehalecky/dotfiles">📁 Dotfiles Repository</a></li>
-                          <li><a href="project-history.html">📜 Project History</a></li>
-                          <li><a href="terminal-setup.html">💻 Terminal Setup</a></li>
+                          <li><a href="https://github.com/nehalecky/dotfiles/actions">⚙️ GitHub Actions</a></li>
                       </ul>
                   </section>
               </main>
@@ -129,20 +125,25 @@ jobs:
           </html>
           EOF
           
-          # Convert markdown files to HTML (basic conversion)
+          # Install and use a proper markdown converter
+          # Use Python's markdown library for better conversion
+          pip install markdown
+          
+          # Convert markdown files to HTML using Python
           for md_file in _site/*.md; do
               if [ -f "$md_file" ]; then
                   base_name=$(basename "$md_file" .md)
                   html_file="_site/${base_name}.html"
+                  title=$(head -n1 "$md_file" | sed 's/^# //')
                   
-                  # Simple markdown to HTML conversion
-                  cat > "$html_file" << 'HTML_HEADER'
+                  # Create HTML with proper styling
+                  cat > "$html_file" << HTML_HEADER
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Development Documentation</title>
+              <title>$title - Development Documentation</title>
               <style>
                   body {
                       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -152,15 +153,62 @@ jobs:
                       padding: 2rem;
                       color: #333;
                   }
-                  h1, h2, h3 { color: #2c3e50; }
-                  code { background: #f4f4f4; padding: 0.2em 0.4em; border-radius: 3px; }
-                  pre { background: #f4f4f4; padding: 1rem; border-radius: 5px; overflow-x: auto; }
-                  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
-                  th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
-                  th { background: #f8f9fa; }
+                  h1, h2, h3, h4, h5, h6 { color: #2c3e50; margin-top: 2rem; }
+                  h1 { border-bottom: 2px solid #3498db; padding-bottom: 0.5rem; }
+                  h2 { border-bottom: 1px solid #ecf0f1; padding-bottom: 0.3rem; }
+                  code { 
+                      background: #f8f9fa; 
+                      padding: 0.2em 0.4em; 
+                      border-radius: 3px; 
+                      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+                      font-size: 0.9em;
+                  }
+                  pre { 
+                      background: #f8f9fa; 
+                      padding: 1rem; 
+                      border-radius: 8px; 
+                      overflow-x: auto;
+                      border: 1px solid #e9ecef;
+                  }
+                  pre code {
+                      background: none;
+                      padding: 0;
+                  }
+                  table { 
+                      border-collapse: collapse; 
+                      width: 100%; 
+                      margin: 1rem 0;
+                      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                  }
+                  th, td { 
+                      border: 1px solid #ddd; 
+                      padding: 0.75rem; 
+                      text-align: left; 
+                  }
+                  th { 
+                      background: #3498db; 
+                      color: white;
+                      font-weight: 600;
+                  }
+                  tr:nth-child(even) { background: #f8f9fa; }
                   a { color: #3498db; text-decoration: none; }
                   a:hover { text-decoration: underline; }
-                  .nav { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+                  .nav { 
+                      margin-bottom: 2rem; 
+                      padding: 1rem; 
+                      background: #f8f9fa;
+                      border-radius: 8px;
+                      border-left: 4px solid #3498db;
+                  }
+                  ul, ol { padding-left: 2rem; }
+                  li { margin: 0.5rem 0; }
+                  blockquote {
+                      border-left: 4px solid #3498db;
+                      background: #f8f9fa;
+                      margin: 1rem 0;
+                      padding: 1rem 1rem 1rem 2rem;
+                      border-radius: 0 8px 8px 0;
+                  }
               </style>
           </head>
           <body>
@@ -170,15 +218,20 @@ jobs:
               <div class="content">
           HTML_HEADER
                   
-                  # Convert markdown to HTML (simple approach - you could use a proper converter)
-                  sed 's/^# \(.*\)/<h1>\1<\/h1>/' "$md_file" | \
-                  sed 's/^## \(.*\)/<h2>\1<\/h2>/' | \
-                  sed 's/^### \(.*\)/<h3>\1<\/h3>/' | \
-                  sed 's/^\*\*\([^*]*\)\*\*/<strong>\1<\/strong>/g' | \
-                  sed 's/^\*\([^*]*\)\*/<em>\1<\/em>/g' | \
-                  sed 's/`\([^`]*\)`/<code>\1<\/code>/g' | \
-                  sed 's/^- \(.*\)/<li>\1<\/li>/' | \
-                  sed 's/^\([0-9]\+\)\. \(.*\)/<li>\2<\/li>/' >> "$html_file"
+                  # Convert markdown to HTML using Python
+                  python3 -c "
+          import markdown
+          import sys
+          
+          with open('$md_file', 'r', encoding='utf-8') as f:
+              content = f.read()
+          
+          # Configure markdown with extensions for better formatting
+          md = markdown.Markdown(extensions=['codehilite', 'tables', 'toc', 'fenced_code'])
+          html_content = md.convert(content)
+          
+          print(html_content)
+          " >> "$html_file"
                   
                   echo '</div></body></html>' >> "$html_file"
               fi
