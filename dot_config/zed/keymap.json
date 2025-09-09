@@ -1,0 +1,11 @@
+[
+  {
+    "context": "Editor && VimControl && !VimWaiting && !menu",
+    "bindings": {
+      "space m p": "markdown::OpenPreview",
+      "space m P": "markdown::OpenPreviewToTheSide",
+      "space m r": "editor::Reload",
+      "space m f": "editor::Format"
+    }
+  }
+]
