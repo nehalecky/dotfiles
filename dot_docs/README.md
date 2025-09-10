@@ -4,13 +4,17 @@
 
 ## 🏗️ Quick Install
 
-**Deploy complete environment from bare macOS in one command:**
+**Deploy complete environment from bare macOS:**
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/nehalecky/dotfiles/master/executable_bootstrap-macos.sh)"
+# Install Homebrew package manager
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install chezmoi and deploy dotfiles (includes all 67+ tools)
+brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
 ```
 
-This single command installs Homebrew, chezmoi, all packages (67+ tools), and configures your entire development environment.
+This approach uses chezmoi's native bootstrap system with embedded scripts to install all packages and configure your complete development environment.
 
 ## 🚀 Getting Started
 
