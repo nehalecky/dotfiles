@@ -34,7 +34,7 @@ This approach uses chezmoi's native bootstrap system with embedded scripts to in
 - **[Claude Code Emacs Guide](claude/emacs-integration.md)** - Advanced editor integration
 - **[VS Code Claude Integration](claude/vscode-integration.md)** - VS Code AI workflow setup
 
-*Claude Code configuration originally developed in [claude-code-hooks-mastery](https://github.com/nehalecky/claude-code-hooks-mastery), then integrated into this comprehensive dotfiles system for unified management.*
+*Claude Code configuration based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery), then refined and integrated into this comprehensive dotfiles system for unified management.*
 
 ## 🔧 System Architecture & Configuration
 

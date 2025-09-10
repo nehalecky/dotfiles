@@ -52,7 +52,7 @@ Comprehensive [Claude Code](https://claude.ai/code) configuration with specializ
 - **Workflow Automation** - Python hooks and custom commands
 - **MCP Integrations** - GitHub, Google Workspace, Atlassian APIs
 
-*Claude Code setup originally developed in [claude-code-hooks-mastery](https://github.com/nehalecky/claude-code-hooks-mastery), then migrated and integrated into this unified dotfiles system.*
+*Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery), then refined and integrated into this unified dotfiles system.*
 
 ## Documentation
 
