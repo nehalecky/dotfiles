@@ -2,7 +2,7 @@
 
 *Chezmoi-managed dotfiles for ultra-modern terminal-first development*
 
-> **📖 [Complete Documentation](docs/README.md)** | **⚡ Quick Setup Below**
+> **📖 [Complete Documentation](dot_docs/README.md)** | **⚡ Quick Setup Below**
 
 ## Overview
 
@@ -54,13 +54,13 @@ Comprehensive [Claude Code](https://claude.ai/code) configuration with specializ
 
 ## Documentation
 
-**📖 [Full Documentation](docs/README.md)**
+**📖 [Full Documentation](dot_docs/README.md)**
 
 **Quick References:**
-- **[Getting Started](docs/core/terminal-guide.md)** - Complete setup guide
-- **[Development Practices](docs/core/development-practices.md)** - Workflows and methodologies  
-- **[Daily Workflows](docs/core/workflows.md)** - Step-by-step guides for common tasks
-- **[System Architecture](docs/architecture/system-overview.md)** - Technical deep dive
+- **[Getting Started](dot_docs/core/terminal-guide.md)** - Complete setup guide
+- **[Development Practices](dot_docs/core/development-practices.md)** - Workflows and methodologies  
+- **[Daily Workflows](dot_docs/core/workflows.md)** - Step-by-step guides for common tasks
+- **[System Architecture](dot_docs/architecture/system-overview.md)** - Technical deep dive
 
 ## Philosophy
 
@@ -93,4 +93,4 @@ For questions or discussions about the approaches used, feel free to [open an is
 
 ---
 
-**Repository**: [nehalecky/dotfiles](https://github.com/nehalecky/dotfiles) • **Documentation**: [docs/README.md](docs/README.md) • **License**: MIT
+**Repository**: [nehalecky/dotfiles](https://github.com/nehalecky/dotfiles) • **Documentation**: [dot_docs/README.md](dot_docs/README.md) • **License**: MIT
