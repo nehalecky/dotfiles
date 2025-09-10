@@ -12,26 +12,17 @@ Practical guides for common tasks and daily development patterns.
 
 ### Step-by-Step Setup
 
-1. **Install Homebrew** (if not already installed):
+1. **Install Homebrew package manager**:
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 
-2. **Initialize dotfiles**:
+2. **Install chezmoi and deploy dotfiles** (includes all 67+ tools):
    ```bash
-   brew install chezmoi
-   chezmoi init --apply nehalecky/dotfiles
+   brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
    ```
 
-3. **Install all tools**:
-   ```bash
-   cd ~/.local/share/chezmoi
-   brew bundle install
-   ```
-
-4. **Restart your terminal** to load new configurations
-
-5. **Launch first workspace**:
+3. **Restart your terminal** to load new configurations and launch first workspace:
    ```bash
    workspace-home
    ```

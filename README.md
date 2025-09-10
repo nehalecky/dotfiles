@@ -6,26 +6,23 @@
 
 ## Overview
 
-A comprehensive development environment built around modern terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features AI-enhanced development with Claude Code integration and 130+ performance-optimized tools.
+A comprehensive development environment built around modern terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features AI-enhanced development with Claude Code integration and 67+ performance-optimized tools.
 
 ## Quick Setup
 
 **⏱️ 5 minutes to full development environment**
 
 ```bash
-# 1. Install chezmoi and initialize dotfiles
-brew install chezmoi
-chezmoi init --apply nehalecky/dotfiles
+# Install Homebrew package manager
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 2. Install all tools
-brew bundle
-
-# 3. Restart terminal and enjoy!
+# Install chezmoi and deploy dotfiles (includes all 67+ tools)
+brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
 ```
 
 **What You Get:**
 - **GPU-Accelerated Terminal** - WezTerm with 120fps rendering
-- **Modern Tool Suite** - 130+ performance-optimized CLI tools
+- **Modern Tool Suite** - 67+ performance-optimized CLI tools
 - **AI Development** - Claude Code with 14 specialized agents
 - **Clean Configuration** - Hidden dotfiles following best practices
 
