@@ -7,7 +7,7 @@
 **Deploy complete environment from bare macOS in one command:**
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/nehalecky/dotfiles/master/bootstrap-macos.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/nehalecky/dotfiles/master/executable_bootstrap-macos.sh)"
 ```
 
 This single command installs Homebrew, chezmoi, all packages (67+ tools), and configures your entire development environment.
