@@ -20,37 +20,35 @@ This approach uses chezmoi's native bootstrap system with embedded scripts to in
 
 **New to the system?** Start here for immediate productivity:
 
-- **[Terminal Guide](terminal-guide.md)** - Complete terminal-first development environment guide
-- **[Development Practices](development-practices.md)** - Standards, workflows, and modern patterns
-- **[Daily Workflows](workflows.md)** - Step-by-step guides for common tasks
-- **[Commands & Shortcuts](commands-and-shortcuts.md)** - Complete reference for all commands and shortcuts
+- **[Terminal Guide](core/terminal-guide.md)** - Complete terminal-first development environment guide
+- **[Development Practices](core/development-practices.md)** - Standards, workflows, and modern patterns
+- **[Daily Workflows](core/workflows.md)** - Step-by-step guides for common tasks
+- **[Commands & Shortcuts](core/shortcuts.md)** - Complete reference for all commands and shortcuts
 
 ## 🧠 AI Development Integration
 
 **Claude Code & AI-Assisted Development:**
 
-- **[Claude Memory System](claude-memory-system.md)** - Modular AI context management and smart project templates
-- **[Claude Code Trust Setup](claude-code-trust-setup.md)** - Security configuration for AI development
-- **[Claude Code Emacs Guide](claude-code-emacs-guide.md)** - Advanced editor integration
-- **[VS Code Claude Integration](vscode-claude-integration.md)** - VS Code AI workflow setup
+- **[Claude Memory System](claude/memory-system.md)** - Modular AI context management and smart project templates
+- **[Claude Code Trust Setup](claude/trust-setup.md)** - Security configuration for AI development
+- **[Claude Code Emacs Guide](claude/emacs-integration.md)** - Advanced editor integration
+- **[VS Code Claude Integration](claude/vscode-integration.md)** - VS Code AI workflow setup
 
 ## 🔧 System Architecture & Configuration
 
 **Deep technical guides for system understanding:**
 
-- **[Architecture](architecture.md)** - System design and visual diagrams
-- **[Secrets Management](secrets-management.md)** - 1Password + SSH authentication strategy
-- **[Python Development](python-development.md)** - Modern Python workflow with uv
-- **[Applications Guide](applications.md)** - Complete catalog of all 67+ installed tools
+- **[Architecture](architecture/system-overview.md)** - System design and visual diagrams
+- **[Secrets Management](architecture/secrets-management.md)** - 1Password + SSH authentication strategy
+- **[Python Development](architecture/python-development.md)** - Modern Python workflow with uv
+- **[Applications Guide](architecture/applications.md)** - Complete catalog of all 67+ installed tools
 
 ## 📖 Reference & History
 
 **Specialized guides and historical context:**
 
-- **[Commands & Shortcuts](commands-and-shortcuts.md)** - Complete command and shortcut reference
-- **[Project History](project-history.md)** - Chronological log of all changes and migrations
-- **[GitHub Stars Reorganization](github-stars-reorganization.md)** - Repository organization project
-- **[Important Instruction Reminders](important-instruction-reminders.md)** - Key development principles
+- **[Commands & Shortcuts](core/shortcuts.md)** - Complete command and shortcut reference
+- **[Important Instruction Reminders](reference/reminders.md)** - Key development principles
 
 ## 📚 Documentation Philosophy
 
@@ -70,18 +68,18 @@ This approach uses chezmoi's native bootstrap system with embedded scripts to in
 ### Navigation Guide
 
 **First Time Setup:** 
-1. [Terminal Guide](terminal-guide.md) → [Daily Workflows](workflows.md)
-2. [Claude Memory System](claude-memory-system.md) → [Development Practices](development-practices.md)
+1. [Terminal Guide](core/terminal-guide.md) → [Daily Workflows](core/workflows.md)
+2. [Claude Memory System](claude/memory-system.md) → [Development Practices](core/development-practices.md)
 
 **Daily Development:**
-- Quick reference: [Commands & Shortcuts](commands-and-shortcuts.md)
-- AI context: [Claude Memory System](claude-memory-system.md)
-- Troubleshooting: [Daily Workflows](workflows.md#troubleshooting)
+- Quick reference: [Commands & Shortcuts](core/shortcuts.md)
+- AI context: [Claude Memory System](claude/memory-system.md)
+- Troubleshooting: [Daily Workflows](core/workflows.md#troubleshooting)
 
 **System Administration:**
-- Configuration: [Architecture](architecture.md) + [Secrets Management](secrets-management.md)
-- Tools: [Applications Guide](applications.md)
+- Configuration: [Architecture](architecture/system-overview.md) + [Secrets Management](architecture/secrets-management.md)
+- Tools: [Applications Guide](architecture/applications.md)
 
 ---
 
-*Start with [Terminal Guide](terminal-guide.md) to transform your development workflow, then explore [Claude Memory System](claude-memory-system.md) for AI-enhanced development!*
+*Start with [Terminal Guide](core/terminal-guide.md) to transform your development workflow, then explore [Claude Memory System](claude/memory-system.md) for AI-enhanced development!*

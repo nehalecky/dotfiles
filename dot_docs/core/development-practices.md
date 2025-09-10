@@ -2,7 +2,7 @@
 
 *Standards, tools, and practices for ultra-modern terminal-first development*
 
-> **See Also**: [Modern Terminal Tools Guide](modern-terminal-tools.md) for detailed tool usage instructions
+> **See Also**: [Terminal Guide](terminal-guide.md) for detailed tool usage instructions
 
 ## Code Standards
 
