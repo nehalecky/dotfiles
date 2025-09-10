@@ -6,6 +6,7 @@ This module coordinates the primary development methodologies and imports specif
 @discovery-first.md
 @test-driven.md
 @visual-feedback.md
+@verification-driven.md
 
 ## Workflow Selection Criteria
 
@@ -24,7 +25,8 @@ This module coordinates the primary development methodologies and imports specif
 ## Universal Workflow Principles
 
 - **TodoWrite Planning:** Always create implementation plan before coding
-- **User Confirmation:** Present complex plans for approval before implementation
+- **User Confirmation:** Present complex plans for approval before implementation  
+- **🔍 MANDATORY VERIFICATION:** Every implementation MUST include verification from user perspective
 - **Descriptive Commits:** Explain "why" not just "what" in commit messages
 - **Continuous Validation:** Test assumptions early and often
 - **Always Include Links:** When referencing GitHub issues, documentation, or external resources, ALWAYS provide clickable links
