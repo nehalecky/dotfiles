@@ -1,0 +1,29 @@
+# WeeChat Secure Startup Commands
+# Copy and paste these commands into WeeChat after launch
+
+# Create secure proxy configuration
+/proxy add tor socks5 127.0.0.1 9050
+
+# Add Libera.Chat server with security settings
+/server add libera irc.libera.chat/6697 -ssl -autoconnect
+/set irc.server.libera.proxy "tor"
+/set irc.server.libera.nicks "anon,anon1,anon2,anon3,anon4"
+/set irc.server.libera.username "anon"
+/set irc.server.libera.realname "Anonymous"
+/set irc.server.libera.tls on
+/set irc.server.libera.tls_verify on
+/set irc.server.libera.tls_priorities "SECURE256:+SECURE128:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3"
+/set irc.server.libera.capabilities "account-notify,away-notify,cap-notify,multi-prefix,server-time"
+/set irc.server.libera.msg_quit ""
+/set irc.server.libera.msg_part ""
+
+# Security-focused global settings
+/set weechat.network.proxy_curl ""
+/set logger.file.auto_log off
+/set weechat.look.save_config_on_exit on
+
+# Save configuration
+/save
+
+# Connect to Libera.Chat
+/connect libera
