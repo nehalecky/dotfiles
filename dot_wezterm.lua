@@ -84,6 +84,12 @@ config.keys = {
     mods = 'OPT',
     action = wezterm.action.SendString '\x1b\x7f',
   },
+  -- Shift+Enter for newline without executing
+  {
+    key = 'Enter',
+    mods = 'SHIFT',
+    action = wezterm.action.SendString '\x1b\r',
+  },
   -- Cmd+Left to move to beginning of line
   {
     key = 'LeftArrow',
