@@ -1,0 +1,98 @@
+#!/bin/bash
+# Claude Code Session Browser
+# Makes it easier to identify and resume Claude Code sessions
+
+set -euo pipefail
+
+CLAUDE_DIR="$HOME/.claude"
+SESSIONS_DIR="$CLAUDE_DIR/data/sessions"
+TODOS_DIR="$CLAUDE_DIR/todos"
+
+# Check if Claude directory exists
+if [[ ! -d "$CLAUDE_DIR" ]]; then
+    echo "❌ Claude directory not found at $CLAUDE_DIR"
+    exit 1
+fi
+
+echo "🔍 Claude Code Session Browser"
+echo "================================"
+
+if [[ ! -d "$SESSIONS_DIR" ]] || [[ -z "$(ls -A "$SESSIONS_DIR" 2>/dev/null)" ]]; then
+    echo "📭 No sessions found in $SESSIONS_DIR"
+    exit 0
+fi
+
+# Function to get todo count for a session
+get_todo_info() {
+    local session_id="$1"
+    local todo_files=($(find "$TODOS_DIR" -name "*${session_id}*" 2>/dev/null || true))
+    
+    if [[ ${#todo_files[@]} -eq 0 ]]; then
+        echo "No todos"
+        return
+    fi
+    
+    local total_todos=0
+    local completed_todos=0
+    
+    for file in "${todo_files[@]}"; do
+        if [[ -f "$file" ]] && [[ $(stat -f%z "$file") -gt 10 ]]; then
+            local todos_in_file=$(jq -r '.[] | select(.status) | .status' "$file" 2>/dev/null | wc -l | tr -d ' ')
+            local completed_in_file=$(jq -r '.[] | select(.status == "completed") | .status' "$file" 2>/dev/null | wc -l | tr -d ' ')
+            total_todos=$((total_todos + todos_in_file))
+            completed_todos=$((completed_todos + completed_in_file))
+        fi
+    done
+    
+    if [[ $total_todos -gt 0 ]]; then
+        echo "${completed_todos}/${total_todos} todos"
+    else
+        echo "Empty todos"
+    fi
+}
+
+# Function to extract meaningful info from session
+get_session_summary() {
+    local session_file="$1"
+    local session_id=$(basename "$session_file" .json)
+    
+    if [[ ! -f "$session_file" ]]; then
+        return
+    fi
+    
+    local agent_name=$(jq -r '.agent_name // "Unknown"' "$session_file" 2>/dev/null)
+    local prompt_count=$(jq -r '.prompts | length' "$session_file" 2>/dev/null)
+    local first_prompt=$(jq -r '.prompts[0] // "No prompts"' "$session_file" 2>/dev/null | head -c 60)
+    local todo_info=$(get_todo_info "$session_id")
+    local modified_date=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M" "$session_file" 2>/dev/null)
+    
+    # Truncate first prompt if too long
+    if [[ ${#first_prompt} -eq 60 ]] && [[ $(jq -r '.prompts[0] // ""' "$session_file" 2>/dev/null | wc -c) -gt 60 ]]; then
+        first_prompt="${first_prompt}..."
+    fi
+    
+    printf "%-8s │ %-12s │ %-16s │ %-15s │ %-63s │ %s\n" \
+        "${session_id:0:8}" \
+        "$agent_name" \
+        "$modified_date" \
+        "$todo_info" \
+        "$first_prompt" \
+        "$session_id"
+}
+
+# Header
+printf "%-8s │ %-12s │ %-16s │ %-15s │ %-63s │ %s\n" \
+    "SHORT-ID" "AGENT" "MODIFIED" "PROGRESS" "FIRST PROMPT" "FULL SESSION ID"
+echo "─────────┼──────────────┼──────────────────┼─────────────────┼─────────────────────────────────────────────────────────────────┼────────────────────────────────────────"
+
+# Sort sessions by modification time (newest first)
+for session_file in $(ls -t "$SESSIONS_DIR"/*.json 2>/dev/null); do
+    get_session_summary "$session_file"
+done
+
+echo ""
+echo "💡 Usage:"
+echo "   claude --continue                              # Resume most recent session"
+echo "   claude --resume                                # Interactive session selector"  
+echo "   claude --resume <session-id>                   # Resume specific session"
+echo "   claude --resume \$(claude-sessions | tail -n +4 | head -1 | awk '{print \$NF}') # Resume newest"
