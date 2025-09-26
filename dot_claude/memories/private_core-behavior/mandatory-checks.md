@@ -2,6 +2,13 @@
 
 **These checks are REQUIRED before every response containing technical content, references, or notebook code.**
 
+## Before Using ANY Tool:
+□ **Is there a specialized agent for this task?**
+□ **Git operations → repository-manager (NOT git commands)**
+□ **Chezmoi/memory updates → dotfiles-manager (NOT basic file operations)**
+□ **Research tasks → research agents (NOT manual searches)**
+□ **Complex workflows → workflow-orchestrator (NOT manual coordination)**
+
 ## Before Making ANY Technical Claim:
 □ **Did I WebFetch the official documentation first?**
 □ **Am I quoting directly from the source?**
