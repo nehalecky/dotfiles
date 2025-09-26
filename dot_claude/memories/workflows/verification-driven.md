@@ -5,6 +5,13 @@
 
 ## Verification Framework by Work Type
 
+### Technical Claims & References
+1. **Source Verification**: Is this claim backed by official documentation?
+2. **WebFetch Before Writing**: Did I verify this BEFORE stating it as fact?
+3. **Direct Quotation**: Am I quoting exactly what the source says?
+4. **Link Verification**: Does every hyperlink actually work?
+5. **Authority Check**: Is this the most authoritative source available?
+
 ### Code Implementation
 1. **Compile/Parse Check**: Does the code run without errors?
 2. **Unit Test Verification**: Do tests pass? (Write tests if missing)
@@ -78,6 +85,9 @@ verification_protocol:
 ## Common Verification Failures
 
 ### What NOT to Do
+❌ **Make technical claims without WebFetch verification first**
+❌ **Assume library features without checking official docs**
+❌ **Add impressive-sounding details to seem authoritative**
 ❌ **Assume deployment success means functionality works**
 ❌ **Skip manual testing because "the code looks right"**
 ❌ **Trust that links work without clicking them**
@@ -85,6 +95,9 @@ verification_protocol:
 ❌ **Skip regression testing on existing functionality**
 
 ### What TO Do
+✅ **WebFetch sources BEFORE making technical claims**
+✅ **Quote directly from documentation, don't interpret**
+✅ **Hyperlink EVERY library, study, dataset, tool mentioned**
 ✅ **Always test from the user's perspective**
 ✅ **Click every link, test every workflow**
 ✅ **Verify both new functionality AND existing functionality**
