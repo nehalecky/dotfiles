@@ -24,6 +24,7 @@
 @.claude/memories/workflows/core-workflows.md
 @.claude/memories/tools/essential-tools.md
 @.claude/memories/tools/git-standards.md
+@.claude/memories/core-behavior/mandatory-checks.md
 
 ### Environment Context
 **Platform:** macOS with Zsh shell
