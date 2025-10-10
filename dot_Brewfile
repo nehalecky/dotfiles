@@ -27,6 +27,8 @@ brew "git"
 brew "glow"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Just a command runner
+brew "just"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Access large language models from the command-line
