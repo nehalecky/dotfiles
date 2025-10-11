@@ -26,6 +26,10 @@ eval $(/opt/homebrew/bin/brew shellenv)
 # Add ~/.local/bin to PATH for user scripts
 export PATH="$HOME/.local/bin:$PATH"
 
+# Java 21 (OpenJDK) for PySpark 4.0
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
 ## iTerm2 Shell Integration
 test -e "${HOME}/.config/iterm2/shell_integration.zsh" && source "${HOME}/.config/iterm2/shell_integration.zsh"
 
