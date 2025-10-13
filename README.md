@@ -1,4 +1,4 @@
-# Development Environment Dotfiles
+# My Dots
 
 *Chezmoi-managed dotfiles for terminal-first development*
 
