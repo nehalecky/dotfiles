@@ -24,7 +24,6 @@
 @.claude/memories/workflows/core-workflows.md
 @.claude/memories/tools/essential-tools.md
 @.claude/memories/tools/git-standards.md
-@.claude/memories/core-behavior/mandatory-checks.md
 
 ### Environment Context
 **Platform:** macOS with Zsh shell
@@ -46,6 +45,7 @@
 - **Ask before creating** new tools/scripts - prefer enhancing existing ones
 - **Test everything** before suggesting commands
 - **Use MCP integrations** to reduce context switching
+- **Leverage Superpowers skills** for TDD, brainstorming, planning, and execution workflows
 - **ALWAYS ASK FOR EXPLICIT REVIEW** before posting GitHub issues, PRs, or any external communications
 - **STRICT SPEC COMPLIANCE**: When implementing any tool, spec, or app based on documentation, implement EXACTLY as specified - no additional files, no assumptions, no "helpful" extras beyond what's documented
 
@@ -66,8 +66,11 @@ Use when setting up or troubleshooting integrations:
 ### Development Workflows
 Reference for complex development methodologies:
 - **Discovery-First:** For complex features or unfamiliar codebases
-- **Test-Driven:** For well-defined functionality with clear requirements  
+- **Test-Driven:** For well-defined functionality with clear requirements
 - **Visual Feedback:** For UI/UX development or visual outputs
+- **Verification-Driven:** Implementation verification from user perspective
+
+Note: All workflows enhanced with Superpowers skill integration for rigorous execution patterns.
 
 ### Quick Access Commands
 ```bash
@@ -83,9 +86,9 @@ python3 ~/.claude/memories/templates/generator.py /path/to/project
 **Structure:**
 ```
 ~/.claude/                    # Runtime directory (managed by chezmoi)
-├── agents/         (14)      # Specialized agents by category
-├── hooks/          (9)       # Python workflow automation hooks  
-├── memories/       (30+)     # Project context & methodologies
+├── agents/         (19)      # Specialized agents by category
+├── hooks/          (9)       # Python workflow automation hooks
+├── memories/       (30+)     # Project context & methodologies (42% token reduction via Superpowers)
 ├── commands/       (13)      # Custom slash commands
 ├── output-styles/  (8)       # Response formatting styles
 ├── status_lines/   (4)       # Status bar configurations
@@ -93,20 +96,48 @@ python3 ~/.claude/memories/templates/generator.py /path/to/project
 
 Local runtime data (NOT managed):
 ├── data/                     # Session data
-├── projects/                 # Project configurations  
+├── projects/                 # Project configurations
 ├── todos/                    # Task management
 ├── settings.local.json       # Machine-specific overrides
 └── shell-snapshots/          # Command history
 ```
 
-### Agent Ecosystem (14 Specialized Agents)
-- **Development:** repository-manager, system-environment-manager, workflow-designer
-- **Consulting:** professional-document-architect, comprehensive-report-generator  
-- **Research:** client-research-coordinator, confluence-research-agent, llm-ai-agents-and-eng-research
-- **Platform:** github-operations-agent, google-workspace-agent, atlas-exec-assistant
-- **Utility:** meta-agent, hello-world-agent, work-completion-summary
+### Agent Ecosystem (19 Active Agents)
 
-**Key Agent:** `comprehensive-report-generator` - Replaces fact-checking, market-intelligence, and reference-validation specialists with integrated approach.
+**Core Operations (4)**
+- `repo.md` - Comprehensive repository operations (local + remote + multi-platform)
+- `system-environment.md` - System & package management
+- `dotfiles-manager.md` - Dotfiles management (you are here!)
+- `meta.md` - Agent ecosystem management
+
+**Platform Integrations (4)**
+- `github-platform.md` - GitHub-specific features (Actions, Discussions, Projects)
+- `google-workspace.md` - Google integrations
+- `atlas-exec.md` - Executive assistance
+- `huggingface-hub.md` - ML model management
+
+**Content & Research (5)**
+- `report-generator.md` - Comprehensive reports with citations (replaces fact-checking specialists)
+- `document-architect.md` - Professional documents
+- `slide-architect.md` - Presentation creation
+- `client-research-coordinator.md` - Multi-source research
+- `confluence-research.md` - Confluence knowledge base
+
+**Development & Workflow (5)**
+- `workflow-manager.md` - Unified workflow design & orchestration (merged workflow-designer + workflow-orchestrator)
+- `ai-modeling-developer.md` - ML development with TDD enforcement
+- `pr-review-assistant.md` - Code review
+- `llm-research.md` - AI/ML research
+- `work-completion-summary.md` - TTS summaries
+
+**Utility (1)**
+- `hello-world.md` - Simple greeting
+
+**Recent Consolidation:**
+- Deprecated: repository-manager (replaced by repo.md)
+- Merged: workflow-designer + workflow-orchestrator (now workflow-manager.md)
+- Renamed: 10 agents standardized (removed -agent suffix)
+- Token Savings: 42% reduction (818 lines, ~65K tokens)
 
 ### Configuration Management
 - **Source:** `~/.local/share/chezmoi/dot_claude/`
@@ -114,8 +145,34 @@ Local runtime data (NOT managed):
 - **Local Data:** Excluded via `.chezmoiignore` (never version controlled)
 - **Updates:** Edit source via chezmoi, then `chezmoi apply`
 
+## Superpowers Plugin Integration
+
+**Adoption Date:** October 2024
+**Architecture:** Progressive Enhancement Pattern
+
+### Division of Responsibility
+- **Claude Memories:** Strategic patterns, when-to-use criteria, environment-specific tools
+- **Superpowers Skills:** Tactical execution, rigid process discipline, bulletproof checklists
+- **Integration:** Graceful degradation - Claude works standalone, enhances with Superpowers
+
+### Key Skills Integrated
+- `testing/test-driven-development/SKILL.md` - Strict RED-GREEN-REFACTOR TDD
+- `collaboration/brainstorming/SKILL.md` - Interactive idea refinement
+- `collaboration/writing-plans/SKILL.md` - Bite-sized task planning
+- `collaboration/executing-plans/SKILL.md` - Batch execution with checkpoints
+- `collaboration/subagent-driven-development/SKILL.md` - Task-by-task with code review
+
+### Workflow Memory Updates
+All workflow memories updated with Superpowers skill references:
+- `test-driven.md`: Delegates detailed TDD execution to Superpowers
+- `discovery-first.md`: References brainstorming & planning skills
+- `verification-driven.md`: Integrated verification checklists
+- `core-workflows.md`: Complete skill integration mapping
+
+**Token Efficiency:** 42% reduction in workflow memories (818 lines saved) through strategic Superpowers delegation while preserving unique Claude Code patterns (uv, chezmoi, rg, fd, eza, delta).
+
 ## Claude Code Focus Areas
-Dotfiles management, command execution, file operations, git workflows, project analysis, comprehensive report generation
+Dotfiles management, command execution, file operations, git workflows, project analysis, comprehensive report generation, agent ecosystem coordination
 
 ---
 
