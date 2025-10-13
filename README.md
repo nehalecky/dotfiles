@@ -53,13 +53,15 @@ Recent consolidation improved token efficiency by 42% (818 lines, ~65K tokens sa
 
 ## Documentation
 
-**[Full Documentation](dot_docs/README.md)**
+Complete documentation for this development environment:
+- **[Documentation Index](dot_docs/README.md)** - Start here for setup, tools, and architecture
 
-**Quick References:**
-- **[Getting Started](dot_docs/core/terminal-guide.md)** - Setup guide
-- **[Development Practices](dot_docs/core/development-practices.md)** - Workflows and methodologies
-- **[Daily Workflows](dot_docs/core/workflows.md)** - Common task guides
-- **[System Architecture](dot_docs/architecture/system-overview.md)** - Technical details
+Key docs:
+- [Setup Guide](dot_docs/setup-guide.md) - First-time installation and customization
+- [Tool Reference](dot_docs/tool-reference.md) - All 67+ tools, commands, shortcuts
+- [Architecture](dot_docs/architecture.md) - System design and decisions
+
+For Claude Code configuration with [Superpowers](https://github.com/obra/superpowers) integration, see [CLAUDE.md](CLAUDE.md).
 
 ## Philosophy
 
