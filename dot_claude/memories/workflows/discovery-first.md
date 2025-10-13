@@ -3,74 +3,56 @@
 ## Purpose and Scope
 For complex features or unfamiliar codebases where requirements aren't fully clear and exploration is needed.
 
+## 🔗 Superpowers Skills Integration
+
+For structured refinement after exploration:
+- **Brainstorming:** `${SUPERPOWERS_SKILLS_ROOT}/skills/collaboration/brainstorming/SKILL.md`
+- **Writing Plans:** `${SUPERPOWERS_SKILLS_ROOT}/skills/collaboration/writing-plans/SKILL.md`
+
 ## When to Use
 - Complex features with unclear requirements
-- Working with unfamiliar codebases  
+- Unfamiliar codebases
 - Large refactoring projects
 - New technology exploration
 - Legacy system modifications
 
 ## Process Flow
 
-### 1. Explore Phase
-- **Use search tools extensively** to understand the codebase
-- **Map system architecture** and identify key components
-- **Document findings** as you discover them
-- **Identify dependencies** and potential impact areas
+**Explore → Plan → Confirm → Code → Commit**
 
-### 2. Plan Phase  
-- **Create TodoWrite plan** before implementation
-- **Break down complex tasks** into manageable steps
-- **Identify risks and unknowns** that need validation
-- **Estimate effort** based on exploration findings
+1. **Explore:** Use search tools (rg, fd) to understand codebase, map architecture, identify dependencies
+2. **Plan:** Create TodoWrite plan, break down tasks, identify risks
+3. **Confirm:** Present plan for user approval, adjust based on feedback
+4. **Code:** Implement following approved plan, validate assumptions
+5. **Commit:** Descriptive messages explaining "why", reference discovery process
 
-### 3. Confirm Phase
-- **Present plan to user** for approval
-- **Discuss approach** and get feedback on strategy
-- **Adjust plan** based on user input
-- **Get explicit approval** before proceeding
+## Tool Integration
 
-### 4. Code Phase
-- **Implement with confidence** following approved plan
-- **Validate assumptions** as you build
-- **Document decisions** that differ from plan
-- **Commit incremental progress** regularly
-
-### 5. Commit Phase
-- **Descriptive commit messages** explaining "why" not just "what"
-- **Reference discovery process** in commit description
-- **Include lessons learned** for future developers
-
-## Tool Integration Patterns
-
-### Search and Analysis
 ```bash
-# Use preferred tools for codebase exploration
-rg "pattern" --type=language    # ripgrep for code search
-eza -la --tree                  # directory structure analysis
-bat filename                    # syntax-highlighted file viewing
+# Codebase exploration
+rg "pattern" --type=language
+eza -la --tree
+bat filename
 ```
 
 ### Documentation as You Go
 - Update architecture notes in real-time
 - Document surprising discoveries
-- Note potential refactoring opportunities
-- Record performance or security considerations
+- Note refactoring opportunities
+- Record performance/security considerations
 
 ## Success Criteria
-- ✅ **Clear understanding** of system architecture before coding
-- ✅ **User approval** on implementation approach  
-- ✅ **Comprehensive plan** with identified dependencies
-- ✅ **Documented decisions** for future reference
-- ✅ **Working implementation** that meets requirements
+- ✅ Clear system understanding before coding
+- ✅ User approval on approach
+- ✅ Comprehensive plan with dependencies
+- ✅ Documented decisions
 
-## Common Pitfalls to Avoid
-- ❌ **Starting to code** without sufficient exploration
-- ❌ **Skipping user confirmation** on complex approaches
-- ❌ **Inadequate documentation** of discovery process
-- ❌ **Over-engineering** based on incomplete understanding
+## Common Pitfalls
+- ❌ Starting to code without sufficient exploration
+- ❌ Skipping user confirmation
+- ❌ Inadequate documentation
+- ❌ Over-engineering
 
 ## Integration with Other Workflows
-- May transition to **Test-Driven** workflow once requirements are clear
-- Often combined with **Visual Feedback** for UI-heavy discovery
-- Always incorporates standard **Git Conventions** for commits
+- Transitions to Test-Driven once requirements clear
+- Often combined with Visual Feedback for UI-heavy discovery
