@@ -1,87 +1,40 @@
-# Documentation Index
+# Documentation
 
-*Ultra-modern terminal-first development environment documentation*
+Development environment documentation for this dotfiles setup.
 
-## 🏗️ Quick Install
+## Quick Start
 
-**Deploy complete environment from bare macOS:**
+New to this system? Start here:
+1. [Setup Guide](setup-guide.md) - Installation and configuration
+2. [Tool Reference](tool-reference.md) - Commands and shortcuts
+3. [Architecture](architecture.md) - System design
 
-```bash
-# Install Homebrew package manager
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+## Core Documentation
 
-# Install chezmoi and deploy dotfiles (includes all 67+ tools)
-brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
-```
+- **[Setup Guide](setup-guide.md)** - First-time setup and customization
+- **[Tool Reference](tool-reference.md)** - Complete catalog of 67+ tools, commands, shortcuts
+- **[Architecture](architecture.md)** - System design and technical decisions
+- **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
 
-This approach uses chezmoi's native bootstrap system with embedded scripts to install all packages and configure your complete development environment.
+## Specialized Guides
 
-## 🚀 Getting Started
+- **[Python Development](python-development.md)** - Modern Python workflow with uv
+- **[Secrets Management](secrets-management.md)** - 1Password + SSH authentication
+- **[WeeChat Setup](weechat-setup.md)** - IRC client configuration
 
-**New to the system?** Start here for immediate productivity:
+## Claude Code Configuration
 
-- **[Terminal Guide](core/terminal-guide.md)** - Complete terminal-first development environment guide
-- **[Development Practices](core/development-practices.md)** - Standards, workflows, and modern patterns
-- **[Daily Workflows](core/workflows.md)** - Step-by-step guides for common tasks
-- **[Commands & Shortcuts](core/shortcuts.md)** - Complete reference for all commands and shortcuts
+For Claude Code agent configuration, memory system, and Superpowers integration:
+- **[~/CLAUDE.md](../CLAUDE.md)** - Complete Claude Code documentation
 
-## 🧠 AI Development Integration
+## Acknowledgments
 
-**Claude Code & AI-Assisted Development:**
+This setup leverages [Superpowers](https://github.com/obra/superpowers) - a Claude Code plugin providing rigorous workflow skills for test-driven development, brainstorming, planning, and systematic execution.
 
-- **[Claude Memory System](claude/memory-system.md)** - Modular AI context management and smart project templates
-- **[Claude Code Trust Setup](claude/trust-setup.md)** - Security configuration for AI development
-- **[Claude Code Emacs Guide](claude/emacs-integration.md)** - Advanced editor integration
-- **[VS Code Claude Integration](claude/vscode-integration.md)** - VS Code AI workflow setup
+## Navigation
 
-*Claude Code configuration based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery), then refined and integrated into this comprehensive dotfiles system for unified management.*
-
-## 🔧 System Architecture & Configuration
-
-**Deep technical guides for system understanding:**
-
-- **[Architecture](architecture/system-overview.md)** - System design and visual diagrams
-- **[Secrets Management](architecture/secrets-management.md)** - 1Password + SSH authentication strategy
-- **[Python Development](architecture/python-development.md)** - Modern Python workflow with uv
-- **[Applications Guide](architecture/applications.md)** - Complete catalog of all 67+ installed tools
-
-## 📖 Reference & History
-
-**Specialized guides and historical context:**
-
-- **[Commands & Shortcuts](core/shortcuts.md)** - Complete command and shortcut reference
-- **[Important Instruction Reminders](reference/reminders.md)** - Key development principles
-
-## 📚 Documentation Philosophy
-
-### Structure
-- **Getting Started** - Immediate productivity guides for new users
-- **AI Development Integration** - Claude Code modular memory system and AI workflows
-- **System Architecture** - Deep technical guides for system understanding
-- **Reference & History** - Commands, shortcuts, and evolutionary context
-
-### Principles
-1. **Practical First** - Focus on daily workflows and real usage patterns
-2. **AI-Enhanced Development** - Document the Claude Code modular memory approach
-3. **Terminal-First** - Ultra-modern TUI tools as the primary development interface
-4. **Integration Focus** - Show how tools work together, not in isolation
-5. **Modular Organization** - Documentation mirrors the modular memory system architecture
-
-### Navigation Guide
-
-**First Time Setup:** 
-1. [Terminal Guide](core/terminal-guide.md) → [Daily Workflows](core/workflows.md)
-2. [Claude Memory System](claude/memory-system.md) → [Development Practices](core/development-practices.md)
-
-**Daily Development:**
-- Quick reference: [Commands & Shortcuts](core/shortcuts.md)
-- AI context: [Claude Memory System](claude/memory-system.md)
-- Troubleshooting: [Daily Workflows](core/workflows.md#troubleshooting)
-
-**System Administration:**
-- Configuration: [Architecture](architecture/system-overview.md) + [Secrets Management](architecture/secrets-management.md)
-- Tools: [Applications Guide](architecture/applications.md)
+**From repo:** See [main README](../README.md) for repository overview
 
 ---
 
-*Start with [Terminal Guide](core/terminal-guide.md) to transform your development workflow, then explore [Claude Memory System](claude/memory-system.md) for AI-enhanced development!*
+*Start with [Setup Guide](setup-guide.md) for first-time configuration.*
