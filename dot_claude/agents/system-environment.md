@@ -1,5 +1,5 @@
 ---
-name: system-environment-manager
+name: system-environment
 description: Use for macOS system management, package installation (Homebrew, uv, npm), development environment setup, and system tool configuration. Keywords include "install", "setup environment", "configure system", "homebrew", "uv", "python environment", "development tools", "package manager", "system configuration", or "environment". NOT for dotfiles/chezmoi operations - that's agent-dotfiles-manager's domain.
 tools: Bash, Read, Write, WebFetch
 color: green

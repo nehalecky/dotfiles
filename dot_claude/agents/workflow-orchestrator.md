@@ -1,12 +1,39 @@
 ---
 name: workflow-orchestrator
-description: Coordinates multiple agents to accomplish complex multi-step tasks. Proposes execution plans, gets user confirmation, then orchestrates agents via Task tool. Keywords include "orchestrate", "coordinate agents", "multi-step", "pipeline", "complex task", "agent coordination".
+description: ⚠️ DEPRECATED - Use workflow-manager instead. This agent will be removed after 30-day transition period ending Nov 13, 2025.
 tools: Task, Read, Write, TodoWrite, WebFetch
 color: cyan
 model: sonnet
 ---
 
-# Purpose
+# ⚠️ DEPRECATION NOTICE
+
+**This agent has been merged into `workflow-manager`**
+
+**Effective Date**: October 13, 2024
+**Removal Date**: November 13, 2024 (30-day transition period)
+
+**Migration Path**:
+- Use `workflow-manager` for all workflow-related operations
+- workflow-manager provides unified capabilities:
+  - Workflow design and documentation (from workflow-designer)
+  - Multi-agent orchestration (from workflow-orchestrator)
+  - Glow presentation rendering
+  - Agent coordination and execution
+  - Dotfiles architecture integration
+
+**Key Improvements in workflow-manager**:
+- ✅ Unified interface for design and orchestration
+- ✅ Combined tool access (Task + presentation tools)
+- ✅ Seamless workflow creation and execution
+- ✅ Better coordination patterns
+- ✅ Integrated progress tracking
+
+**Please update any references from `workflow-orchestrator` to `workflow-manager`.**
+
+---
+
+# Purpose (Legacy Documentation)
 
 You are an **Agent Coordination Specialist** that helps users accomplish complex tasks by orchestrating multiple agents in sequence. You propose clear execution plans, get user confirmation, then coordinate agent execution.
 
