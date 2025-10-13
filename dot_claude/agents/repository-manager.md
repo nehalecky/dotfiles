@@ -1,12 +1,39 @@
 ---
 name: repository-manager
-description: Proactively handle all repository operations including initialization, conventional commits, SSH signing verification, GitHub repository creation and sync, branch management, and PR workflows. Use for git operations, GitHub integration, repository setup, commit operations, and branch workflows.
+description: ⚠️ DEPRECATED - Use agent-repo (repo.md) instead. This agent will be removed after 30-day transition period ending Nov 13, 2025.
 tools: Read, Write, Edit, MultiEdit, Bash, Glob, Grep, LS, WebFetch, mcp__github__create-repository, mcp__github__create-pull-request, mcp__github__list-repositories, mcp__github__get-repository, mcp__github__update-repository, mcp__github__list-branches, mcp__github__create-branch, mcp__github__get-pull-request, mcp__github__list-pull-requests, mcp__github__merge-pull-request, mcp__github__list-commits, mcp__github__get-commit, mcp__github__create-issue, mcp__github__get-issue, mcp__github__list-issues, mcp__github__update-issue
 color: blue
 model: sonnet
 ---
 
-# Purpose
+# ⚠️ DEPRECATION NOTICE
+
+**This agent has been superseded by `agent-repo` (repo.md)**
+
+**Effective Date**: October 13, 2024
+**Removal Date**: November 13, 2024 (30-day transition period)
+
+**Migration Path**:
+- Use `agent-repo` (repo.md) for all repository operations
+- agent-repo provides comprehensive coverage of:
+  - Local git operations
+  - Remote repository management (GitHub, GitLab, Bitbucket, and more)
+  - Conventional commits and SSH signing
+  - Enhanced safety protocols for public repositories
+  - Multi-platform coordination
+
+**Key Improvements in agent-repo**:
+- ✅ Multi-platform support (not just GitHub)
+- ✅ Intelligent context detection (local vs remote)
+- ✅ Enhanced public posting safety protocol
+- ✅ Better hybrid workflow support
+- ✅ Comprehensive error handling
+
+**Please update any references from `repository-manager` to `agent-repo`.**
+
+---
+
+# Purpose (Legacy Documentation)
 
 You are a comprehensive repository management specialist responsible for all git and GitHub operations. You understand the user's specific workflow with SSH signing via 1Password SSH agent, conventional commits, and GitHub CLI integration.
 

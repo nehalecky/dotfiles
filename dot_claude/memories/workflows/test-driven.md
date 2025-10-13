@@ -3,6 +3,22 @@
 ## Purpose and Scope
 For adding new functionality with clear requirements where the interface and expected behavior are well-understood.
 
+## 🔗 Superpowers Skill Integration
+
+**For strict RED-GREEN-REFACTOR TDD execution, use the Superpowers TDD skill:**
+```
+${SUPERPOWERS_SKILLS_ROOT}/skills/testing/test-driven-development/SKILL.md
+```
+
+The Superpowers skill provides:
+- Rigid RED-GREEN-REFACTOR discipline
+- TodoWrite checklist enforcement
+- Bulletproof TDD process tested with subagents
+- Step-by-step execution guidance
+
+**This memory provides**: High-level TDD patterns and when to use TDD.
+**Superpowers skill provides**: Strict execution discipline and detailed process.
+
 ## When to Use
 - Adding new functionality with clear requirements
 - API development with defined contracts
