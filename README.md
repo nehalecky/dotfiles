@@ -1,82 +1,79 @@
-# Modern Development Environment Dotfiles
+# Development Environment Dotfiles
 
-*Chezmoi-managed dotfiles for ultra-modern terminal-first development*
+*Chezmoi-managed dotfiles for terminal-first development*
 
-> **📖 [Complete Documentation](dot_docs/README.md)** | **⚡ Quick Setup Below**
+> **[Documentation](dot_docs/README.md)** | **Quick Setup Below**
 
 ## Overview
 
-A comprehensive development environment built around modern terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features AI-enhanced development with Claude Code integration and 67+ performance-optimized tools.
+Development environment built around terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features Claude Code integration with 19 specialized agents and 67+ command-line tools.
 
 ## Quick Setup
-
-**⏱️ 5 minutes to full development environment**
 
 ```bash
 # Install Homebrew package manager
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install chezmoi and deploy dotfiles (includes all 67+ tools)
+# Install chezmoi and deploy dotfiles
 brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
 ```
 
-**What You Get:**
-- **GPU-Accelerated Terminal** - WezTerm with 120fps rendering
-- **Modern Tool Suite** - 67+ performance-optimized CLI tools
-- **AI Development** - Claude Code with 14 specialized agents
-- **Clean Configuration** - Hidden dotfiles following best practices
+This installs WezTerm with GPU acceleration, 67+ command-line tools, Claude Code with 19 specialized agents, and XDG-compliant dotfile organization.
 
 ## Key Components
 
 ### Core Stack
 - **Terminal**: WezTerm (GPU-accelerated, multiplexed)
-- **Shell**: Zsh + Starship (fast, informative prompt)
+- **Shell**: Zsh + Starship prompt
 - **Editor**: Helix/Emacs with LSP integration
 - **Package Management**: Homebrew + uv (Python)
 
-### Modern Replacements
-| Traditional | Modern Alternative | Key Benefit |
-|-------------|-------------------|-------------|
+### Tool Suite
+| Traditional | Replacement | Key Benefit |
+|-------------|------------|-------------|
 | `ls` | `eza` | Git integration, tree view |
 | `cat` | `bat` | Syntax highlighting |
 | `find` | `fd` | Faster, respects .gitignore |
-| `grep` | `ripgrep` | 10x faster searches |
-| `top` | `btop` | Beautiful system monitor |
+| `grep` | `ripgrep` | Faster searches |
+| `top` | `btop` | Interactive system monitor |
 
 ### Claude Code Integration
 
-Comprehensive [Claude Code](https://claude.ai/code) configuration with specialized agents:
+[Claude Code](https://claude.ai/code) configuration with specialized agents and workflow automation:
 
-- **14 Specialized Agents** - Development, consulting, research, platform operations
-- **Memory Systems** - Project-specific context and methodologies
-- **Workflow Automation** - Python hooks and custom commands
-- **MCP Integrations** - GitHub, Google Workspace, Atlassian APIs
+- **19 specialized agents** for development, research, and operations
+- **Memory systems** for project context and methodologies
+- **Workflow automation** via Python hooks and custom commands
+- **MCP integrations** for GitHub, Google Workspace, Atlassian APIs
+- **Superpowers plugin** for enhanced capabilities (October 2024)
 
-*Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery), then refined and integrated into this unified dotfiles system.*
+Recent consolidation improved token efficiency by 42% (818 lines, ~65K tokens saved) through unified agent architecture.
+
+*Initial Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery).*
 
 ## Documentation
 
-**📖 [Full Documentation](dot_docs/README.md)**
+**[Full Documentation](dot_docs/README.md)**
 
 **Quick References:**
-- **[Getting Started](dot_docs/core/terminal-guide.md)** - Complete setup guide
-- **[Development Practices](dot_docs/core/development-practices.md)** - Workflows and methodologies  
-- **[Daily Workflows](dot_docs/core/workflows.md)** - Step-by-step guides for common tasks
-- **[System Architecture](dot_docs/architecture/system-overview.md)** - Technical deep dive
+- **[Getting Started](dot_docs/core/terminal-guide.md)** - Setup guide
+- **[Development Practices](dot_docs/core/development-practices.md)** - Workflows and methodologies
+- **[Daily Workflows](dot_docs/core/workflows.md)** - Common task guides
+- **[System Architecture](dot_docs/architecture/system-overview.md)** - Technical details
 
 ## Philosophy
 
 **Terminal-First Development:**
-- Single interface for all development tasks
-- Sub-100ms tool launch times
-- Consistent vim-inspired navigation
+- Consistent interface for development tasks
+- Fast tool launch times
+- Vim-inspired navigation patterns
 - Reproducible environments via code
 
-**Dotfiles Best Practices:**
-- Hidden configuration files (`~/.config`, `~/.local`)
+**Dotfiles Organization:**
+- XDG-compliant configuration (`~/.config`, `~/.local`)
 - Chezmoi management for cross-machine deployment
 - Secret integration with 1Password
-- Clean `$HOME` directory
+- Organized home directory structure
 
 ## Technology Stack
 
