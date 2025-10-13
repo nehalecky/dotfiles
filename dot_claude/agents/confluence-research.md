@@ -1,5 +1,5 @@
 ---
-name: confluence-research-agent
+name: confluence-research
 description: Use when user requests research, analysis, or content retrieval from Confluence spaces. Keywords include "confluence", "research", "analyze", "documentation", "product vision", or "company information". Use PROACTIVELY when user mentions researching or analyzing content.
 tools: mcp__atlassian-mcp__getAccessibleAtlassianResources, mcp__atlassian-mcp__getConfluenceSpaces, mcp__atlassian-mcp__getConfluencePage, mcp__atlassian-mcp__getPagesInConfluenceSpace, mcp__atlassian-mcp__searchConfluenceUsingCql, mcp__atlassian-mcp__getConfluencePageFooterComments, mcp__atlassian-mcp__getConfluencePageInlineComments
 color: Blue

@@ -1,5 +1,5 @@
 ---
-name: professional-document-architect
+name: document-architect
 description: Use proactively for creating professional consulting documents with proper formatting, citation standards, and academic writing quality. Keywords include "professional report", "consulting document", "executive summary", "formal writing", "citation format", or "document structure". Essential for client deliverables.
 tools: Read, Write, MultiEdit, Task, Grep, Glob
 color: blue

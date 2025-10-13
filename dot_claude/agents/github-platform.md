@@ -1,5 +1,5 @@
 ---
-name: github-operations-agent
+name: github-platform
 description: Specialized GitHub platform features - notifications, organization operations, GitHub Actions, Discussions, Projects, and platform-specific workflows. For general repository operations (git, commits, branches, PRs), use agent-repo instead.
 tools: mcp__github__get_me, mcp__github__search_repositories, mcp__github__fork_repository, mcp__github__create_repository, mcp__github__get_file_contents, mcp__github__create_or_update_file, mcp__github__create_issue, mcp__github__update_issue, mcp__github__add_issue_comment, mcp__github__list_issues, mcp__github__search_issues, mcp__github__search_code, mcp__github__create_pull_request, mcp__github__list_pull_requests, mcp__github__get_pull_request, mcp__github__list_notifications
 color: Purple

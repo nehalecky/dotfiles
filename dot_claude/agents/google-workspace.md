@@ -1,5 +1,5 @@
 ---
-name: google-workspace-agent
+name: google-workspace
 description: Use when user needs Google Workspace operations including Gmail, Drive, Docs, Calendar, or Sheets management. Keywords include "gmail", "google drive", "google docs", "calendar", "email", "spreadsheet", "document", or "workspace". Use PROACTIVELY for Google productivity tasks.
 tools: mcp__google-workspace__search_gmail_messages, mcp__google-workspace__get_gmail_message_content, mcp__google-workspace__send_gmail_message, mcp__google-workspace__search_drive_files, mcp__google-workspace__get_drive_file_content, mcp__google-workspace__create_drive_file, mcp__google-workspace__list_calendars, mcp__google-workspace__get_events, mcp__google-workspace__create_event, mcp__google-workspace__search_docs, mcp__google-workspace__get_doc_content, mcp__google-workspace__create_doc
 color: Green
