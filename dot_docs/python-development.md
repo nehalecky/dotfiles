@@ -23,6 +23,37 @@ uv is installed via Homebrew in our setup:
 brew install uv
 ```
 
+## Global Python Tools
+
+Tools installed globally via `uv tool` for system-wide use:
+
+### Jupyter Integration
+- **pyproject-local-kernel**: Auto-detects project Python environments for Jupyter notebooks
+  - Reads `[tool.uv]` from pyproject.toml and automatically provisions the correct kernel
+  - No manual kernel registration required
+  - Works with both VS Code/Cursor and Jupyter Lab
+
+  ```bash
+  # Install
+  uv tool install pyproject-local-kernel
+
+  # Verify
+  uv tool list | grep pyproject-local-kernel
+  ```
+
+### Managing Global Tools
+
+```bash
+# List installed tools
+uv tool list
+
+# Update a tool
+uv tool upgrade pyproject-local-kernel
+
+# Remove a tool
+uv tool uninstall pyproject-local-kernel
+```
+
 ## Project Workflow
 
 ### Creating a New Project
