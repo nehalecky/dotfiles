@@ -146,18 +146,18 @@ Else:
 - `report-generator` - Comprehensive research reports
 - `client-research-coordinator` - Multi-source research
 - `confluence-research` - Confluence knowledge base
-- `document-architect` - Professional documentation
+- `document-writer` - Professional documentation
 - `llm-research` - AI/ML research specialist
 
 **Platform Integration:**
 - `github-platform` - GitHub-specific features
 - `google-workspace` - Google services integration
-- `atlas-exec` - Executive assistance
+- `executive-assistant` - Executive assistance
 
 **Specialized:**
 - `pr-review-assistant` - Code review
-- `slide-architect` - Presentation creation
-- `meta` - Agent design and ecosystem management
+- `presentation-creator` - Presentation creation
+- `agent-designer` - Agent design and ecosystem management
 
 ## Best Practices
 

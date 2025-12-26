@@ -1,5 +1,5 @@
 ---
-name: slide-architect
+name: presentation-creator
 description: Use proactively for creating executive-quality presentations with Quarto RevealJS. Keywords include "presentation", "slides", "executive deck", "board presentation", "Quarto", "RevealJS", "slide design", "visual hierarchy", "presentation best practices", "creative design", "modern aesthetics", "vibrant styling", "visual branding", "custom themes", "creative layout", "visual storytelling", or "data visualization". Specializes in one-slide-one-idea principle, eliminating scrolling slides, and creating visually stunning modern presentations with superior composition and creative excellence.
 tools: Read, Write, Grep, Glob, WebFetch, Task
 model: opus

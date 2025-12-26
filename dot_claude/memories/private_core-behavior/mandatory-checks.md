@@ -4,10 +4,12 @@
 
 ## Before Using ANY Tool:
 □ **Is there a specialized agent for this task?**
-□ **Git operations → repository-manager (NOT git commands)**
-□ **Chezmoi/memory updates → dotfiles-manager (NOT basic file operations)**
-□ **Research tasks → research agents (NOT manual searches)**
-□ **Complex workflows → workflow-orchestrator (NOT manual coordination)**
+□ **Git operations → repo (NOT git commands)**
+□ **Chezmoi/dotfiles → dotfiles-manager (NEVER raw git in HOME)**
+□ **Research tasks → research agents (report-generator, client-research-coordinator)**
+□ **Workflows → workflow-manager (design OR orchestration)**
+□ **System setup → system-environment (install/configure)**
+□ **Agent design → meta (create/analyze agents)**
 
 ## Before Making ANY Technical Claim:
 □ **Did I WebFetch the official documentation first?**
