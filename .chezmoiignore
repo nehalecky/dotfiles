@@ -12,3 +12,6 @@ dot_claude/.anthropic
 
 # System files
 **/.DS_Store
+
+# Project directories (not dotfiles)
+Projects/
