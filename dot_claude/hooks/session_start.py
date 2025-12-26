@@ -57,7 +57,7 @@ def get_git_status():
             timeout=5
         )
         current_branch = branch_result.stdout.strip() if branch_result.returncode == 0 else "unknown"
-        
+
         # Get uncommitted changes count
         status_result = subprocess.run(
             ['git', 'status', '--porcelain'],
@@ -70,10 +70,69 @@ def get_git_status():
             uncommitted_count = len(changes)
         else:
             uncommitted_count = 0
-        
+
         return current_branch, uncommitted_count
     except Exception:
         return None, None
+
+
+def get_weather():
+    """Get weather from existing weather command."""
+    try:
+        result = subprocess.run(
+            [os.path.expanduser("~/.local/bin/weather")],
+            capture_output=True, text=True, timeout=5
+        )
+        return result.stdout.strip() if result.returncode == 0 else "Weather unavailable"
+    except Exception:
+        return "Weather unavailable"
+
+
+def get_recent_todos():
+    """Get incomplete todos from Claude."""
+    todos_dir = Path.home() / ".claude" / "todos"
+    incomplete_count = 0
+
+    if todos_dir.exists():
+        try:
+            # Find most recent todo file
+            todo_files = sorted(todos_dir.glob("*.json"), key=lambda f: f.stat().st_mtime, reverse=True)
+            if todo_files:
+                with open(todo_files[0]) as f:
+                    todos = json.load(f)
+                    incomplete = [t for t in todos if t.get("status") != "completed"]
+                    incomplete_count = len(incomplete)
+        except Exception:
+            pass
+
+    return incomplete_count
+
+
+def build_morning_context(source: str) -> str:
+    """Build morning brief context for session start."""
+    if source != "startup":
+        return ""  # Only on fresh startup, not resume/clear
+
+    weather = get_weather()
+    branch, changes = get_git_status()
+    todos_count = get_recent_todos()
+
+    git_info = f"Branch: {branch}" if branch else "Not in git repo"
+    if changes and changes > 0:
+        git_info += f" | {changes} uncommitted files"
+
+    return f"""
+☀️ Session Started
+
+Weather: {weather}
+
+📋 Git Status:
+{git_info}
+
+✅ Pending Tasks: {todos_count} incomplete
+
+💡 Tip: Use /morning-brief for detailed briefing from executive-assistant
+"""
 
 
 def get_recent_issues():
@@ -150,38 +209,53 @@ def main():
         parser.add_argument('--announce', action='store_true',
                           help='Announce session start via TTS')
         args = parser.parse_args()
-        
+
         # Read JSON input from stdin
         input_data = json.loads(sys.stdin.read())
-        
+
         # Extract fields
         session_id = input_data.get('session_id', 'unknown')
         source = input_data.get('source', 'unknown')  # "startup", "resume", or "clear"
-        
+
         # Log the session start event
         log_session_start(input_data)
-        
+
+        # Build morning context for output
+        morning_context = build_morning_context(source)
+
         # Load development context if requested
         if args.load_context:
             context = load_development_context(source)
             if context:
+                # Combine morning context with development context
+                combined_context = morning_context + "\n\n" + context if morning_context else context
                 # Using JSON output to add context
                 output = {
                     "hookSpecificOutput": {
                         "hookEventName": "SessionStart",
-                        "additionalContext": context
+                        "additionalContext": combined_context
                     }
                 }
                 print(json.dumps(output))
                 sys.exit(0)
-        
+
+        # If not loading full context, still show morning brief
+        if morning_context:
+            output = {
+                "hookSpecificOutput": {
+                    "hookEventName": "SessionStart",
+                    "additionalContext": morning_context
+                }
+            }
+            print(json.dumps(output))
+
         # Announce session start if requested
         if args.announce:
             try:
                 # Try to use TTS to announce session start
                 script_dir = Path(__file__).parent
                 tts_script = script_dir / "utils" / "tts" / "pyttsx3_tts.py"
-                
+
                 if tts_script.exists():
                     messages = {
                         "startup": "Claude Code session started",
@@ -189,7 +263,7 @@ def main():
                         "clear": "Starting fresh session"
                     }
                     message = messages.get(source, "Session started")
-                    
+
                     subprocess.run(
                         ["uv", "run", str(tts_script), message],
                         capture_output=True,
@@ -197,10 +271,10 @@ def main():
                     )
             except Exception:
                 pass
-        
+
         # Success
         sys.exit(0)
-        
+
     except json.JSONDecodeError:
         # Handle JSON decode errors gracefully
         sys.exit(0)
