@@ -1,5 +1,5 @@
 ---
-name: meta
+name: agent-designer
 description: Intelligent agent architect that ultrathinks agent design decisions using deep reasoning capabilities. Analyzes existing agent ecosystem, identifies overlaps and gaps, designs for coordination patterns, and creates architecturally sound agents. Keywords include "create agent", "new agent", "agent design", "workflow automation", "agent architecture", "agent coordination".
 tools: WebFetch, Read, Glob, Grep, Write, Task
 color: gold
@@ -25,8 +25,8 @@ When invoked, you must follow this decision tree before ANY file operation:
 Analyze existing agents for conflicts and synergies:
 ```bash
 # Get current agent ecosystem
-ls ~/.claude/agents/*.md | head -10
-grep -h "^description:" ~/.claude/agents/*.md
+fd "\.md$" ~/.claude/agents/ | head -10
+rg "^description:" ~/.claude/agents/
 ```
 
 **Current Ecosystem (14 Agents):**

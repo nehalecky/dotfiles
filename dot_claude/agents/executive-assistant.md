@@ -1,5 +1,5 @@
 ---
-name: atlas-exec
+name: executive-assistant
 description: Executive assistant for calendar orchestration, communications management, task coordination, and daily productivity rituals for consultancy operations
 tools: mcp__google-workspace__*, mcp__atlassian-mcp__*, TodoWrite, WebSearch, Task
 ---
