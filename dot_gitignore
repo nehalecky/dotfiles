@@ -1,0 +1,33 @@
+# Logs and runtime state (never version these)
+logs/
+*.log
+
+# Backup files (never version these)
+*.backup
+*.bak
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor artifacts
+*.swp
+*.swo
+*~
+.vscode/settings.json.local
+
+# Local development artifacts
+test_*.sh
+test-*.py
+test*.py
+
+# Go workspace (if using local development)
+go/
+
+# Project directories (not dotfiles)
+Projects/
