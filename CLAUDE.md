@@ -11,11 +11,21 @@
    - Am I about to create/edit in `~/.local/share/chezmoi/`? → **STOP! WRONG WORKFLOW**
    - Am I editing in HOME directory first? → **CONTINUE**
 
-2. **WORKFLOW VERIFICATION**:  
+2. **WORKFLOW VERIFICATION**:
    - New file: Create in HOME → Test → `chezmoi add` → Commit
    - Existing file: Edit in HOME → Test → `chezmoi add` → Commit
 
 **Course Correction:** When you catch yourself about to write to `/Users/nehalecky/.local/share/chezmoi/`, STOP and use the HOME→Source workflow instead.
+
+### GIT OPERATIONS FOR DOTFILES:
+**Golden Rule:** Always use `chezmoi git -- <command>`, never raw `git` in HOME.
+
+Examples:
+- `chezmoi git -- status` (not `git status`)
+- `chezmoi git -- rebase -i HEAD~3` (not `git rebase -i`)
+- `chezmoi git -- push` (not `git push`)
+- `chezmoi git -- commit -m "msg"` (not `git commit`)
+- Edit in HOME → `chezmoi add` (not `git add`)
 
 
 ## Core Development Context
