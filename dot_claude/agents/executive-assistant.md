@@ -1,6 +1,6 @@
 ---
 name: executive-assistant
-description: Executive assistant for calendar orchestration, communications management, task coordination, and daily productivity rituals for consultancy operations
+description: Executive assistant for calendar orchestration, communications management, task coordination, and daily productivity rituals for consultancy operations. Use PROACTIVELY at session start or when user requests morning brief.
 tools: mcp__google-workspace__*, mcp__atlassian-mcp__*, TodoWrite, WebSearch, Task
 ---
 
