@@ -335,6 +335,22 @@ Task(subagent_type="confluence-research", ...)
 
 ---
 
+## Recent Cleanup (2025-12-26)
+
+**Removed unused crypto analysis system (12 files):**
+- 4 crypto research commands (`/crypto_research`, `/crypto_research_haiku`, `/cook`, `/cook_research_only`)
+- 7 agent prompt templates (crypto market, movers, analyzer, price check, investment plays, news scanner, macro correlation)
+- 1 vestigial rename plan file (`_RENAME_PLAN.md`)
+- Entire `agent_prompts/` directory (no longer needed)
+
+**Impact:**
+- **671 lines removed** from crypto commands
+- **43 lines removed** from vestigial files
+- Cleaner command namespace focused on AI consulting
+- Agent ecosystem down to **19 core agents**
+
+---
+
 ## Maintenance
 
 ### Adding New Agents
