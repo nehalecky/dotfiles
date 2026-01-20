@@ -131,8 +131,8 @@ git config user.signingkey ~/.ssh/id_ed25519_signing.pub
 git config commit.gpgsign true
 git config gpg.format ssh
 
-# Create remote via platform API (GitHub shown)
-mcp__github__create-repository
+# Create remote via gh CLI
+gh repo create <name> --public --source=. --remote=origin
 
 # Connect and sync
 git remote add origin <repository-url>
