@@ -137,27 +137,28 @@ Else:
 
 ## Available Agents for Orchestration
 
-**Repository & Development:**
-- `agent-repo` (repo.md) - Comprehensive repository operations
-- `system-environment` - Package management and environment
-- `dotfiles-manager` - Chezmoi configuration
-
-**Research & Content:**
-- `report-generator` - Comprehensive research reports
-- `client-research-coordinator` - Multi-source research
-- `confluence-research` - Confluence knowledge base
-- `document-writer` - Professional documentation
-- `llm-research` - AI/ML research specialist
-
-**Platform Integration:**
-- `github-platform` - GitHub-specific features
-- `google-workspace` - Google services integration
-- `executive-assistant` - Executive assistance
-
-**Specialized:**
-- `pr-review-assistant` - Code review
-- `presentation-creator` - Presentation creation
+**Core Operations:**
+- `agent-repo` - Repository operations (local git + GitHub via `gh` CLI)
+- `system-environment` - Package management and environment setup
+- `dotfiles-manager` - Chezmoi configuration management
 - `agent-designer` - Agent design and ecosystem management
+
+**Platform Integrations:**
+- `google-workspace` - Google services via `gog` CLI
+- `executive-assistant` - Executive assistance (delegates to google-workspace + acli)
+
+**Content Creation:**
+- `report-generator` - Research reports with citations
+- `document-writer` - Professional documentation
+- `presentation-creator` - Quarto RevealJS presentations
+
+**Development:**
+- `ai-modeling-developer` - ML development with TDD enforcement
+
+**Utility:**
+- `hello-world` - Simple greeting
+
+**Note:** For Confluence/Jira operations, use `acli` CLI directly or delegate to `executive-assistant`.
 
 ## Best Practices
 
