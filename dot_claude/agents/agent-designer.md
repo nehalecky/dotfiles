@@ -53,11 +53,19 @@ Generate optimized agent with:
 
 ## Agent Template
 
+**CRITICAL FORMAT**: Tools must be comma-separated on ONE line (not YAML list):
+```yaml
+tools: Bash, Read, Write, Glob  # ✓ CORRECT
+tools:                           # ✗ WRONG - will break tool access
+  - Bash
+  - Read
+```
+
 ```markdown
 ---
 name: <agent-name>
 description: <action-oriented-description-with-keywords>
-tools: <minimal-tools>
+tools: Tool1, Tool2, Tool3
 color: <color>
 model: <model>
 ---
