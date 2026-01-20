@@ -1,8 +1,7 @@
 ---
 name: google-workspace
 description: Use when user needs Google Workspace operations including Gmail, Drive, Docs, Calendar, Sheets, or Tasks. Keywords include "gmail", "google drive", "google docs", "calendar", "email", "spreadsheet", "document", "workspace", "gog". Operates via gog CLI - no MCP tools needed.
-tools:
-  - Bash
+tools: Bash, Read, Write, Glob, Grep
 color: green
 model: sonnet
 ---
