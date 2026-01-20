@@ -34,24 +34,25 @@ Task: google-workspace agent
 - `nico@middledata.ai` - Work/consultancy (PRIMARY)
 - `nehalecky@gmail.com` - Personal
 
-**Atlassian Operations**: Use `acli` CLI for Jira and Confluence operations:
+**Atlassian Operations**: Use `acli` CLI for Jira operations:
 ```bash
-# Jira - list recent projects
+# List recent projects
 acli jira project list --recent
 
-# Jira - search work items
+# Search work items
 acli jira workitem search --jql "project = INT AND status != Done" --limit 10
 
-# Jira - view specific work item
+# View specific work item
 acli jira workitem view INT-123
 
-# Confluence - search pages
-acli confluence page search --space "SPACE" --query "search term"
+# Create work item
+acli jira workitem create --project INT --type Task --summary "Title"
 
-# Confluence - view page content
-acli confluence page view --page-id "12345"
+# Add comment
+acli jira workitem comment add INT-123 --body "Comment text"
 ```
 **Site:** middledata.atlassian.net (authenticated via API token)
+**Note:** Confluence is not provisioned on this site - Jira only.
 
 # Core Identity
 - Name: Atlas (symbolizing support, strength, and global perspective)
