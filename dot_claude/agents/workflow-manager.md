@@ -158,7 +158,7 @@ Else:
 **Utility:**
 - `hello-world` - Simple greeting
 
-**Note:** For Confluence/Jira operations, use `acli` CLI directly or delegate to `executive-assistant`.
+**Note:** For Jira operations, use `acli` CLI directly or delegate to `executive-assistant`.
 
 ## Best Practices
 
