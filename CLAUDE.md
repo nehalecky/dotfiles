@@ -50,11 +50,11 @@ Examples:
 - Never commit secrets or credentials
 
 ### Workflow Principles
+- **PROACTIVE AGENT DELEGATION**: Before starting non-trivial tasks, check `~/.claude/agents/` for specialists. Run `ls ~/.claude/agents/` and read relevant agent descriptions to understand capabilities. Delegate when an agent matches the task domain.
 - **HOME → Source workflow**: Always edit files in HOME directory first, then `chezmoi add`
 - **Verify success**: When using source → HOME workflow, verify `chezmoi apply` succeeds
 - **Ask before creating** new tools/scripts - prefer enhancing existing ones
 - **Test everything** before suggesting commands
-- **Use MCP integrations** to reduce context switching
 - **Leverage Superpowers skills** for TDD, brainstorming, planning, and execution workflows
 - **ALWAYS ASK FOR EXPLICIT REVIEW** before posting GitHub issues, PRs, or any external communications
 - **STRICT SPEC COMPLIANCE**: When implementing any tool, spec, or app based on documentation, implement EXACTLY as specified - no additional files, no assumptions, no "helpful" extras beyond what's documented
