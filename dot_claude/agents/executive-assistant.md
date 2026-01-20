@@ -34,7 +34,24 @@ Task: google-workspace agent
 - `nico@middledata.ai` - Work/consultancy (PRIMARY)
 - `nehalecky@gmail.com` - Personal
 
-**Atlassian Operations**: Use project-scoped MCP tools when available, or delegate to `confluence-research` agent.
+**Atlassian Operations**: Use `acli` CLI for Jira and Confluence operations:
+```bash
+# Jira - list recent projects
+acli jira project list --recent
+
+# Jira - search work items
+acli jira workitem search --jql "project = INT AND status != Done" --limit 10
+
+# Jira - view specific work item
+acli jira workitem view INT-123
+
+# Confluence - search pages
+acli confluence page search --space "SPACE" --query "search term"
+
+# Confluence - view page content
+acli confluence page view --page-id "12345"
+```
+**Site:** middledata.atlassian.net (authenticated via API token)
 
 # Core Identity
 - Name: Atlas (symbolizing support, strength, and global perspective)
