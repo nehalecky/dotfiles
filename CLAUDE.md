@@ -112,42 +112,34 @@ Local runtime data (NOT managed):
 └── shell-snapshots/          # Command history
 ```
 
-### Agent Ecosystem (19 Active Agents)
+### Agent Ecosystem (12 Active Agents)
 
 **Core Operations (4)**
-- `repo.md` - Comprehensive repository operations (local + remote + multi-platform)
-- `system-environment.md` - System & package management
-- `dotfiles-manager.md` - Dotfiles management (you are here!)
-- `meta.md` - Agent ecosystem management
+- `repo.md` - Git + GitHub operations via `gh` CLI (commits, PRs, issues, search)
+- `system-environment.md` - System & package management (Homebrew, uv, npm)
+- `dotfiles-manager.md` - Chezmoi dotfiles management (HOME→Source workflow)
+- `agent-designer.md` - Creates new agents with doc discovery
 
-**Platform Integrations (4)**
-- `github-platform.md` - GitHub-specific features (Actions, Discussions, Projects)
-- `google-workspace.md` - Google integrations
-- `atlas-exec.md` - Executive assistance
-- `huggingface-hub.md` - ML model management
+**Platform Integrations (2)**
+- `google-workspace.md` - Gmail, Calendar, Drive via `gog` CLI
+- `executive-assistant.md` - Daily productivity rituals, calendar orchestration
 
-**Content & Research (5)**
-- `report-generator.md` - Comprehensive reports with citations (replaces fact-checking specialists)
-- `document-architect.md` - Professional documents
-- `slide-architect.md` - Presentation creation
-- `client-research-coordinator.md` - Multi-source research
-- `confluence-research.md` - Confluence knowledge base
+**Content Creation (3)**
+- `report-generator.md` - Reports with citations and references
+- `document-writer.md` - Professional consulting documents
+- `presentation-creator.md` - Quarto RevealJS presentations
 
-**Development & Workflow (5)**
-- `workflow-manager.md` - Unified workflow design & orchestration (merged workflow-designer + workflow-orchestrator)
+**Development & Workflow (2)**
+- `workflow-manager.md` - Workflow design & orchestration
 - `ai-modeling-developer.md` - ML development with TDD enforcement
-- `pr-review-assistant.md` - Code review
-- `llm-research.md` - AI/ML research
-- `work-completion-summary.md` - TTS summaries
 
 **Utility (1)**
 - `hello-world.md` - Simple greeting
 
-**Recent Consolidation:**
-- Deprecated: repository-manager (replaced by repo.md)
-- Merged: workflow-designer + workflow-orchestrator (now workflow-manager.md)
-- Renamed: 10 agents standardized (removed -agent suffix)
-- Token Savings: 42% reduction (818 lines, ~65K tokens)
+**Design Principles:**
+- Agents encapsulate **workflows**, not thin tool wrappers
+- Use CLI tools (`gh`, `gog`, `hf`) instead of MCP for context efficiency
+- Dynamic discovery: check `~/.claude/agents/` before delegating
 
 ### Configuration Management
 - **Source:** `~/.local/share/chezmoi/dot_claude/`
