@@ -39,7 +39,7 @@ gog <service> <command> --account=nehalecky@gmail.com
 
 #### Gmail
 ```bash
-# Search emails
+# Search emails (returns threads, not individual messages)
 gog gmail search "query" --account=EMAIL --json
 gog gmail search "from:sender@example.com" --account=EMAIL
 gog gmail search "subject:meeting after:2024/01/01" --account=EMAIL
@@ -47,9 +47,17 @@ gog gmail search "subject:meeting after:2024/01/01" --account=EMAIL
 # Get specific message
 gog gmail get MESSAGE_ID --account=EMAIL
 
+# Get full thread with all replies (CRITICAL for conversations)
+gog gmail thread get THREAD_ID --account=EMAIL
+
 # List recent messages
 gog gmail list --account=EMAIL --json
 ```
+
+**IMPORTANT Gmail Search Quirk:**
+- `from:person@example.com` returns threads where that person is the *original sender*
+- It does NOT find threads where they replied but didn't start the thread
+- **Workaround:** Search by domain (`from:example.com`) or subject, then use `gog gmail thread get` to see full conversation including all replies
 
 #### Google Drive
 ```bash
@@ -178,6 +186,20 @@ Return clean, actionable summaries to parent context - not raw JSON dumps.
 ```bash
 gog calendar list --account=nico@middledata.ai --json | jq '.events | map(select(.start.dateTime | startswith("2024-01-15")))'
 ```
+
+### Find Full Email Conversation with a Person
+**Two-step process (RECOMMENDED):**
+```bash
+# Step 1: Find threads involving this person (search by domain or name)
+gog gmail search "from:linkedin.com" --account=nehalecky@gmail.com
+# or search by subject/topic
+gog gmail search "subject:Intro Taylor" --account=nehalecky@gmail.com
+
+# Step 2: Get full thread to see ALL replies (including theirs)
+gog gmail thread get THREAD_ID --account=nehalecky@gmail.com
+```
+
+**Why this matters:** `from:person@email.com` only finds threads they *started*. If someone replied to YOUR email or a third party's intro, that search won't find it. Always fetch full threads.
 
 ### Find Recent Client Emails
 ```bash
