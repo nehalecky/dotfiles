@@ -9,6 +9,7 @@ dot_claude/statsig
 dot_claude/plugins
 dot_claude/memories_local_mcp_backup
 dot_claude/.anthropic
+dot_claude/logs
 
 # System files
 **/.DS_Store
