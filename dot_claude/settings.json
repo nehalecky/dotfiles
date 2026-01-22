@@ -16,5 +16,16 @@
       "Bash(touch:*)"
     ],
     "deny": []
+  },
+  "enabledPlugins": {
+    "code-simplifier@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "atlassian@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "elements-of-style@superpowers-marketplace": true,
+    "superpowers-developing-for-claude-code@superpowers-marketplace": true,
+    "episodic-memory@superpowers-marketplace": true,
+    "obsidian@obsidian-skills": true
   }
 }
