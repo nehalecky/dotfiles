@@ -4,6 +4,10 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+-- Profile-aware theming (set at chezmoi apply time)
+-- Profile is "personal" or "work"; work machines get a visual indicator.
+local chezmoi_profile = "{{ .profile }}"
+
 -- Portable Homebrew prefix: Apple Silicon uses /opt/homebrew, Intel uses /usr/local
 local brew_prefix = "/opt/homebrew"
 if not wezterm.target_triple:find("aarch64") then
@@ -54,6 +58,35 @@ config.colors = {
     '#f8f8f2',  -- bright white (Ansi 15)
   },
 }
+
+-- Work profile: override tab bar background to a muted warm tone
+-- so it's immediately obvious this is a work machine
+if chezmoi_profile == "work" then
+  config.colors.tab_bar = {
+    background = '#2a1a1a',
+    active_tab = {
+      bg_color = '#3d1515',
+      fg_color = '#f8f8f2',
+      intensity = 'Bold',
+    },
+    inactive_tab = {
+      bg_color = '#1e1010',
+      fg_color = '#808080',
+    },
+    inactive_tab_hover = {
+      bg_color = '#2d1010',
+      fg_color = '#909090',
+    },
+    new_tab = {
+      bg_color = '#2a1a1a',
+      fg_color = '#808080',
+    },
+    new_tab_hover = {
+      bg_color = '#3d1515',
+      fg_color = '#f8f8f2',
+    },
+  }
+end
 
 -- Window configuration
 config.initial_cols = 80
@@ -491,23 +524,31 @@ wezterm.on('update-status', function(window, pane)
   -- Get the active key table name
   local key_table = window:active_key_table()
   
-  -- Right status (leader key indicator and key sequence)
+  -- Right status (leader key indicator, key sequence, and profile badge)
   local leader = ''
   local key_status = ''
-  
+  local profile_badge = ''
+
   if window:leader_is_active() then
     leader = '  LEADER  '
   end
-  
+
   if key_table then
     key_status = ' [' .. key_table .. '] '
   end
-  
+
+  if chezmoi_profile == "work" then
+    profile_badge = '  WORK  '
+  end
+
   window:set_right_status(wezterm.format {
     { Foreground = { Color = '#f92672' } },
     { Text = leader },
     { Foreground = { Color = '#a6e22e' } },
     { Text = key_status },
+    { Foreground = { Color = '#cc3333' } },
+    { Attribute = { Intensity = 'Bold' } },
+    { Text = profile_badge },
   })
 end)
 
