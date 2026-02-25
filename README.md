@@ -6,7 +6,7 @@
 
 ## Overview
 
-Development environment built around terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features Claude Code integration with 19 specialized agents and 67+ command-line tools.
+Development environment built around terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features Claude Code integration with 12 specialized agents and 60+ command-line tools.
 
 ## Quick Setup
 
@@ -18,7 +18,9 @@ Development environment built around terminal-first tools, managed with [chezmoi
 brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
 ```
 
-This installs WezTerm with GPU acceleration, 67+ command-line tools, Claude Code with 19 specialized agents, and XDG-compliant dotfile organization.
+This installs WezTerm with GPU acceleration, 60+ command-line tools, Claude Code with 12 specialized agents, and XDG-compliant dotfile organization.
+
+See [SETUP.md](SETUP.md) for detailed first-time setup, profile selection (personal/work), and customization options.
 
 ## Key Components
 
@@ -41,7 +43,7 @@ This installs WezTerm with GPU acceleration, 67+ command-line tools, Claude Code
 
 [Claude Code](https://claude.ai/code) configuration with specialized agents and workflow automation:
 
-- **19 specialized agents** for development, research, and operations
+- **12 specialized agents** for development, research, and operations
 - **Memory systems** for project context and methodologies
 - **Workflow automation** via Python hooks and custom commands
 - **MCP integrations** for GitHub, Google Workspace, Atlassian APIs
@@ -58,7 +60,7 @@ Complete documentation for this development environment:
 
 Key docs:
 - [Setup Guide](dot_docs/setup-guide.md) - First-time installation and customization
-- [Tool Reference](dot_docs/tool-reference.md) - All 67+ tools, commands, shortcuts
+- [Tool Reference](dot_docs/tool-reference.md) - All 60+ tools, commands, shortcuts
 - [Architecture](dot_docs/architecture.md) - System design and decisions
 
 For Claude Code configuration with [Superpowers](https://github.com/obra/superpowers) integration, see [CLAUDE.md](CLAUDE.md).
@@ -76,6 +78,8 @@ For Claude Code configuration with [Superpowers](https://github.com/obra/superpo
 - Chezmoi management for cross-machine deployment
 - Secret integration with 1Password
 - Organized home directory structure
+
+**Multi-profile support:** A single repo serves both personal and work machines. `chezmoi init` prompts for profile (personal/work) and injects the correct git identity, SSH keys, 1Password items, Brewfile packages, and terminal themes.
 
 ## Technology Stack
 
