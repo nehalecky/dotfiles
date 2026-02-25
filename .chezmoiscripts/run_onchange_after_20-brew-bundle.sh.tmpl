@@ -25,8 +25,8 @@ fi
 if [[ -f "$HOME/.Brewfile" ]]; then
   echo "📋 Found Brewfile, installing packages..."
   cd "$HOME"
-  brew bundle --no-lock || {
-    echo "⚠️  Some packages failed to install. Run 'brew bundle --no-lock' manually to retry."
+  brew bundle --global || {
+    echo "⚠️  Some packages failed to install. Run 'brew bundle --global' manually to retry."
   }
   echo "✅ Package installation complete"
 else
