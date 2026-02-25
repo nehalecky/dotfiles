@@ -1,0 +1,122 @@
+# Managed by chezmoi - do not edit directly
+# Profile: {{ .profile }}
+# Generated: {{ now | date "2006-01-02" }}
+
+tap "romkatv/powerlevel10k"
+
+# ── Core Development ────────────────────────────────────────
+brew "bash"
+brew "bat"
+brew "chezmoi"
+brew "delta"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "gh"
+brew "git"
+brew "glow"
+brew "jq"
+brew "just"
+brew "lazygit"
+brew "llm"
+brew "marksman"
+brew "node"
+brew "ripgrep"
+brew "starship"
+brew "tealdeer"
+brew "uv"
+brew "wget"
+
+# ── Shell & Terminal ────────────────────────────────────────
+brew "yazi"
+brew "zellij"
+brew "zsh"
+
+# ── Editors ─────────────────────────────────────────────────
+brew "helix"
+
+# ── System Utilities ────────────────────────────────────────
+brew "btop"
+brew "dust"
+brew "procs"
+
+# ── AI & ML Tools ──────────────────────────────────────────
+brew "fabric-ai"
+
+# ── Containers & Infra ──────────────────────────────────────
+brew "lazydocker"
+
+# ── Productivity ────────────────────────────────────────────
+brew "task"
+brew "taskwarrior-tui"
+
+# ── API & Networking ────────────────────────────────────────
+brew "atac"
+brew "bandwhich"
+
+# ── Cask - All Profiles ────────────────────────────────────
+cask "1password"
+cask "1password-cli"
+cask "claude"
+cask "claude-code"
+cask "font-awesome-terminal-fonts"
+cask "font-meslo-lg-nerd-font"
+cask "obsidian"
+cask "raycast"
+cask "visual-studio-code"
+cask "wezterm"
+
+{{ if .isWork -}}
+# ── Platform Engineering (work only) ────────────────────────
+brew "cosign"
+brew "k9s"
+brew "kubectl"
+brew "helm"
+brew "kustomize"
+cask "google-cloud-sdk"
+{{ end -}}
+
+{{ if .isWork -}}
+# ── Work Applications ───────────────────────────────────────
+cask "docker"
+cask "slack"
+cask "zoom"
+{{ end -}}
+
+{{ if .isPersonal -}}
+# ── Personal Applications ───────────────────────────────────
+cask "pokemon-tcg-live"
+cask "signal"
+cask "sonic-pi"
+cask "spotify"
+cask "steam"
+cask "telegram"
+cask "whatsapp"
+{{ end -}}
+
+# ── Optional (both profiles) ───────────────────────────────
+brew "corelocationcli"
+brew "emacs", restart_service: :changed
+brew "speedtest-cli"
+cask "arc"
+cask "cursor"
+cask "firefox"
+cask "github"
+cask "protonvpn"
+cask "vlc"
+cask "zotero"
+
+# ── VS Code Extensions ─────────────────────────────────────
+vscode "davidanson.vscode-markdownlint"
+vscode "github.copilot"
+vscode "github.copilot-chat"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "shd101wyy.markdown-preview-enhanced"
+vscode "yzhang.markdown-all-in-one"
