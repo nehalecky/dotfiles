@@ -10,7 +10,7 @@
 {{-   $git_email = promptStringOnce . "git_email" "Git email" "nehalecky@gmail.com" -}}
 {{-   $github_username = promptStringOnce . "github_username" "GitHub username" "nehalecky" -}}
 {{- else -}}
-{{-   $git_email = promptStringOnce . "git_email" "Work git email" "" -}}
+{{-   $git_email = promptStringOnce . "git_email" "Work git email" "user@company.com" -}}
 {{-   $github_username = promptStringOnce . "github_username" "Work GitHub username" "" -}}
 {{- end -}}
 
@@ -20,8 +20,8 @@
 {{- $op_signing_key_name := "" -}}
 {{- if eq $profile "personal" -}}
 {{-   $git_signing_key = promptStringOnce . "git_signing_key" "Git signing public key" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6" -}}
-{{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "Nico Personal GitHub Auth Key" -}}
-{{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name" "Github Signing Key (Nico Personal)" -}}
+{{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "GitHub SSH Auth Key" -}}
+{{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name" "Git Commit Signing Key" -}}
 {{- else -}}
 {{-   $git_signing_key = promptStringOnce . "git_signing_key" "Work git signing public key (ssh-ed25519 ...)" "" -}}
 {{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "GitHub Auth Key" -}}
