@@ -5,6 +5,15 @@
       "Tags" : [
 
       ],
+      {{- if .isWork }}
+      "Badge Text" : "WORK",
+      "Badge Color" : {
+        "Red Component" : 0.9,
+        "Green Component" : 0.3,
+        "Blue Component" : 0.3,
+        "Alpha Component" : 0.5
+      },
+      {{- end }}
       "Ansi 12 Color" : {
         "Green Component" : 0.85098040103912354,
         "Blue Component" : 0.93725490570068359,
