@@ -2,8 +2,8 @@
 # Managed by chezmoi
 
 [user]
-    name = Nicholaus Halecky
-    email = nehalecky@gmail.com
+    name = {{ .git_name }}
+    email = {{ .git_email }}
 
 [commit]
     gpgsign = true
@@ -12,11 +12,13 @@
     format = ssh
 
 [gpg "ssh"]
-    allowedSignersFile = /Users/nehalecky/.ssh/allowed_signers
+    allowedSignersFile = {{ .chezmoi.homeDir }}/.ssh/allowed_signers
     program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
+{{- if .git_signing_key }}
 [user]
-    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6
+    signingkey = {{ .git_signing_key }}
+{{- end }}
 
 [init]
     defaultBranch = main

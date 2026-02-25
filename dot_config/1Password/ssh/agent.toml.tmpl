@@ -1,0 +1,8 @@
+# 1Password SSH Agent Configuration
+# This controls which SSH keys the agent offers to SSH servers
+
+[[ssh-keys]]
+item = {{ .op_auth_key_name | quote }}
+
+[[ssh-keys]]
+item = {{ .op_signing_key_name | quote }}

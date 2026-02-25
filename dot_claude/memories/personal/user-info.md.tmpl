@@ -1,9 +1,13 @@
 # User Information
 
 ## Personal Details
-- **Full Name**: Nicholaus Eugene Halecky
+- **Full Name**: {{ .git_name }}
 - **Preferred Name**: Nico
-- **GitHub Username**: nehalecky
+- **GitHub Username**: {{ .github_username }}
+{{- if .isWork }}
+- **Work Profile**: Active
+- **Work Email**: {{ .git_email }}
+{{- end }}
 
 ## Context Notes
 - Prefers to be called Nico in casual conversation
