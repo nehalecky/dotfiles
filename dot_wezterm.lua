@@ -4,6 +4,12 @@
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
 
+-- Portable Homebrew prefix: Apple Silicon uses /opt/homebrew, Intel uses /usr/local
+local brew_prefix = "/opt/homebrew"
+if not wezterm.target_triple:find("aarch64") then
+  brew_prefix = "/usr/local"
+end
+
 -- Font configuration
 config.font = wezterm.font('MesloLGS Nerd Font', {weight='Regular', stretch='Normal', style='Normal'})
 config.font_size = 12.0
@@ -211,7 +217,7 @@ config.keys = {
     action = wezterm.action.SplitPane {
       direction = 'Right',
       size = { Percent = 60 },
-      command = { args = { '/opt/homebrew/bin/glow', os.getenv('HOME') .. '/.docs/' } },
+      command = { args = { brew_prefix .. '/bin/glow', os.getenv('HOME') .. '/.docs/' } },
     },
   },
   
@@ -224,19 +230,19 @@ config.keys = {
       window:perform_action(
         wezterm.action.SplitPane {
           direction = 'Right',
-          command = { args = { '/opt/homebrew/bin/btop' } },
+          command = { args = { brew_prefix .. '/bin/btop' } },
         },
         pane
       )
-      
+
       -- Go back to left pane
       window:perform_action(wezterm.action.ActivatePaneDirection 'Left', pane)
-      
+
       -- Split bottom for lazygit
       window:perform_action(
         wezterm.action.SplitPane {
           direction = 'Down',
-          command = { args = { '/opt/homebrew/bin/lazygit' } },
+          command = { args = { brew_prefix .. '/bin/lazygit' } },
         },
         pane
       )
@@ -305,7 +311,7 @@ config.keys = {
     key = 'f',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/yazi' },
+      args = { brew_prefix .. '/bin/yazi' },
       cwd = wezterm.home_dir,
     },
   },
@@ -315,7 +321,7 @@ config.keys = {
     key = 'e',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/hx', '.' },
+      args = { brew_prefix .. '/bin/hx', '.' },
     },
   },
   
@@ -324,16 +330,16 @@ config.keys = {
     key = 'g',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/lazygit' },
+      args = { brew_prefix .. '/bin/lazygit' },
     },
   },
-  
+
   -- Docker Management
   {
     key = 'D',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/lazydocker' },
+      args = { brew_prefix .. '/bin/lazydocker' },
     },
   },
   
@@ -342,7 +348,7 @@ config.keys = {
     key = 'k',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/k9s' },
+      args = { brew_prefix .. '/bin/k9s' },
     },
   },
   
@@ -351,7 +357,7 @@ config.keys = {
     key = 'a',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/atac' },
+      args = { brew_prefix .. '/bin/atac' },
     },
   },
   
@@ -360,7 +366,7 @@ config.keys = {
     key = 'p',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/procs' },
+      args = { brew_prefix .. '/bin/procs' },
     },
   },
   
@@ -369,16 +375,16 @@ config.keys = {
     key = 'm',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/btop' },
+      args = { brew_prefix .. '/bin/btop' },
     },
   },
-  
+
   -- System Monitor btop (uppercase for new window)
   {
     key = 'M',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewWindow {
-      args = { '/opt/homebrew/bin/btop' },
+      args = { brew_prefix .. '/bin/btop' },
     },
   },
   
@@ -387,7 +393,7 @@ config.keys = {
     key = 'n',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/bandwhich' },
+      args = { brew_prefix .. '/bin/bandwhich' },
     },
   },
   
@@ -396,7 +402,7 @@ config.keys = {
     key = 'u',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/dust' },
+      args = { brew_prefix .. '/bin/dust' },
     },
   },
   
@@ -405,7 +411,7 @@ config.keys = {
     key = 's',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewTab {
-      args = { '/opt/homebrew/bin/zellij' },
+      args = { brew_prefix .. '/bin/zellij' },
     },
   },
 }
@@ -425,7 +431,7 @@ config.default_cwd = wezterm.home_dir
 
 -- Set PATH to include Homebrew (for macOS)
 config.set_environment_variables = {
-  PATH = '/opt/homebrew/bin:/usr/local/bin:' .. os.getenv('PATH'),
+  PATH = brew_prefix .. '/bin:/usr/local/bin:' .. os.getenv('PATH'),
 }
 
 -- Performance
