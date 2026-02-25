@@ -11,13 +11,13 @@ This directory contains a modular memory system for Claude Code that leverages t
 ├── workflows/           # Core development methodologies
 │   ├── core-workflows.md       # Main workflow coordinator
 │   ├── discovery-first.md      # Complex/unfamiliar codebase workflow
+│   ├── self-review-workflow.md # Self-review and quality check workflow
 │   ├── test-driven.md          # Clear requirements workflow
+│   ├── verification-driven.md  # Verification-first implementation workflow
 │   └── visual-feedback.md      # UI/UX development workflow
 ├── tools/              # Essential tooling and practices
-│   ├── chezmoi.md             # Dotfiles management patterns
-│   ├── git-practices.md       # Git workflows and conventions
 │   ├── essential-tools.md     # Modern CLI tool preferences
-│   └── tui-workflows.md       # Terminal UI and workspace management
+│   └── git-standards.md       # Git workflows and conventions
 ├── stacks/             # Technology-specific patterns
 │   ├── python.md              # Python development with UV, pytest, ruff
 │   ├── nodejs.md              # Node.js/TypeScript development
@@ -26,6 +26,14 @@ This directory contains a modular memory system for Claude Code that leverages t
 │   ├── installation.md       # General MCP installation patterns
 │   ├── github-integration.md # GitHub MCP workflows
 │   └── huggingface-integration.md # Hugging Face MCP workflows
+├── core-behavior/      # Mandatory behavioral checks
+│   └── mandatory-checks.md    # Required checks before actions
+├── personal/           # User-specific context
+│   └── user-info.md           # Personal user information
+├── safety/             # Safety and posting protocols
+│   └── public-posting-protocol.md # Protocol for public communications
+├── writing-style/      # Output style guidelines
+│   └── no-ai-cliches.md       # Avoiding AI language patterns
 └── templates/          # Project template generation
     └── generator.py           # Smart CLAUDE.md generator
 ```
@@ -82,8 +90,8 @@ The generator automatically includes relevant imports:
 
 | Project Type | Includes |
 |--------------|----------|
-| Python | python.md, essential-tools.md, git-practices.md |
-| Node.js | nodejs.md, essential-tools.md, git-practices.md |
+| Python | python.md, essential-tools.md, git-standards.md |
+| Node.js | nodejs.md, essential-tools.md, git-standards.md |
 | Web Frontend | nodejs.md, web-frontend.md, essential-tools.md |
 | Mixed | Multiple stack modules as detected |
 | Git Repository | github-integration.md (if applicable) |
@@ -102,10 +110,8 @@ The generator automatically includes relevant imports:
 
 **Essential tooling and workflow patterns:**
 
-- **chezmoi.md** - Dotfiles management with HOME→Source workflow enforcement
-- **git-practices.md** - Git conventions, commit messages, branching strategies
 - **essential-tools.md** - Modern CLI tool preferences (rg, eza, bat, etc.)
-- **tui-workflows.md** - Terminal UI applications and workspace management
+- **git-standards.md** - Git conventions, commit messages, branching strategies
 
 ### Stacks (`/stacks/`)
 
