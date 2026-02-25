@@ -4,6 +4,7 @@
 
 {{- /* ── Identity ──────────────────────────────────────────── */ -}}
 {{- $git_name := promptStringOnce . "git_name" "Git author name" "Nicholaus Halecky" -}}
+{{- $preferred_name := promptStringOnce . "preferred_name" "Preferred/casual name" (index (splitList " " $git_name) 0) -}}
 {{- $git_email := "" -}}
 {{- $github_username := "" -}}
 {{- if eq $profile "personal" -}}
@@ -33,6 +34,7 @@
     isWork              = {{ eq $profile "work" }}
     isPersonal          = {{ eq $profile "personal" }}
     git_name            = {{ $git_name | quote }}
+    preferred_name      = {{ $preferred_name | quote }}
     git_email           = {{ $git_email | quote }}
     github_username     = {{ $github_username | quote }}
     git_signing_key     = {{ $git_signing_key | quote }}
