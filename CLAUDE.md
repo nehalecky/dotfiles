@@ -42,6 +42,7 @@ Examples:
 **Dotfiles:** chezmoi-managed (HOME→Source workflow mandatory)
 **Claude Config:** Direct chezmoi management via `dot_claude/` directory
 **Git:** SSH commit signing enforced
+**Profiles:** personal/work via `.chezmoi.toml.tmpl` — see `SETUP.md`
 
 ### Code Standards
 - 2-space indentation for shell scripts
@@ -96,10 +97,10 @@ python3 ~/.claude/memories/templates/generator.py /path/to/project
 **Structure:**
 ```
 ~/.claude/                    # Runtime directory (managed by chezmoi)
-├── agents/         (19)      # Specialized agents by category
-├── hooks/          (9)       # Python workflow automation hooks
+├── agents/         (12)      # Specialized agents by category
+├── hooks/          (8)       # Python workflow automation hooks
 ├── memories/       (30+)     # Project context & methodologies (42% token reduction via Superpowers)
-├── commands/       (13)      # Custom slash commands
+├── commands/       (8)       # Custom slash commands
 ├── output-styles/  (8)       # Response formatting styles
 ├── status_lines/   (4)       # Status bar configurations
 └── settings.json             # Global configuration
@@ -174,7 +175,7 @@ All workflow memories updated with Superpowers skill references:
 **Token Efficiency:** 42% reduction in workflow memories (818 lines saved) through strategic Superpowers delegation while preserving unique Claude Code patterns (uv, chezmoi, rg, fd, eza, delta).
 
 ## Claude Code Focus Areas
-Dotfiles management, command execution, file operations, git workflows, project analysis, comprehensive report generation, agent ecosystem coordination
+Dotfiles management, command execution, file operations, git workflows, project analysis, comprehensive report generation, agent ecosystem coordination, SETUP.md onboarding guide
 
 ---
 
