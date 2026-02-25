@@ -278,7 +278,7 @@ config.keys = {
     key = 'h',
     mods = 'LEADER',
     action = wezterm.action.SpawnCommandInNewWindow {
-      args = { '/Users/nehalecky/.local/bin/workspace-home' },
+      args = { wezterm.home_dir .. '/.local/bin/workspace-home' },
     },
   },
   
@@ -287,7 +287,7 @@ config.keys = {
     key = 'W',
     mods = 'LEADER|SHIFT',
     action = wezterm.action.SpawnCommandInNewWindow {
-      args = { '/Users/nehalecky/.local/bin/workspace-dev' },
+      args = { wezterm.home_dir .. '/.local/bin/workspace-dev' },
     },
   },
   
