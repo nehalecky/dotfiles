@@ -2,7 +2,7 @@
 
 ## Personal Details
 - **Full Name**: {{ .git_name }}
-- **Preferred Name**: Nico
+- **Preferred Name**: {{ .preferred_name }}
 - **GitHub Username**: {{ .github_username }}
 {{- if .isWork }}
 - **Work Profile**: Active
@@ -10,7 +10,7 @@
 {{- end }}
 
 ## Context Notes
-- Prefers to be called Nico in casual conversation
+- Prefers to be called {{ .preferred_name }} in casual conversation
 - Full name should be used for formal documentation (licenses, copyright, etc.)
 - GitHub username derives from "N. E. Halecky" (Nicholaus Eugene Halecky)
 
