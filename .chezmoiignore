@@ -11,8 +11,14 @@ dot_claude/memories_local_mcp_backup
 dot_claude/.anthropic
 dot_claude/logs
 
+# Claude app runtime state (contains account UUIDs, session history)
+.config/claude/config.json
+
 # System files
 **/.DS_Store
 
 # Project directories (not dotfiles)
 Projects/
+
+# Repo-internal directories (not deployed to HOME)
+plan/
