@@ -19,19 +19,40 @@ The sync happens automatically:
 - Uses rsync for efficient updates
 - Preserves all your profile customizations
 
+## Profile-Aware Dynamic Profiles
+
+`DynamicProfiles/default.json` is rendered from a chezmoi template (`default.json.tmpl`). The
+rendered content adapts based on the active profile:
+
+- **personal** profile: standard terminal appearance
+- **work** profile: red WORK badge displayed in the terminal window for visual distinction
+
+To inspect or modify the template:
+```bash
+# View the source template
+bat ~/.local/share/chezmoi/dot_config/iterm2/DynamicProfiles/default.json.tmpl
+
+# After editing the HOME file, sync to chezmoi source
+chezmoi add ~/.config/iterm2/DynamicProfiles/default.json
+chezmoi git -- commit -m "feat: update iTerm2 dynamic profile"
+```
+
+The profile is set once at `chezmoi init` time via `.chezmoi.toml.tmpl` and stored in
+`.chezmoidata.yaml`.
+
 ## Initial Setup (One-time)
 
 ### Export Your Current Profile
 
-1. Open iTerm2 → Preferences → Profiles
+1. Open iTerm2 -> Preferences -> Profiles
 2. Select your profile
-3. Click "Other Actions" → "Save Profile as JSON"
+3. Click "Other Actions" -> "Save Profile as JSON"
 4. Save to: `~/.config/iterm2/DynamicProfiles/default.json`
 5. Add to chezmoi:
    ```bash
    chezmoi add ~/.config/iterm2/DynamicProfiles/default.json
-   chezmoi cd && git add -A && git commit -m "Add iTerm2 profile"
-   chezmoi git push
+   chezmoi git -- commit -m "feat: add iTerm2 profile"
+   chezmoi git -- push
    ```
 
 ## New Machine Setup
@@ -49,11 +70,13 @@ chezmoi init --apply nehalecky/dotfiles
 open -a iTerm
 ```
 
-The `.chezmoiscripts/run_after_10-sync-iterm2-profiles.sh` script automatically:
-- Runs after every `chezmoi apply`
-- Syncs profiles from `~/.config/iterm2/DynamicProfiles/`
-- Updates iTerm2's directory without symlinks
-- Handles additions, updates, and deletions
+After `chezmoi apply`, the chezmoi scripts handle syncing profiles to iTerm2's required location.
+The actual scripts that run are:
+
+- `run_once_after_40-starship-check.sh` - validates starship prompt setup
+- `run_once_install-homebrew.sh` - installs Homebrew if missing
+- `run_onchange_after_20-brew-bundle.sh.tmpl` - installs Homebrew packages from Brewfile
+- `run_onchange_install-starship.sh.tmpl` - installs/updates Starship prompt
 
 ## What's Included
 

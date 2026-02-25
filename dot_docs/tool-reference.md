@@ -15,9 +15,10 @@ Complete catalog of installed tools, commands, and shortcuts for development and
 | Tool | Purpose | Key Commands |
 |------|---------|--------------|
 | [Homebrew](https://brew.sh/) | macOS package manager | `brew install`, `brew upgrade`, `brew bundle` |
-| [uv](https://docs.astral.sh/uv/) | Python package installer | `uv add`, `uv run`, `uv sync` |
-| [pnpm](https://pnpm.io/) | Node.js package manager | `pnpm install`, `pnpm add`, `pnpm run` |
-| [pdm](https://pdm.fming.dev/) | Python package manager | `pdm add`, `pdm install`, `pdm run` |
+| [uv](https://docs.astral.sh/uv/) | Python package manager (primary) | `uv add`, `uv run`, `uv sync` |
+| npm/pnpm | Node.js package manager | `npm install`, `pnpm add` (pnpm installable via `npm install -g pnpm`) |
+
+> **Note:** The Brewfile is profile-aware. `personal` and `work` profiles install different package sets — see the Desktop Applications section below and [SETUP.md](../SETUP.md) for details.
 
 ### Modern CLI Replacements
 
@@ -41,19 +42,19 @@ Complete catalog of installed tools, commands, and shortcuts for development and
 - [lazygit](https://github.com/jesseduffield/lazygit) - Terminal UI for git
 
 **Containerization**
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Container management with GUI
-- [Apple Container](https://github.com/apple/container) - Native macOS containers
 - [lazydocker](https://github.com/jesseduffield/lazydocker) - Terminal UI for Docker
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Container management with GUI (work profile only)
 
-**Kubernetes**
+**Kubernetes** (work profile only)
 - [k9s](https://k9scli.io/) - Terminal UI for Kubernetes
-- [flux](https://fluxcd.io/) - GitOps continuous delivery
+- [kubectl](https://kubernetes.io/docs/reference/kubectl/) - Kubernetes CLI
+- [helm](https://helm.sh/) - Kubernetes package manager
 
 **Text Editors**
 - [helix](https://helix-editor.com/) - Modal editor with built-in LSP
 - [emacs](https://www.gnu.org/software/emacs/) - Extensible editor
 - [Visual Studio Code](https://code.visualstudio.com/) - GUI editor with extensions
-- [Cursor](https://cursor.sh/) - AI-first code editor
+- [Cursor](https://cursor.sh/) - AI-first code editor (optional, both profiles)
 
 **Languages & Runtimes**
 - [node](https://nodejs.org/) - JavaScript runtime
@@ -83,39 +84,53 @@ Complete catalog of installed tools, commands, and shortcuts for development and
 
 ### Desktop Applications
 
-**Development**
-- iTerm2, WezTerm - Terminal emulators
-- GitHub Desktop - Visual Git client
-- TeXShop - LaTeX editor
+The Brewfile is profile-aware: `personal` and `work` profiles install different cask sets. Apps are grouped below by profile scope. See [SETUP.md](../SETUP.md) for profile configuration.
 
-**Security & Privacy**
+**Development (all profiles)**
+- WezTerm - Terminal emulator
+- Visual Studio Code - GUI editor with extensions
+
+**Development (optional, both profiles)**
+- GitHub Desktop - Visual Git client
+- Cursor - AI-first code editor
+
+**Security & Privacy (all profiles)**
 - 1Password - Password manager with SSH agent
 - 1Password CLI - Command-line credential access
-- GPG Suite - Email encryption and signing
-- ProtonVPN - Privacy-focused VPN
+- ProtonVPN - Privacy-focused VPN (optional)
 
-**Productivity**
+**Productivity (all profiles)**
 - Obsidian - Knowledge base and notes
 - Raycast - Launcher (replaces Spotlight)
-- Zotero - Reference and citation manager
 - Claude - AI assistant
 
-**Communication**
+**Productivity (optional, both profiles)**
+- Zotero - Reference and citation manager
+
+**Communication (work profile only)**
 - Slack - Team communication
+- Zoom - Video conferencing
+
+**Communication (personal profile only)**
 - Signal - Secure messaging
 - Telegram - Cloud messaging
 - WhatsApp - Personal messaging
-- Zoom - Video conferencing
 
-**Browsers**
+**Containers & Platform Engineering (work profile only)**
+- Docker Desktop - Container management with GUI
+- k9s - Terminal UI for Kubernetes
+
+**Browsers (optional, both profiles)**
 - Arc - Modern browser with spaces
 - Firefox - Privacy-focused browser
 
-**Media**
+**Media (personal profile only)**
 - Spotify - Music streaming
-- VLC - Universal media player
 - Sonic Pi - Code-based music creation
 - Steam - Gaming platform
+
+**Media (optional, both profiles)**
+- VLC - Universal media player
 
 ### Configuration Management
 
@@ -200,10 +215,11 @@ uv add package                  # Add dependency
 uv run script.py                # Run with environment
 uv sync                         # Sync dependencies
 
-# Node.js (pnpm)
-pnpm install                    # Install dependencies
+# Node.js (npm/pnpm)
+npm install                     # Install dependencies
+npm run script                  # Run package script
+# pnpm (if installed via npm install -g pnpm):
 pnpm add package                # Add new package
-pnpm run script                 # Run package script
 ```
 
 ### Configuration Management (Chezmoi)
@@ -526,9 +542,10 @@ chezmoi git -- commit -m "..."  # Commit changes
 ### Configuration File Locations
 
 ```
+~/.wezterm.lua                  # WezTerm terminal settings (managed as dot_wezterm.lua.tmpl)
+
 ~/.config/
 ├── starship.toml               # Shell prompt
-├── wezterm/wezterm.lua         # Terminal settings
 ├── helix/config.toml           # Editor configuration
 ├── yazi/yazi.toml              # File manager settings
 ├── lazygit/config.yml          # Git UI settings

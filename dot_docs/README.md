@@ -1,16 +1,18 @@
 # Documentation
 
-Development environment documentation for this dotfiles setup.
+Development environment documentation for this dotfiles setup. The repository supports `personal` and `work` profiles, installing different package sets and identities per machine — see [SETUP.md](../SETUP.md) for new machine onboarding.
 
 ## Quick Start
 
 New to this system? Start here:
-1. [Setup Guide](setup-guide.md) - Installation and configuration
-2. [Tool Reference](tool-reference.md) - Commands and shortcuts
-3. [Architecture](architecture.md) - System design
+1. [SETUP.md](../SETUP.md) - New machine onboarding and profile selection
+2. [Setup Guide](setup-guide.md) - Installation and configuration details
+3. [Tool Reference](tool-reference.md) - Commands and shortcuts
+4. [Architecture](architecture.md) - System design
 
 ## Core Documentation
 
+- **[SETUP.md](../SETUP.md)** - New machine setup, profile selection, and onboarding
 - **[Setup Guide](setup-guide.md)** - First-time setup and customization
 - **[Tool Reference](tool-reference.md)** - Complete catalog of 67+ tools, commands, shortcuts
 - **[Architecture](architecture.md)** - System design and technical decisions

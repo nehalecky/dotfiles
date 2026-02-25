@@ -35,6 +35,32 @@ source ~/.file               # Or appropriate test
 chezmoi add ~/.file
 ```
 
+### Profile & Template Issues
+
+**Wrong identity appearing in git commits**:
+Check `~/.config/chezmoi/chezmoi.toml` — this is the local machine config with your identity.
+To update a value: delete the key from that file and run `chezmoi init` to re-prompt.
+
+**Work packages installed on personal machine (or vice versa)**:
+The Brewfile is profile-aware. Verify your profile:
+```bash
+chezmoi data | grep profile
+```
+Expected: `"profile": "personal"` or `"profile": "work"`.
+If the wrong profile was set, remove `~/.config/chezmoi/chezmoi.toml` and re-run `chezmoi init` to select the correct profile.
+
+**Template rendering errors**:
+Run `chezmoi execute-template` on the failing template to see the error:
+```bash
+chezmoi execute-template < ~/.local/share/chezmoi/dot_config/git/config.tmpl
+```
+
+**Missing template variables**:
+```bash
+chezmoi data              # Show all template data values
+```
+If expected keys are missing, they were likely not answered during `chezmoi init`. Edit `~/.config/chezmoi/chezmoi.toml` directly to add them.
+
 ### Tool Installation Problems
 
 **Missing packages**:
@@ -93,7 +119,7 @@ echo "test" | ssh-keygen -Y sign -n git -f ~/.ssh/id_ed25519_signing
 3. Try restarting WezTerm: `Cmd+Q` then relaunch
 4. Verify configuration loaded:
    ```bash
-   grep -A5 "leader_key" ~/.config/wezterm/wezterm.lua
+   grep -A5 "leader_key" ~/.wezterm.lua
    ```
 
 **Slow prompt**:
