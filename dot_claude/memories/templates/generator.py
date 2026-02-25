@@ -325,7 +325,7 @@ npm run test                 # Verify tests pass
         
         # Add tool imports
         imports.append("\n### Essential Tools")
-        imports.append(f"@{self._relative_path_to_global()}.claude/memories/tools/git-practices.md")
+        imports.append(f"@{self._relative_path_to_global()}.claude/memories/tools/git-standards.md")
         imports.append(f"@{self._relative_path_to_global()}.claude/memories/tools/essential-tools.md")
         
         # Add MCP imports if relevant
