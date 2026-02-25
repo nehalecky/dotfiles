@@ -1,0 +1,40 @@
+{{- /* ── Profile Selection ─────────────────────────────────── */ -}}
+{{- $profiles := list "personal" "work" -}}
+{{- $profile := promptChoiceOnce . "profile" "Machine profile" $profiles "personal" -}}
+
+{{- /* ── Identity ──────────────────────────────────────────── */ -}}
+{{- $git_name := promptStringOnce . "git_name" "Git author name" "Nicholaus Halecky" -}}
+{{- $git_email := "" -}}
+{{- $github_username := "" -}}
+{{- if eq $profile "personal" -}}
+{{-   $git_email = promptStringOnce . "git_email" "Git email" "nehalecky@gmail.com" -}}
+{{-   $github_username = promptStringOnce . "github_username" "GitHub username" "nehalecky" -}}
+{{- else -}}
+{{-   $git_email = promptStringOnce . "git_email" "Work git email" "" -}}
+{{-   $github_username = promptStringOnce . "github_username" "Work GitHub username" "" -}}
+{{- end -}}
+
+{{- /* ── SSH & Signing ─────────────────────────────────────── */ -}}
+{{- $git_signing_key := "" -}}
+{{- $op_auth_key_name := "" -}}
+{{- $op_signing_key_name := "" -}}
+{{- if eq $profile "personal" -}}
+{{-   $git_signing_key = promptStringOnce . "git_signing_key" "Git signing public key" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6" -}}
+{{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "Nico Personal GitHub Auth Key" -}}
+{{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name" "Github Signing Key (Nico Personal)" -}}
+{{- else -}}
+{{-   $git_signing_key = promptStringOnce . "git_signing_key" "Work git signing public key (ssh-ed25519 ...)" "" -}}
+{{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "GitHub Auth Key" -}}
+{{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name" "Signing Key" -}}
+{{- end -}}
+
+[data]
+    profile             = {{ $profile | quote }}
+    isWork              = {{ eq $profile "work" }}
+    isPersonal          = {{ eq $profile "personal" }}
+    git_name            = {{ $git_name | quote }}
+    git_email           = {{ $git_email | quote }}
+    github_username     = {{ $github_username | quote }}
+    git_signing_key     = {{ $git_signing_key | quote }}
+    op_auth_key_name    = {{ $op_auth_key_name | quote }}
+    op_signing_key_name = {{ $op_signing_key_name | quote }}

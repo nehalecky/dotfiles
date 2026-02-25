@@ -22,3 +22,13 @@ Projects/
 
 # Repo-internal directories (not deployed to HOME)
 plan/
+
+# Profile-conditional exclusions
+{{ if .isWork }}
+.ssh/id_ed25519_signing.pub
+{{ end }}
+
+{{ if .isPersonal }}
+.kube/
+.aws/
+{{ end }}
