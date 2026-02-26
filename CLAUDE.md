@@ -15,7 +15,7 @@
    - New file: Create in HOME → Test → `chezmoi add` → Commit
    - Existing file: Edit in HOME → Test → `chezmoi add` → Commit
 
-**Course Correction:** When you catch yourself about to write to `/Users/nehalecky/.local/share/chezmoi/`, STOP and use the HOME→Source workflow instead.
+**Course Correction:** When you catch yourself about to write to `~/.local/share/chezmoi/`, STOP and use the HOME→Source workflow instead.
 
 ### GIT OPERATIONS FOR DOTFILES:
 **Golden Rule:** Always use `chezmoi git -- <command>`, never raw `git` in HOME.

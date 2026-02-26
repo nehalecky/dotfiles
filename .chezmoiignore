@@ -32,3 +32,12 @@ plan/
 .kube/
 .aws/
 {{ end }}
+
+# Terminal-conditional exclusions
+{{ if ne .terminal "wezterm" }}
+.wezterm.lua
+.local/bin/wezterm-shortcuts
+{{ end }}
+{{ if ne .terminal "iterm2" }}
+.config/iterm2/
+{{ end }}
