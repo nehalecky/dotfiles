@@ -29,7 +29,7 @@ brew install chezmoi
 chezmoi init --apply <your-github-username>
 ```
 
-`chezmoi init` prompts for your profile (personal/work), git identity, SSH keys, and terminal emulator (WezTerm, iTerm2, Ghostty, and others supported). It installs only the packages and configs for your choices — 60+ command-line tools, 12 Claude Code agents, and XDG-compliant dotfile organization.
+`chezmoi init` prompts for your profile (personal/work), git identity, SSH keys, and terminal emulator (WezTerm, iTerm2, Ghostty, and others supported). It installs only the packages and configs for your choices — faster and friendlier developer tools, 12 Claude Code agents, and XDG-compliant dotfile organization.
 
 ## Key Components
 
