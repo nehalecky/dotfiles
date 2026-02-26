@@ -64,7 +64,23 @@ cask "font-meslo-lg-nerd-font"
 cask "obsidian"
 cask "raycast"
 cask "visual-studio-code"
+
+{{ if eq .terminal "wezterm" -}}
+# ── Terminal: WezTerm ───────────────────────────────────────
 cask "wezterm"
+{{ else if eq .terminal "iterm2" -}}
+# ── Terminal: iTerm2 ────────────────────────────────────────
+cask "iterm2"
+{{ else if eq .terminal "ghostty" -}}
+# ── Terminal: Ghostty ───────────────────────────────────────
+cask "ghostty"
+{{ else if eq .terminal "kitty" -}}
+# ── Terminal: Kitty ─────────────────────────────────────────
+cask "kitty"
+{{ else if eq .terminal "alacritty" -}}
+# ── Terminal: Alacritty ─────────────────────────────────────
+cask "alacritty"
+{{ end -}}
 
 {{ if .isWork -}}
 # ── Platform Engineering (work only) ────────────────────────
