@@ -2,6 +2,13 @@
 
 Detailed onboarding for new machines and profile changes.
 
+## Before You Begin
+
+This repo is a personal dotfiles template. To use it:
+1. **Fork** this repository on GitHub
+2. Replace any references to `nehalecky` with your GitHub username
+3. Follow the Quick Start steps below with your forked repo URL
+
 ## Quick Start
 
 ### New machine setup
@@ -14,7 +21,7 @@ Detailed onboarding for new machines and profile changes.
 2. Install chezmoi and initialize:
    ```bash
    brew install chezmoi
-   chezmoi init --apply nehalecky
+   chezmoi init --apply <your-github-username>
    ```
 
 3. Answer the setup prompts:
@@ -37,7 +44,7 @@ Detailed onboarding for new machines and profile changes.
 To change any prompted value, delete it from `~/.config/chezmoi/chezmoi.toml` and re-run:
 
 ```bash
-chezmoi init --apply nehalecky
+chezmoi init --apply <your-github-username>
 ```
 
 Or edit the value directly in `~/.config/chezmoi/chezmoi.toml` and run `chezmoi apply`.
@@ -144,7 +151,7 @@ After setup, verify everything works:
 
 If you see `chezmoi: warning: config file template has changed, run chezmoi init to regenerate config file`, your local `~/.config/chezmoi/chezmoi.toml` is missing a newly added variable. Either:
 
-- Run `chezmoi init --apply nehalecky` to regenerate (you will be prompted for new values)
+- Run `chezmoi init --apply <your-github-username>` to regenerate (you will be prompted for new values)
 - Or add the missing key manually to `~/.config/chezmoi/chezmoi.toml` under `[data]`
 
 ### 1Password SSH signing errors
