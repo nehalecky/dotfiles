@@ -1,14 +1,14 @@
 # Secrets Management Guide
 
-This guide explains the hybrid secrets management strategy using chezmoi with 1Password as the canonical source.
+This guide explains the secrets management strategy using chezmoi with 1Password as the single source of truth.
 
 ## Overview
 
-We use a **hybrid approach with 1Password as the single source of truth**:
-1. **1Password** - Canonical source for all secrets
-2. **Dynamic Resolution** - Pull from 1Password when available
-3. **Encrypted Fallback** - Age-encrypted files for restricted environments
-4. **Automatic Detection** - Smart switching based on environment
+All secrets are managed through **1Password**. There is no encrypted-file fallback. The approach is:
+
+1. **1Password** - Single canonical source for all secrets
+2. **Dynamic Resolution** - Templates pull from 1Password at `chezmoi apply` time
+3. **Profile-Aware Keys** - SSH key names are configurable per profile (personal vs. work)
 
 ## Architecture
 
@@ -17,34 +17,102 @@ We use a **hybrid approach with 1Password as the single source of truth**:
 │  1Password  │ ← Single source of truth
 └──────┬──────┘
        │
-       ├─── Development Environment (1Password available)
-       │    └─→ Templates pull directly from 1Password
+       ├─── chezmoi templates (dot_config/git/config.tmpl, etc.)
+       │    └─→ op-ssh-sign / 1Password CLI injects secrets at apply time
        │
-       └─── Restricted Environment (No 1Password)
-            └─→ Use pre-encrypted files (synced from 1Password)
+       └─── ~/.config/chezmoi/chezmoi.toml (local, never committed)
+            └─→ Stores profile identity and 1Password item names
 ```
 
-## Environment Detection Strategy
+## Profile-Aware 1Password Key Names
 
-Chezmoi automatically detects the environment and chooses the appropriate method:
+At `chezmoi init` time, you are prompted for profile identity and key names. These are stored in `~/.config/chezmoi/chezmoi.toml` (local machine config, never committed to the repository).
 
-```go
-{{- $has1Password := lookPath "op" -}}
-{{- if $has1Password -}}
-  # Use 1Password directly
-  api_key: {{ onepasswordRead "op://Personal/myapp/api_key" }}
-{{- else -}}
-  # Fall back to encrypted file
-  {{- include ".secrets/myapp-api-key.age" | decrypt -}}
-{{- end -}}
+### Prompted Variables
+
+| Variable | Purpose | Personal Default |
+|---|---|---|
+| `op_auth_key_name` | 1Password item name for your SSH authentication key | "Nico Personal GitHub Auth Key" |
+| `op_signing_key_name` | 1Password item name for your SSH signing key | "Github Signing Key (Nico Personal)" |
+
+Work profiles have no defaults — you must specify the vault item names that match your work 1Password setup.
+
+### How They Are Used
+
+These variables are rendered into `~/.config/1Password/ssh/agent.toml` via the chezmoi template at `dot_config/1Password/ssh/agent.toml.tmpl`:
+
+```toml
+# Rendered from dot_config/1Password/ssh/agent.toml.tmpl
+[[ssh-keys]]
+item = "Nico Personal GitHub Auth Key"   # ← from op_auth_key_name
+
+[[ssh-keys]]
+item = "Github Signing Key (Nico Personal)"  # ← from op_signing_key_name
 ```
+
+The template source:
+```toml
+[[ssh-keys]]
+item = {{ .op_auth_key_name | quote }}
+
+[[ssh-keys]]
+item = {{ .op_signing_key_name | quote }}
+```
+
+## SSH Commit Signing
+
+This setup uses SSH commit signing with 1Password instead of GPG for verified commits.
+
+### Configuration
+
+The git configuration is managed as a chezmoi template at `dot_config/git/config.tmpl`. The signing key is injected at `chezmoi init` time from the `git_signing_key` prompt and stored in `~/.config/chezmoi/chezmoi.toml`.
+
+The template:
+```gitconfig
+# Rendered from dot_config/git/config.tmpl
+[user]
+    name = {{ .git_name }}
+    email = {{ .git_email }}
+
+[commit]
+    gpgsign = true
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    allowedSignersFile = {{ .chezmoi.homeDir }}/.ssh/allowed_signers
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+{{- if .git_signing_key }}
+[user]
+    signingkey = {{ .git_signing_key }}
+{{- end }}
+```
+
+After rendering, `~/.config/git/config` contains the actual public key value from your `git_signing_key` prompt — for example:
+
+```gitconfig
+[user]
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5...  # your actual key after rendering
+```
+
+### Benefits
+- **Unified Key Management**: Same 1Password vault manages SSH auth and signing keys
+- **Profile Portability**: Different machines or profiles specify their own 1Password item names at init time
+- **Simpler Setup**: No GPG key generation, distribution, or expiration management
+- **Consistent Workflow**: Leverages existing SSH infrastructure
+- **GitHub Native Support**: Full verification support since 2022
+
+### Usage
+Once configured, all commits are automatically signed. The SSH public key must be added to GitHub as a "Signing Key" (separate from authentication keys).
 
 ## Implementation Guide
 
 ### 1. Store Secret in 1Password (Canonical Source)
 
 ```bash
-# Create entry in 1Password
+# Create an entry in 1Password
 op item create \
   --category=api_credential \
   --title="MyApp API Key" \
@@ -52,194 +120,88 @@ op item create \
   api_key="sk-xxxxxxxxxxxx"
 ```
 
-### 2. Create Hybrid Template
+### 2. Reference Secret in a Chezmoi Template
 
 File: `~/.config/myapp/config.yml.tmpl`
 ```yaml
-# Hybrid template that works in both environments
+# Template that pulls from 1Password at apply time
 api:
-  {{- if lookPath "op" }}
-  # 1Password is available - pull directly
   key: {{ onepasswordRead "op://Personal/MyApp API Key/api_key" }}
-  {{- else }}
-  # No 1Password - use encrypted fallback
-  key: {{ include ".secrets/myapp-api-key.age" | decrypt }}
-  {{- end }}
 ```
 
-### 3. Sync Secret to Encrypted File
-
-Create a sync script to pull from 1Password and encrypt:
+### 3. Add to Chezmoi
 
 ```bash
-#!/bin/bash
-# scripts/sync-secrets.sh
-# Pulls secrets from 1Password and creates encrypted files
+# Add the template file (from HOME directory)
+chezmoi add ~/.config/myapp/config.yml
 
-# Ensure we're signed in
-eval $(op signin)
+# Verify the template renders correctly
+chezmoi execute-template < ~/.local/share/chezmoi/dot_config/myapp/config.yml.tmpl
 
-# Pull secret from 1Password
-SECRET=$(op read "op://Personal/MyApp API Key/api_key")
-
-# Encrypt and save
-echo -n "$SECRET" | chezmoi age encrypt > .local/share/chezmoi/.secrets/myapp-api-key.age
-
-echo "✓ Synced MyApp API key"
+# Commit the template
+chezmoi git -- commit -m "feat: add myapp configuration template"
 ```
-
-### 4. Add to Chezmoi
-
-```bash
-# Add the template
-chezmoi add ~/.config/myapp/config.yml.tmpl
-
-# Add the encrypted secret (for fallback)
-chezmoi add .secrets/myapp-api-key.age
-```
-
-## Workflow Examples
-
-### Development Machine (with 1Password)
-
-1. Templates resolve directly from 1Password
-2. No encrypted files needed locally
-3. Always gets latest secret values
-
-### Server/CI Environment (without 1Password)
-
-1. Templates detect missing `op` command
-2. Falls back to encrypted files
-3. Secrets remain secure with age encryption
 
 ## Managing Different Secret Types
 
 ### Simple Values (API Keys, Tokens)
 
 ```yaml
-# Template with fallback
-token: {{- if lookPath "op" -}}
-  {{ onepasswordRead "op://Vault/Item/field" }}
-{{- else -}}
-  {{ include ".secrets/token.age" | decrypt }}
-{{- end -}}
+token: {{ onepasswordRead "op://Vault/Item/field" }}
 ```
 
-### Complex Files (SSL Certificates, SSH Keys)
+### Documents (SSL Certificates, SSH Keys)
 
 ```yaml
-# For larger files, always use encryption
-{{- if lookPath "op" -}}
-  {{- onepasswordDocument "uuid" | b64dec -}}
-{{- else -}}
-  {{- include ".secrets/certificate.age" | decrypt -}}
-{{- end -}}
+{{- onepasswordDocument "item-uuid" | b64dec -}}
 ```
 
 ### Environment-Specific Secrets
 
+Use chezmoi data variables (set in `chezmoi.toml`) to branch on profile:
+
 ```yaml
-# Use chezmoi's data to determine environment
-{{- $env := .chezmoi.hostname -}}
-{{- if eq $env "production" -}}
-  {{- if lookPath "op" -}}
-    key: {{ onepasswordRead "op://Production/api/key" }}
-  {{- else -}}
-    key: {{ include ".secrets/prod-api-key.age" | decrypt }}
-  {{- end -}}
-{{- end -}}
-```
-
-## Automation Scripts
-
-### Sync All Secrets
-
-Create `.local/share/chezmoi/scripts/sync-all-secrets.sh`:
-
-```bash
-#!/bin/bash
-# Sync all secrets from 1Password to encrypted files
-
-set -e
-
-echo "Syncing secrets from 1Password..."
-
-# Ensure signed in
-eval $(op signin) || exit 1
-
-# Define secrets to sync
-declare -A SECRETS=(
-  ["github-token"]="op://Personal/GitHub/token"
-  ["aws-key"]="op://Work/AWS/access_key"
-  ["aws-secret"]="op://Work/AWS/secret_key"
-)
-
-# Sync each secret
-for name in "${!SECRETS[@]}"; do
-  uri="${SECRETS[$name]}"
-  echo -n "Syncing $name... "
-  
-  # Pull from 1Password and encrypt
-  op read "$uri" | chezmoi age encrypt > ".secrets/${name}.age"
-  
-  echo "✓"
-done
-
-echo "All secrets synced!"
-```
-
-### Verify Secrets
-
-```bash
-#!/bin/bash
-# Verify encrypted secrets match 1Password
-
-for file in .secrets/*.age; do
-  name=$(basename "$file" .age)
-  decrypted=$(chezmoi age decrypt < "$file")
-  # Compare with 1Password (implementation depends on secret structure)
-done
+{{- if .isWork }}
+key: {{ onepasswordRead "op://Work/api/key" }}
+{{- else }}
+key: {{ onepasswordRead "op://Personal/api/key" }}
+{{- end }}
 ```
 
 ## Best Practices
 
-1. **Always use 1Password as source of truth**
-   - Never edit encrypted files directly
-   - Run sync script after updating 1Password
+1. **1Password is the only source of truth**
+   - Never hardcode secrets in templates or committed files
+   - Never store secrets in `.chezmoidata.yaml` (committed to repo)
 
-2. **Version control encrypted files**
-   - Safe to commit `.age` files to git
-   - They're encrypted with your age key
+2. **Profile identity lives in `~/.config/chezmoi/chezmoi.toml`**
+   - This file is local to the machine and never committed
+   - Contains `op_auth_key_name`, `op_signing_key_name`, `git_signing_key`, etc.
 
 3. **Document secret requirements**
-   - List all required 1Password entries
-   - Include vault and item names
+   - List all required 1Password entries in setup guides
+   - Include vault name and item name so other machines can reproduce
 
-4. **Test both paths**
+4. **Test template rendering**
    ```bash
-   # Test with 1Password
-   chezmoi apply --dry-run
-   
-   # Test without (temporarily rename op)
-   sudo mv /opt/homebrew/bin/op /opt/homebrew/bin/op.bak
-   chezmoi apply --dry-run
-   sudo mv /opt/homebrew/bin/op.bak /opt/homebrew/bin/op
-   ```
+   # Preview rendered output without applying
+   chezmoi execute-template < ~/.local/share/chezmoi/dot_config/git/config.tmpl
 
-5. **Regular sync**
-   - Run sync script in CI/CD
-   - Or before deploying to new environments
+   # Full dry run
+   chezmoi apply --dry-run
+   ```
 
 ## Security Considerations
 
-- **1Password Access**: Development machines only
-- **Age Encryption**: Uses your personal age key
-- **Git Storage**: Encrypted files are safe to commit
-- **Rotation**: Update in 1Password, then sync
+- **No encrypted fallback files** - 1Password is required; there is no offline secret storage in this repo
+- **Local config only** - `~/.config/chezmoi/chezmoi.toml` holds identity data and is never committed
+- **Git Storage** - No secrets or encrypted blobs are stored in the repository
+- **Rotation** - Update the secret in 1Password; run `chezmoi apply` to pick up the new value
 
 ## Troubleshooting
 
 ### Secret not found in 1Password
+
 ```bash
 # List available items
 op item list --vault Personal
@@ -248,55 +210,38 @@ op item list --vault Personal
 op read "op://Vault/Item/field" --reveal
 ```
 
-### Decryption fails
-```bash
-# Check age key
-chezmoi age decrypt --help
-
-# Verify encryption
-cat .secrets/file.age | chezmoi age decrypt
-```
-
 ### Template syntax errors
+
 ```bash
 # Test template rendering
 chezmoi execute-template < template.tmpl
 ```
 
-## SSH Commit Signing
+### SSH agent not offering the right keys
 
-This setup uses SSH commit signing with 1Password instead of GPG for verified commits.
+```bash
+# Check what the rendered agent.toml looks like
+chezmoi cat ~/.config/1Password/ssh/agent.toml
 
-### Configuration
-The git configuration uses SSH signing with the 1Password SSH agent:
-
-```toml
-[commit]
-    gpgsign = true
-
-[gpg]
-    format = ssh
-
-[gpg "ssh"]
-    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-
-[user]
-    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6
+# Verify the item names match what is in 1Password
+op item get "Nico Personal GitHub Auth Key" --vault Personal
 ```
 
-### Benefits
-- **Unified Key Management**: Same 1Password vault manages SSH auth and signing keys
-- **Simpler Setup**: No GPG key generation, distribution, or expiration management
-- **Consistent Workflow**: Leverages existing SSH infrastructure
-- **GitHub Native Support**: Full verification support since 2022
+### Wrong key name after profile switch
 
-### Usage
-Once configured, all commits are automatically signed. The SSH public key must be added to GitHub as a "Signing Key" (separate from authentication keys).
+If you need to update the key names (e.g., switching from personal to work setup), edit `~/.config/chezmoi/chezmoi.toml` directly:
+
+```toml
+[data]
+  op_auth_key_name = "Work GitHub Auth Key"
+  op_signing_key_name = "Work Git Signing Key"
+```
+
+Then run `chezmoi apply` to re-render the affected templates.
 
 ## References
 
 - [Chezmoi Password Managers](https://www.chezmoi.io/user-guide/password-managers/)
 - [Chezmoi 1Password Integration](https://www.chezmoi.io/user-guide/password-managers/1password/)
-- [Chezmoi Encryption](https://www.chezmoi.io/user-guide/encryption/)
 - [1Password CLI](https://developer.1password.com/docs/cli/)
 - [GitHub SSH Commit Signing](https://docs.github.com/en/authentication/managing-commit-signature-verification/about-commit-signature-verification#ssh-commit-signature-verification)
