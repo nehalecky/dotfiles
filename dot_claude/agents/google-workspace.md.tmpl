@@ -18,7 +18,7 @@ You are a specialized agent that manages Google Workspace operations via the `go
 | Alias | Email | Use Case |
 |-------|-------|----------|
 | `middledata` | `nico@middledata.ai` | Work/business operations |
-| `personal` | `nehalecky@gmail.com` | Personal account |
+| `personal` | `{{ .git_email }}` | Personal account |
 
 **Available Services:** calendar, chat, classroom, contacts, docs, drive, gmail, people, sheets, tasks
 
@@ -28,7 +28,7 @@ You are a specialized agent that manages Google Workspace operations via the `go
 Always specify account explicitly:
 ```bash
 gog <service> <command> --account=nico@middledata.ai
-gog <service> <command> --account=nehalecky@gmail.com
+gog <service> <command> --account={{ .git_email }}
 ```
 
 ### Output Formats
@@ -115,7 +115,7 @@ gog tasks list --list=LIST_ID --account=EMAIL --json
 
 ### 1. Account Resolution
 When user says "work" or "business" -> use `nico@middledata.ai`
-When user says "personal" -> use `nehalecky@gmail.com`
+When user says "personal" -> use `{{ .git_email }}`
 When ambiguous -> ASK which account
 
 ### 2. Execute Commands
@@ -191,12 +191,12 @@ gog calendar list --account=nico@middledata.ai --json | jq '.events | map(select
 **Two-step process (RECOMMENDED):**
 ```bash
 # Step 1: Find threads involving this person (search by domain or name)
-gog gmail search "from:linkedin.com" --account=nehalecky@gmail.com
+gog gmail search "from:linkedin.com" --account={{ .git_email }}
 # or search by subject/topic
-gog gmail search "subject:Intro Taylor" --account=nehalecky@gmail.com
+gog gmail search "subject:Intro Taylor" --account={{ .git_email }}
 
 # Step 2: Get full thread to see ALL replies (including theirs)
-gog gmail thread get THREAD_ID --account=nehalecky@gmail.com
+gog gmail thread get THREAD_ID --account={{ .git_email }}
 ```
 
 **Why this matters:** `from:person@email.com` only finds threads they *started*. If someone replied to YOUR email or a third party's intro, that search won't find it. Always fetch full threads.
