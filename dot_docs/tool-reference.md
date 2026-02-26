@@ -303,16 +303,18 @@ command --help                  # Built-in help
 
 ### Workspace Commands
 
-```bash
-# Launch workspaces
-workspace-home                  # Home command center
-workspace-dev [project]         # Development workspace
-workspace-refresh               # Refresh workspace data
+Workspaces run inside named [zellij](https://zellij.dev) sessions and persist across terminal restarts. Opening a workspace twice attaches to the existing session rather than creating a new one.
 
-# Session management (zellij)
+```bash
+# Launch workspaces (terminal-agnostic — works in any terminal)
+workspace-home                  # Home command center (session: home)
+workspace-dev [project]         # Dev workspace (session: dev-<project>)
+
+# Session management
 zellij list-sessions            # Show active sessions
-zellij attach session-name      # Reconnect to session
-zellij kill-session name        # Terminate session
+zellij attach home              # Reconnect to home session
+zellij attach dev-myproject     # Reconnect to a dev session
+zellij kill-session home        # Terminate a session
 ```
 
 ## Keyboard Shortcuts
@@ -526,8 +528,8 @@ Ctrl+a u                        # Disk usage
 
 **Development Workspace**
 ```bash
-workspace-dev project           # Launch 4-pane layout
-Ctrl+a |/-                      # Split panes as needed
+workspace-dev project           # Launch or attach to dev session
+zellij attach dev-project       # Re-attach after terminal restart
 Ctrl+a h/j/k/l                  # Navigate between panes
 ```
 
@@ -551,10 +553,13 @@ chezmoi git -- commit -m "..."  # Commit changes
 ├── lazygit/config.yml          # Git UI settings
 └── git/config                  # Git configuration
 
+~/.config/zellij/layouts/       # Workspace layout definitions
+├── home.kdl                    # Home command center layout
+└── dev.kdl                     # Development workspace layout
+
 ~/.local/bin/                   # Custom scripts
-├── workspace-home              # Home workspace launcher
-├── workspace-dev               # Dev workspace launcher
-└── workspace-refresh           # Workspace refresh
+├── workspace-home              # Home workspace launcher (zellij)
+└── workspace-dev               # Dev workspace launcher (zellij)
 
 ~/.local/share/chezmoi/         # Dotfiles source
 └── .git/                       # Dotfiles repository

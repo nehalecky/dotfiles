@@ -1,19 +1,19 @@
 # Setup Guide
 
-Onboarding for new machines and profile changes.
+Detailed onboarding for new machines and profile changes.
 
 ## Before You Begin
 
-This repo is a personal dotfiles template.
+This repo is a personal dotfiles template. To use it:
 1. **Fork** this repository on GitHub
-2. Replace all references to `nehalecky` with your GitHub username
+2. Replace any references to `nehalecky` with your GitHub username
 3. Follow the Quick Start steps below with your forked repo URL
 
 ## Quick Start
 
 ### New machine setup
 
-1. Install Homebrew (skip if already installed):
+1. Install Homebrew (if not already installed):
    ```bash
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
@@ -27,21 +27,21 @@ This repo is a personal dotfiles template.
 3. Answer the setup prompts:
    - **Machine profile**: `personal` or `work`
    - **Git author name**: Your full name
-   - **Preferred/casual name**: How you prefer to be addressed (defaults to first word of full name)
+   - **Preferred/casual name**: What you like to be called (defaults to first word of full name)
    - **Git email**: Your email for commits
    - **GitHub username**: Your GitHub handle
    - **Git signing public key**: Your SSH public key (`ssh-ed25519 ...`)
    - **1Password SSH auth key name**: Item name in 1Password for your auth key
    - **1Password signing key name**: Item name in 1Password for your signing key
 
-4. Install packages:
+4. Run brew bundle to install packages:
    ```bash
    brew bundle --global
    ```
 
 ### Re-initializing (change profile or update values)
 
-To change a prompted value, delete it from `~/.config/chezmoi/chezmoi.toml` and re-run:
+To change any prompted value, delete it from `~/.config/chezmoi/chezmoi.toml` and re-run:
 
 ```bash
 chezmoi init --apply <your-github-username>
@@ -49,7 +49,7 @@ chezmoi init --apply <your-github-username>
 
 Or edit the value directly in `~/.config/chezmoi/chezmoi.toml` and run `chezmoi apply`.
 
-## What Profiles Control
+## What the profiles control
 
 | Setting | `personal` | `work` |
 |---------|-----------|--------|
@@ -83,16 +83,16 @@ After running `chezmoi init --apply` with the `work` profile:
 
 ## Understanding the HOME→Source Workflow
 
-All dotfile changes follow this workflow:
+All dotfile changes follow a consistent workflow:
 
-1. **Edit** the file in your HOME directory (`~/.zshrc`, `~/.config/starship.toml`, etc.)
-2. **Test** the change (reload shell, verify configuration)
+1. **Edit** the actual file in your HOME directory (`~/.zshrc`, `~/.config/starship.toml`, etc.)
+2. **Test** that the changes work correctly (reload shell, test configuration)
 3. **Sync** to chezmoi with `chezmoi add <file>`
-4. **Commit** with `chezmoi git -- commit -m "description"`
+4. **Commit** changes with `chezmoi git -- commit -m "description"`
 
-**Why this workflow:** Editing in HOME lets you test immediately. Chezmoi then synchronizes changes to the source repository.
+**Why this workflow**: Direct editing ensures immediate testing. Chezmoi handles synchronization to the source repository.
 
-**Never edit directly in** `~/.local/share/chezmoi/` -- always edit in HOME first.
+**Never edit directly in** `~/.local/share/chezmoi/` — always edit in HOME first.
 
 **Example — editing your shell config:**
 ```bash
@@ -111,7 +111,7 @@ chezmoi git -- commit -m "feat: add custom shell aliases"
 
 ## Tool Verification Checklist
 
-After setup, verify each component:
+After setup, verify everything works:
 
 ### Core System
 - [ ] Shell loads without errors (`exec zsh`)
@@ -149,20 +149,18 @@ After setup, verify each component:
 
 ### Config template changed warning
 
-**Cause:** Your local `~/.config/chezmoi/chezmoi.toml` is missing a newly added variable.
+If you see `chezmoi: warning: config file template has changed, run chezmoi init to regenerate config file`, your local `~/.config/chezmoi/chezmoi.toml` is missing a newly added variable. Either:
 
-**Fix:**
-- Run `chezmoi init --apply <your-github-username>` to regenerate (chezmoi prompts for new values)
+- Run `chezmoi init --apply <your-github-username>` to regenerate (you will be prompted for new values)
 - Or add the missing key manually to `~/.config/chezmoi/chezmoi.toml` under `[data]`
 
 ### 1Password SSH signing errors
 
-**Cause:** 1Password SSH agent is unreachable or misconfigured.
+If commits fail with `1Password: agent returned an error`, ensure:
 
-**Fix:**
-1. Open and unlock the 1Password desktop app
-2. Enable the SSH agent in 1Password Settings > Developer > SSH Agent
-3. Confirm key names in `~/.config/chezmoi/chezmoi.toml` match (`op_auth_key_name`, `op_signing_key_name`)
+1. 1Password desktop app is running and unlocked
+2. The SSH agent is enabled in 1Password Settings > Developer > SSH Agent
+3. The correct key names are set in `~/.config/chezmoi/chezmoi.toml` (`op_auth_key_name`, `op_signing_key_name`)
 
 Verify the agent is active:
 ```bash
@@ -180,17 +178,17 @@ chezmoi verify        # Validate all managed files
 
 ### Leader key not working
 
-**Cause:** Another application or terminal multiplexer captures `Ctrl+a`.
+**Symptoms**: Pressing `Ctrl+a` followed by shortcut keys does nothing.
 
-**Fix:**
-1. Confirm WezTerm is active: `echo $TERM_PROGRAM` should output `WezTerm`
-2. Check for conflicts in System Settings > Keyboard > Shortcuts, or a running tmux/screen session
-3. Restart WezTerm (`Cmd+Q`, then relaunch)
-4. Press `Ctrl+a` and look for the "LEADER" indicator in the status bar
+**Solutions**:
+1. Verify you're running WezTerm: `echo $TERM_PROGRAM` should output `WezTerm`
+2. Check if another application captures `Ctrl+a` (System Settings > Keyboard > Shortcuts, or tmux/screen running)
+3. Restart WezTerm: `Cmd+Q` then relaunch
+4. Look for "LEADER" indicator in the status bar when pressing `Ctrl+a`
 
 ### Tools not found
 
-**Cause:** Homebrew packages are missing or PATH excludes Homebrew.
+**Symptoms**: Commands like `yazi`, `lazygit`, or `hx` return "command not found".
 
 ```bash
 # Check what's missing
@@ -205,7 +203,7 @@ echo $PATH | grep homebrew
 
 ### Font or symbol issues
 
-**Cause:** Nerd Font is missing or WezTerm uses the wrong font family.
+**Symptoms**: Boxes, missing icons, or garbled text in the prompt or TUI tools.
 
 ```bash
 # Install Nerd Font
@@ -217,25 +215,28 @@ grep "font.*family" ~/.wezterm.lua
 
 ### Workspace launch failures
 
-**Cause:** Workspace scripts are missing or a required TUI tool is absent.
+**Symptoms**: `workspace-home` or `workspace-dev` commands fail or hang.
 
 ```bash
 # Check workspace scripts exist
 ls -la ~/.local/bin/workspace-*
+
+# Verify zellij is installed
+which zellij && zellij --version
 
 # Test individual tools
 yazi       # File manager
 hx         # Editor
 lazygit    # Git client
 
-# Check WezTerm pane splitting works
-# Ctrl+a |  (vertical split)
-# Ctrl+a -  (horizontal split)
+# Kill a stale session and relaunch
+zellij kill-session home
+workspace-home
 ```
 
 ### Git authentication problems
 
-**Cause:** GitHub CLI or SSH authentication is expired or misconfigured.
+**Symptoms**: Git push/pull asks for credentials or fails with authentication errors.
 
 ```bash
 gh auth status          # Check GitHub CLI auth state

@@ -336,15 +336,21 @@ chmod +x ~/.local/bin/workspace-*
 ### Workspace Layout Problems
 
 **Panes not spawning correctly**:
-1. Check WezTerm configuration syntax
-2. Verify commands in workspace script exist
-3. Review WezTerm logs: `tail -f ~/.local/share/wezterm/wezterm.log`
+1. Verify zellij is installed: `which zellij`
+2. Check the layout file parses: `zellij --layout home --help` (dry run)
+3. Confirm commands in the layout exist: `which hx lazygit btop yazi`
+4. View layout files: `cat ~/.config/zellij/layouts/home.kdl`
+
+**Session already exists but layout changed**:
+```bash
+zellij kill-session home        # Kill stale session
+workspace-home                  # Relaunch with updated layout
+```
 
 **Project detection not working**:
 ```bash
-# Debug workspace-dev detection
 cd /path/to/project
-cat workspace-dev            # Review detection logic
+workspace-dev                   # Run from project directory
 ```
 
 ## Getting Help
@@ -354,7 +360,7 @@ cat workspace-dev            # Review detection logic
 - **[Tool Reference](tool-reference.md)** - Complete command and shortcut reference
 - **[README](README.md)** - Overview and quick start
 - **[System Architecture](architecture.md)** - System design details
-- **[Setup Guide](setup-guide.md)** - First-time setup and customization
+- **[Setup Guide](../SETUP.md)** - First-time setup and customization
 
 ### Diagnostic Commands
 

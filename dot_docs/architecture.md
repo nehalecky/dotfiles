@@ -154,9 +154,8 @@ This separation keeps behavioral defaults version-controlled and identity data m
 |   |-- executable_sync-secrets          # Secrets synchronization
 |   |-- executable_weather / weather-display
 |   |-- executable_wezterm-shortcuts     # WezTerm keybinding reference
-|   |-- executable_workspace-dev         # Development workspace launcher
-|   |-- executable_workspace-home        # Home/dotfiles workspace launcher
-|   `-- executable_workspace-refresh     # Workspace refresh utility
+|   |-- executable_workspace-dev         # Development workspace launcher (zellij)
+|   `-- executable_workspace-home        # Home command center launcher (zellij)
 |
 |-- dot_docs/                            # Documentation -> ~/.docs/
 |-- dot_task/hooks/                      # Taskwarrior hooks
