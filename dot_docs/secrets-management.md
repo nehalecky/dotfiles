@@ -32,8 +32,8 @@ At `chezmoi init` time, you are prompted for profile identity and key names. The
 
 | Variable | Purpose | Personal Default |
 |---|---|---|
-| `op_auth_key_name` | 1Password item name for your SSH authentication key | "Nico Personal GitHub Auth Key" |
-| `op_signing_key_name` | 1Password item name for your SSH signing key | "Github Signing Key (Nico Personal)" |
+| `op_auth_key_name` | 1Password item name for your SSH authentication key | "GitHub SSH Auth Key" |
+| `op_signing_key_name` | 1Password item name for your SSH signing key | "Git Commit Signing Key" |
 
 Work profiles have no defaults — you must specify the vault item names that match your work 1Password setup.
 
@@ -44,10 +44,10 @@ These variables are rendered into `~/.config/1Password/ssh/agent.toml` via the c
 ```toml
 # Rendered from dot_config/1Password/ssh/agent.toml.tmpl
 [[ssh-keys]]
-item = "Nico Personal GitHub Auth Key"   # ← from op_auth_key_name
+item = "GitHub SSH Auth Key"   # ← from op_auth_key_name
 
 [[ssh-keys]]
-item = "Github Signing Key (Nico Personal)"  # ← from op_signing_key_name
+item = "Git Commit Signing Key"  # ← from op_signing_key_name
 ```
 
 The template source:
@@ -224,7 +224,7 @@ chezmoi execute-template < template.tmpl
 chezmoi cat ~/.config/1Password/ssh/agent.toml
 
 # Verify the item names match what is in 1Password
-op item get "Nico Personal GitHub Auth Key" --vault Personal
+op item get "GitHub SSH Auth Key" --vault Personal
 ```
 
 ### Wrong key name after profile switch
