@@ -6,7 +6,7 @@
 
 ## Overview
 
-Development environment built around terminal-first tools, managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Features Claude Code integration with 12 specialized agents and 60+ command-line tools.
+Terminal-first development environment managed with [chezmoi](https://chezmoi.io) for consistent deployment across machines. Includes 12 Claude Code agents, 60+ command-line tools, and multi-profile support for personal and work machines.
 
 ## Quick Setup
 
@@ -19,7 +19,7 @@ brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfil
 # Replace 'nehalecky' with your GitHub username if forking
 ```
 
-This installs WezTerm with GPU acceleration, 60+ command-line tools, Claude Code with 12 specialized agents, and XDG-compliant dotfile organization.
+This installs WezTerm with GPU acceleration, 60+ command-line tools, 12 Claude Code agents, and XDG-compliant dotfile organization.
 
 See [SETUP.md](SETUP.md) for detailed first-time setup, profile selection (personal/work), and customization options.
 
@@ -44,17 +44,17 @@ See [SETUP.md](SETUP.md) for detailed first-time setup, profile selection (perso
 
 [Claude Code](https://claude.ai/code) configuration with specialized agents and workflow automation:
 
-- **12 specialized agents** for development, research, and operations
-- **Memory systems** for project context and methodologies
-- **Workflow automation** via Python hooks and custom commands
-- **MCP integrations** for GitHub, Google Workspace, Atlassian APIs
-- **Superpowers plugin** for enhanced capabilities (October 2024)
+- **12 agents** covering development, research, and operations
+- **Memory system** storing project context and methodologies
+- **Workflow automation** through Python hooks and custom commands
+- **MCP integrations** connecting GitHub, Google Workspace, and Atlassian
+- **Superpowers plugin** adding structured TDD, planning, and execution skills (October 2024)
 
-*Initial Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery).*
+*Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery).*
 
 ## Documentation
 
-Complete documentation for this development environment:
+Full documentation for this environment:
 - **[Documentation Index](dot_docs/README.md)** - Start here for setup, tools, and architecture
 
 Key docs:
@@ -62,23 +62,23 @@ Key docs:
 - [Tool Reference](dot_docs/tool-reference.md) - All 60+ tools, commands, shortcuts
 - [Architecture](dot_docs/architecture.md) - System design and decisions
 
-For Claude Code configuration with [Superpowers](https://github.com/obra/superpowers) integration, see [CLAUDE.md](CLAUDE.md).
+For Claude Code configuration and [Superpowers](https://github.com/obra/superpowers) integration, see [CLAUDE.md](CLAUDE.md).
 
 ## Philosophy
 
 **Terminal-First Development:**
-- Consistent interface for development tasks
-- Fast tool launch times
-- Vim-inspired navigation patterns
-- Reproducible environments via code
+- One interface for all development tasks
+- Sub-second tool launch times
+- Vim-inspired navigation throughout
+- Reproducible environments defined in code
 
 **Dotfiles Organization:**
-- XDG-compliant configuration (`~/.config`, `~/.local`)
-- Chezmoi management for cross-machine deployment
-- Secret integration with 1Password
-- Organized home directory structure
+- XDG-compliant layout (`~/.config`, `~/.local`)
+- Chezmoi-managed cross-machine deployment
+- 1Password integration for secrets
+- Clean home directory structure
 
-**Multi-profile support:** A single repo serves both personal and work machines. `chezmoi init` prompts for profile (personal/work) and injects the correct git identity, SSH keys, 1Password items, Brewfile packages, and terminal themes.
+**Multi-Profile Support:** One repo serves both personal and work machines. `chezmoi init` prompts for a profile and injects the matching git identity, SSH keys, 1Password items, Brewfile packages, and terminal theme.
 
 ## Technology Stack
 
@@ -91,9 +91,9 @@ For Claude Code configuration with [Superpowers](https://github.com/obra/superpo
 
 ## Contributing
 
-This is a personal dotfiles repository optimized for my development workflow. While you're welcome to explore and learn from the configuration, it's designed specifically for my setup and preferences.
+This is a personal dotfiles repository built for my workflow. Explore and borrow freely, but expect opinionated defaults.
 
-For questions or discussions about the approaches used, feel free to [open an issue](https://github.com/nehalecky/dotfiles/issues).
+For questions or discussion, [open an issue](https://github.com/nehalecky/dotfiles/issues).
 
 ---
 

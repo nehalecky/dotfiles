@@ -3,10 +3,10 @@
 ## Overview
 
 This repository uses [chezmoi](https://chezmoi.io) to manage dotfiles across two machine profiles
-(`personal` and `work`). The central design principle is **init-time identity injection**: machine
-identity (name, email, SSH keys, 1Password vault items) is captured once at `chezmoi init` and
-stored in a local config file that is never committed. All profile-specific behavior flows from that
-single init decision.
+(`personal` and `work`). The central design principle is **init-time identity injection**: `chezmoi init`
+captures machine identity (name, email, SSH keys, 1Password vault items) once and stores it in a
+local config file that is never committed. All profile-specific behavior flows from that single
+init decision.
 
 ---
 
@@ -66,7 +66,7 @@ run_once_* scripts      ->  executed once per machine
 
 ### Apply-Time: Two Data Sources
 
-The template rendering merges two sources, with `chezmoi.toml` taking precedence:
+Template rendering merges two sources, with `chezmoi.toml` taking precedence:
 
 ```
 .chezmoidata.yaml          chezmoi.toml [data]
@@ -168,7 +168,7 @@ This separation keeps behavioral defaults version-controlled and identity data m
 
 ## Profile System
 
-Two profiles are defined. The profile choice at `chezmoi init` gates identity, packages, terminal
+Two profiles exist. The profile chosen at `chezmoi init` gates identity, packages, terminal
 theming, and file inclusion throughout the repository.
 
 ### Profile Comparison
@@ -190,7 +190,7 @@ theming, and file inclusion throughout the repository.
 
 ### Profile-Conditional .chezmoiignore
 
-The `.chezmoiignore` file evaluates template logic at apply time:
+`.chezmoiignore` evaluates template logic at apply time:
 
 ```
 {{ if .isWork }}
@@ -207,8 +207,8 @@ The `.chezmoiignore` file evaluates template logic at apply time:
 
 ## Template Files
 
-All `.tmpl` files are rendered by chezmoi at apply time. Identity variables are injected from
-`chezmoi.toml`; behavioral variables come from `.chezmoidata.yaml`.
+Chezmoi renders all `.tmpl` files at apply time. Identity variables come from `chezmoi.toml`;
+behavioral variables come from `.chezmoidata.yaml`.
 
 | Source file                                     | Deployed to                              | What it parameterizes                                       |
 |-------------------------------------------------|------------------------------------------|-------------------------------------------------------------|
@@ -229,12 +229,12 @@ All `.tmpl` files are rendered by chezmoi at apply time. Identity variables are 
 
 ## Secret Management
 
-There is no encrypted secrets store in this repository. The approach relies on two mechanisms:
+This repository contains no encrypted secrets store. Secret access relies on two mechanisms:
 
 ### 1Password SSH Agent
 
-SSH keys (auth and signing) live in 1Password and are served via the 1Password SSH agent socket.
-The `agent.toml` template controls which vault items are offered:
+SSH keys (auth and signing) live in 1Password. The 1Password SSH agent socket serves them to
+the system. The `agent.toml` template controls which vault items to offer:
 
 ```toml
 # ~/.config/1Password/ssh/agent.toml (rendered from template)
@@ -245,7 +245,7 @@ item = "GitHub SSH Auth Key"   # value from .op_auth_key_name
 item = "Git Commit Signing Key"  # value from .op_signing_key_name
 ```
 
-Git is configured to sign commits using the 1Password op-ssh-sign binary:
+Git signs commits through the 1Password `op-ssh-sign` binary:
 
 ```
 [gpg "ssh"]
@@ -253,19 +253,18 @@ Git is configured to sign commits using the 1Password op-ssh-sign binary:
     allowedSignersFile = ~/.ssh/allowed_signers
 ```
 
-No private key material is stored in the repository or in `~/.ssh/` for authentication or signing.
+No private key material exists in the repository or in `~/.ssh/`.
 
 ### Environment Variable Templating
 
-`private_dot_env.tmpl` (deployed as `~/.env`, mode 600) is the intended location for
-`onepasswordRead` calls that inject API tokens at apply time. It currently contains only commented
-examples. Entries follow the pattern:
+`private_dot_env.tmpl` (deployed as `~/.env`, mode 600) holds `onepasswordRead` calls that inject
+API tokens at apply time. It currently contains only commented examples. Entries follow this pattern:
 
 ```bash
 export GITHUB_TOKEN='{{ onepasswordRead "op://Private/github-pat/token" }}'
 ```
 
-The `private_` prefix ensures chezmoi deploys the file with restricted permissions (600).
+The `private_` prefix tells chezmoi to deploy the file with mode 600.
 
 ### What Does Not Exist
 
@@ -280,10 +279,10 @@ The `private_` prefix ensures chezmoi deploys the file with restricted permissio
 
 ### run_once vs run_onchange
 
-chezmoi distinguishes two script types:
+Chezmoi distinguishes two script types:
 
-- `run_once_*` — executes once per machine, tracked by script name in chezmoi state
-- `run_onchange_*` — executes whenever the script content changes (re-evaluated each apply)
+- `run_once_*` -- runs once per machine, tracked by script name in chezmoi state
+- `run_onchange_*` -- runs whenever script content changes (re-evaluated each apply)
 
 | Script                                       | Type         | Trigger                          | Purpose                              |
 |----------------------------------------------|--------------|----------------------------------|--------------------------------------|
@@ -292,15 +291,15 @@ chezmoi distinguishes two script types:
 | `run_onchange_install-starship.sh.tmpl`      | run_onchange | Script content changes           | Install starship via brew or curl    |
 | `run_once_after_40-starship-check.sh`        | run_once     | After other run_once scripts     | Verify starship installation         |
 
-The brew-bundle script uses a content hash trick to couple its trigger to Brewfile changes:
+The brew-bundle script uses a content-hash trick to couple its trigger to Brewfile changes:
 
 ```bash
 #!/bin/bash
 # Brewfile hash: {{ include "dot_Brewfile.tmpl" | sha256sum }}
 ```
 
-Including the Brewfile hash in the script body means chezmoi detects a content change and
-re-executes the script whenever the Brewfile is modified.
+Embedding the Brewfile hash in the script body causes chezmoi to detect a content change and
+re-execute the script whenever the Brewfile changes.
 
 ---
 
@@ -309,37 +308,37 @@ re-executes the script whenever the Brewfile is modified.
 ### Templates Over Branches
 
 A single branch handles both profiles through template conditionals rather than maintaining
-separate `personal` and `work` branches. This ensures:
+separate `personal` and `work` branches. This approach:
 
-- One commit history with no divergence
-- Profile differences are explicit and auditable in source
-- Adding a new profile-conditional behavior requires one edit, not a branch merge
+- Keeps one commit history with no divergence
+- Makes profile differences explicit and auditable in source
+- Requires one edit for new profile-conditional behavior, not a branch merge
 
 ### promptStringOnce / promptChoiceOnce
 
 Init prompts use the `Once` variants, which store answers in `chezmoi.toml` after the first run.
-Subsequent `chezmoi apply` calls reuse stored values without re-prompting. This makes apply
-idempotent and safe to run frequently.
+Subsequent `chezmoi apply` calls reuse stored values without re-prompting, making apply idempotent
+and safe to run frequently.
 
 ### run_onchange for Brew Bundle
 
-The brew-bundle script is `run_onchange` rather than `run_once`. This ensures new packages added
-to the Brewfile are actually installed on existing machines, not just new ones. The sha256 hash
-injection in the script body is the coupling mechanism.
+The brew-bundle script uses `run_onchange` rather than `run_once`, so new Brewfile packages
+install on existing machines, not only new ones. The sha256 hash injection in the script body
+couples the trigger to Brewfile content.
 
 ### Lua-Native Profile Logic in WezTerm
 
-The WezTerm config (`dot_wezterm.lua.tmpl`) uses a minimal template: only the profile string is
-injected (`local chezmoi_profile = "{{ .profile }}"`). All conditional logic (tab bar colors,
-status badge) is implemented in Lua rather than template conditionals. This approach:
+The WezTerm config (`dot_wezterm.lua.tmpl`) injects only the profile string
+(`local chezmoi_profile = "{{ .profile }}"`). All conditional logic (tab bar colors, status badge)
+lives in Lua rather than template conditionals. This approach:
 
 - Keeps the deployed `.wezterm.lua` valid Lua regardless of profile
-- Allows WezTerm to reload configuration at runtime without requiring chezmoi re-apply
-- Makes the profile-conditional logic readable in a single file
+- Lets WezTerm reload configuration at runtime without a chezmoi re-apply
+- Centralizes profile-conditional logic in one readable file
 
 ### private_ Prefix for Permissions
 
-Files prefixed with `private_` are deployed with mode 600. This is used for:
+Chezmoi deploys files prefixed with `private_` at mode 600. This applies to:
 
 - `~/.env` — environment variables may include API tokens
 - `~/.gitconfig` — contains email and signing key identity
@@ -348,14 +347,14 @@ Files prefixed with `private_` are deployed with mode 600. This is used for:
 
 ### XDG Base Directory Compliance
 
-Configuration follows the XDG Base Directory specification where tools support it:
+Configuration follows the XDG Base Directory specification where tools support it. Examples:
 
 - `~/.config/git/config` (not `~/.gitconfig` as primary)
 - `~/.config/starship.toml`
 - `~/.config/lazygit/config.yml`
 - `~/.local/bin/` for user scripts
 
-`~/.gitconfig` exists as a `private_` file for tools that do not follow XDG.
+`~/.gitconfig` exists as a `private_` file for tools that ignore XDG.
 
 ---
 
