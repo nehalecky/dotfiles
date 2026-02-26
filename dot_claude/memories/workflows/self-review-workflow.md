@@ -54,12 +54,12 @@ Normal development workflow where you:
 
 ### Phase 3: PR Creation
 **Duration**: 10-15 minutes per PR
-**Tools**: pr-review-assistant + repository-manager
+**Tools**: pr-review-assistant + repo
 
 For each PR group:
 1. **Create feature branch**
    ```bash
-   > Use repository-manager to create branch for [PR description]
+   > Use repo to create branch for [PR description]
    ```
 
 2. **Cherry-pick relevant commits**
@@ -74,7 +74,7 @@ For each PR group:
 
 4. **Create GitHub PR**
    ```bash
-   > Use github-operations-agent to create PR with generated description
+   > Use repo to create PR with generated description
    ```
 
 ### Phase 4: Self-Review Process
@@ -140,9 +140,8 @@ For critical fixes:
 ## Integration Points
 
 ### With Existing Agents
-- **repository-manager**: Branch and commit operations
-- **github-operations-agent**: PR creation and management
-- **workflow-designer**: Custom workflow documentation
+- **repo**: Branch, commit, and PR operations
+- **workflow-manager**: Custom workflow documentation
 
 ### With Development Tools
 - **Git**: Commit organization and cherry-picking
@@ -225,14 +224,14 @@ docs commits (10-12) → docs PR → content accuracy review
 
 # Create PR with context
 > Use pr-review-assistant to generate PR description
-> Use github-operations-agent to create PR
+> Use repo to create PR
 
 # During review
 > Use pr-review-assistant to explain [specific change]
 > Use pr-review-assistant to analyze risks
 
 # Post-review
-> Use repository-manager to merge and sync
+> Use repo to merge and sync
 ```
 
 This workflow ensures thoughtful self-review while maintaining development velocity and code quality.

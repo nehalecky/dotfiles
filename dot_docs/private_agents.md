@@ -1,6 +1,6 @@
 # Agent Ecosystem
 
-> **Comprehensive guide to Claude Code's 19 specialized agents**
+> **Comprehensive guide to Claude Code's 12 specialized agents**
 
 ## Quick Reference
 
@@ -10,20 +10,13 @@
 | `system-environment` | Core | Package installation, env setup | "install", "homebrew", "uv", "setup" |
 | `dotfiles-manager` | Core | Chezmoi dotfiles management | "dotfiles", "chezmoi", "config files" |
 | `agent-designer` | Core | Agent design and ecosystem | "create agent", "agent design" |
-| `github-platform` | Platform | GitHub Actions, Discussions, Projects | "github actions", "workflow", "discussion" |
 | `google-workspace` | Platform | Gmail, Drive, Docs, Calendar | "email", "calendar", "google doc" |
 | `executive-assistant` | Platform | Executive calendar/email mgmt | "morning brief", "schedule", "triage" |
-| `huggingface-hub` | Platform | ML model search and download | "huggingface", "model", "whisper", "llama" |
 | `report-generator` | Content | Professional reports with citations | "report", "analysis", "market research" |
 | `document-writer` | Content | Formal documents, citations | "professional document", "formal writing" |
 | `presentation-creator` | Content | Quarto/RevealJS presentations | "presentation", "slides", "deck" |
-| `client-research-coordinator` | Content | Multi-platform research | "client research", "comprehensive study" |
-| `confluence-research` | Content | Confluence knowledge base | "confluence", "documentation search" |
 | `workflow-manager` | Development | Workflow design & orchestration | "workflow", "process", "multi-step" |
 | `ai-modeling-developer` | Development | ML development with TDD | "model", "ML", "training", "dataset" |
-| `pr-review-assistant` | Development | Code review preparation | "PR prep", "review", "commit analysis" |
-| `llm-research` | Development | AI/ML news and developments | "AI news", "LLM research", "latest models" |
-| `work-completion-summary` | Development | TTS audio summaries | "tts", "audio summary", "completion" |
 | `hello-world` | Utility | Simple greetings | "hi claude", "hello" |
 
 ---
@@ -98,25 +91,17 @@ Do you want explicit control? → Command or Agent
 - HOME→Source workflow enforcement
 - Configuration file deployment
 - Documentation synchronization
-- **⚠️ CRITICAL:** Always use `chezmoi git --`, never raw `git`
+- **CRITICAL:** Always use `chezmoi git --`, never raw `git`
 - **Tools:** Bash, Read, Write, Edit, chezmoi, rg, fd, eza, bat, delta
 - **NOT for:** Package installation (use system-environment)
 
-**`meta`** - Agent ecosystem architect
+**`agent-designer`** - Agent ecosystem architect
 - Design new agents
 - Analyze agent gaps and overlaps
 - Agent coordination patterns
 - **Tools:** All tools
-- **⚠️ NOTE:** Currently uses legacy `ls`/`grep` - needs modernization to `fd`/`rg`
 
-### Platform Integrations (4 agents)
-
-**`github-platform`** - GitHub-specific features
-- GitHub Actions, Workflows
-- Discussions, Projects
-- Platform-specific operations
-- **NOT for:** Basic repo ops (use `repo`)
-- **Tools:** GitHub MCP tools
+### Platform Integrations (2 agents)
 
 **`google-workspace`** - Google productivity suite
 - Gmail, Drive, Docs, Calendar, Sheets
@@ -131,13 +116,7 @@ Do you want explicit control? → Command or Agent
 - Daily productivity rituals
 - **Tools:** Google Workspace MCP, Atlassian MCP, TodoWrite
 
-**`huggingface-hub`** - ML model gateway
-- Search and download models/datasets
-- HuggingFace Hub integration
-- Model cache management
-- **Tools:** Bash, WebFetch, HuggingFace MCP tools
-
-### Content & Research (5 agents)
+### Content & Research (3 agents)
 
 **`report-generator`** - Professional reports with citations
 - Market analyses, strategic documents
@@ -158,19 +137,7 @@ Do you want explicit control? → Command or Agent
 - Creative design with superior composition
 - **Tools:** Read, Write, WebFetch, Task, Quarto
 
-**`client-research-coordinator`** - Multi-platform research
-- Comprehensive client research
-- Spans Confluence, GitHub, Google Workspace
-- Consultancy deliverable preparation
-- **Tools:** Atlassian MCP, GitHub MCP, Google Workspace MCP, HuggingFace MCP
-
-**`confluence-research`** - Confluence knowledge base
-- Research and content retrieval
-- Product vision, company documentation
-- CQL search capabilities
-- **Tools:** Atlassian MCP (Confluence-specific)
-
-### Development & Workflow (5 agents)
+### Development & Workflow (2 agents)
 
 **`workflow-manager`** - Unified workflow design & orchestration
 - Designs workflows (creates documentation)
@@ -184,25 +151,6 @@ Do you want explicit control? → Command or Agent
 - Empirical research integration
 - Statistical simulations, data pipelines
 - **Tools:** Read, Write, Grep, Glob, WebFetch
-
-**`pr-review-assistant`** - Code review preparation
-- Analyzes commits for review
-- Organizes logical PRs
-- Generates comprehensive descriptions
-- Interactive review support
-- **Tools:** Read, Grep, Glob, Bash, WebFetch, GitHub MCP
-
-**`llm-research`** - AI/ML news and developments
-- Latest LLM news and innovations
-- Actionable insights for engineering
-- New tool and technique discovery
-- **Tools:** Bash, Firecrawl MCP, WebFetch
-
-**`work-completion-summary`** - TTS audio summaries
-- Concise audio summaries of completed work
-- Suggests next steps
-- **Triggered:** When work completes or user says "tts"
-- **Tools:** Bash, ElevenLabs MCP
 
 ### Utility (1 agent)
 
@@ -237,7 +185,7 @@ description: Use proactively for [specific task]. Keywords: "keyword1", "keyword
 description: Use proactively for generating professional consulting reports, market analyses, and strategic documents with MANDATORY citations and references. Keywords include "report", "analysis", "market research", "consulting document", "strategic assessment", "TAM calculation", "competitive intelligence", or "professional documentation". ALL claims require sources. NO unsourced statistics allowed.
 ```
 
-❌ **Poor (meta - current):**
+❌ **Poor (agent-designer - needs improvement):**
 ```yaml
 description: Intelligent agent architect that ultrathinks agent design decisions using deep reasoning capabilities.
 ```
@@ -269,7 +217,7 @@ All agents should use modern CLI tools where appropriate:
 
 ### Current Issues
 
-**`meta.md`** - Uses legacy tools (HIGH PRIORITY FIX):
+**`agent-designer`** - Uses legacy tools (HIGH PRIORITY FIX):
 ```bash
 # Current (WRONG)
 ls ~/.claude/agents/*.md | head -10
@@ -299,7 +247,6 @@ rg "^description:" ~/.claude/agents/
 **Current Patterns:**
 - Verb-noun: `report-generator`, `presentation-creator`, `document-writer`
 - Domain-specialist: `dotfiles-manager`, `system-environment`, `agent-designer`
-- Tool-focused: `huggingface-hub`, `github-platform`
 
 **Rationale:**
 - Action-oriented over role-oriented
@@ -322,32 +269,16 @@ Task(subagent_type="repo", prompt="Create PR for feature branch")
 Common patterns:
 - `system-environment` → `dotfiles-manager` (install tools, then configure)
 - `workflow-manager` → specialized agents (design workflow, then execute)
-- `client-research-coordinator` → research agents (orchestrate multi-source)
+- `agent-designer` → specialized agents (design new agent, then implement)
 
 ### Parallel Execution
 
 Multiple agents can run simultaneously:
 ```python
 # Single message with multiple Task calls
-Task(subagent_type="github-platform", ...)
-Task(subagent_type="confluence-research", ...)
+Task(subagent_type="report-generator", ...)
+Task(subagent_type="document-writer", ...)
 ```
-
----
-
-## Recent Cleanup (2025-12-26)
-
-**Removed unused crypto analysis system (12 files):**
-- 4 crypto research commands (`/crypto_research`, `/crypto_research_haiku`, `/cook`, `/cook_research_only`)
-- 7 agent prompt templates (crypto market, movers, analyzer, price check, investment plays, news scanner, macro correlation)
-- 1 vestigial rename plan file (`_RENAME_PLAN.md`)
-- Entire `agent_prompts/` directory (no longer needed)
-
-**Impact:**
-- **671 lines removed** from crypto commands
-- **43 lines removed** from vestigial files
-- Cleaner command namespace focused on AI consulting
-- Agent ecosystem down to **19 core agents**
 
 ---
 
@@ -355,7 +286,7 @@ Task(subagent_type="confluence-research", ...)
 
 ### Adding New Agents
 
-1. Use `meta` agent to design new agent
+1. Use `agent-designer` agent to design new agent
 2. Consider if it should be a Skill or Command instead
 3. Write clear description with "Use proactively when..." and keywords
 4. Grant appropriate tools (principle of least privilege)
@@ -381,25 +312,25 @@ Task(subagent_type="confluence-research", ...)
 
 ## Common Pitfalls
 
-### ❌ Creating Agents for Everything
+### Creating Agents for Everything
 
 **Problem:** Too many narrow agents creates discovery issues.
 
 **Solution:** Use Skills for specialized knowledge, Agents for context isolation.
 
-### ❌ Unclear Descriptions
+### Unclear Descriptions
 
 **Problem:** Generic descriptions prevent auto-invocation.
 
 **Solution:** Dense keywords, clear "Use when..." statements, proactive invitation.
 
-### ❌ Tool Overload
+### Tool Overload
 
 **Problem:** Granting all tools to every agent.
 
 **Solution:** Grant minimum tools needed for agent's function.
 
-### ❌ Ignoring Modern Tooling
+### Ignoring Modern Tooling
 
 **Problem:** Using legacy `grep`/`find` when `rg`/`fd` available.
 
@@ -432,10 +363,10 @@ Task(subagent_type="confluence-research", ...)
 - [Agent design patterns](/Users/nehalecky/.claude/agents/)
 - [Workflow coordination](/Users/nehalecky/.claude/memories/workflows/)
 - [Modern CLI tools](/Users/nehalecky/.docs/tool-reference.md)
-- [Routing rules](/Users/nehalecky/.claude/memories/core-behavior/mandatory-checks.md)
+- [Routing rules](/Users/nehalecky/.claude/memories/private_core-behavior/mandatory-checks.md)
 
 ---
 
-**Last Updated:** 2025-12-26
+**Last Updated:** 2026-02-25
 **Maintainer:** dotfiles-manager agent
-**Source:** ~/.docs/agents.md (managed by chezmoi)
+**Source:** ~/.docs/private_agents.md (managed by chezmoi)

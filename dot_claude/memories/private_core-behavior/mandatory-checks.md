@@ -6,10 +6,10 @@
 □ **Is there a specialized agent for this task?**
 □ **Git operations → repo (NOT git commands)**
 □ **Chezmoi/dotfiles → dotfiles-manager (NEVER raw git in HOME)**
-□ **Research tasks → research agents (report-generator, client-research-coordinator)**
+□ **Research tasks → report-generator (reports, analysis, market research)**
 □ **Workflows → workflow-manager (design OR orchestration)**
 □ **System setup → system-environment (install/configure)**
-□ **Agent design → meta (create/analyze agents)**
+□ **Agent design → agent-designer (create/analyze agents)**
 
 ## Before Making ANY Technical Claim:
 □ **Did I WebFetch the official documentation first?**
