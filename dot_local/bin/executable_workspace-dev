@@ -2,6 +2,13 @@
 # myTUI development workspace automation
 # Usage: dev-workspace [project-name]
 
+# Require WezTerm
+if [[ "$TERM_PROGRAM" != "WezTerm" ]]; then
+  echo "Warning: This workspace script requires WezTerm. Current terminal: ${TERM_PROGRAM:-unknown}"
+  echo "   Install WezTerm or adapt this script for your terminal."
+  exit 1
+fi
+
 set -euo pipefail
 
 # Get project name (default to current directory name)

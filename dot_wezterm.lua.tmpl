@@ -1,5 +1,4 @@
 -- WezTerm configuration
--- Migrated from iTerm2 settings
 
 local wezterm = require 'wezterm'
 local config = wezterm.config_builder()
@@ -19,22 +18,22 @@ config.font = wezterm.font('MesloLGS Nerd Font', {weight='Regular', stretch='Nor
 config.font_size = 12.0
 config.line_height = 1.0
 
--- Color scheme (dark theme matching iTerm2 settings)
+-- Color scheme
 config.colors = {
   -- Foreground and background
-  foreground = '#a0a0a0',  -- ~62.7% gray from iTerm2
-  background = '#121212',  -- ~7% gray from iTerm2
-  
+  foreground = '#a0a0a0',
+  background = '#121212',
+
   -- Cursor colors
-  cursor_bg = '#bbbbbb',   -- ~73.3% gray
+  cursor_bg = '#bbbbbb',
   cursor_fg = '#ffffff',
   cursor_border = '#bbbbbb',
-  
+
   -- Selection colors
-  selection_fg = '#bbbcc0', -- ~71-75% gray blend
-  selection_bg = '#453a39', -- ~27% gray with slight warmth
-  
-  -- ANSI colors (converted from iTerm2)
+  selection_fg = '#bbbcc0',
+  selection_bg = '#453a39',
+
+  -- ANSI colors
   ansi = {
     '#1b1d1e',  -- black (Ansi 0)
     '#f92672',  -- red (Ansi 1)
@@ -105,7 +104,7 @@ config.use_resize_increments = true   -- Better grid snapping
 -- Features
 config.enable_scroll_bar = false
 config.scrollback_lines = 1000
-config.audible_bell = 'Disabled'  -- iTerm2 had "Silence Bell" = true
+config.audible_bell = 'Disabled'
 
 -- Tab bar (keeping it minimal like the terminal-first approach)
 config.hide_tab_bar_if_only_one_tab = true
@@ -115,7 +114,7 @@ config.use_fancy_tab_bar = false
 -- Leader key configuration (like tmux)
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
 
--- Key bindings to match iTerm2 keyboard map + multiplexing
+-- Key bindings
 config.keys = {
   -- Option+Backspace to delete word
   {
@@ -471,14 +470,14 @@ config.set_environment_variables = {
 config.front_end = 'WebGpu'  -- GPU acceleration
 config.max_fps = 120
 
--- Enable ligatures (iTerm2 had "ASCII Ligatures" = true)
+-- Enable ligatures
 config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
 
 -- macOS specific
 config.native_macos_fullscreen_mode = true
 config.macos_window_background_blur = 0  -- No blur by default
 
--- Hyperlink configuration (iTerm2 had link color configured)
+-- Hyperlink configuration
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
 -- Add markdown file link handler

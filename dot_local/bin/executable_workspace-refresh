@@ -2,6 +2,13 @@
 # Refresh any workspace type without relaunching
 # Usage: workspace-refresh
 
+# Require WezTerm
+if [[ "$TERM_PROGRAM" != "WezTerm" ]]; then
+  echo "Warning: This workspace script requires WezTerm. Current terminal: ${TERM_PROGRAM:-unknown}"
+  echo "   Install WezTerm or adapt this script for your terminal."
+  exit 1
+fi
+
 echo "🔄 Refreshing workspace..."
 
 # Detect workspace type from current window title

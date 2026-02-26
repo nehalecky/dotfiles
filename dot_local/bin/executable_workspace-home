@@ -2,6 +2,13 @@
 # Home Command Center - Daily operations workspace
 # A persistent workspace for dotfiles management, AI assistance, and Jira task management
 
+# Require WezTerm
+if [[ "$TERM_PROGRAM" != "WezTerm" ]]; then
+  echo "Warning: This workspace script requires WezTerm. Current terminal: ${TERM_PROGRAM:-unknown}"
+  echo "   Install WezTerm or adapt this script for your terminal."
+  exit 1
+fi
+
 set -euo pipefail
 
 echo "🏠 Launching Home Command Center workspace"
