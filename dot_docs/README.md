@@ -22,7 +22,6 @@ New to this system? Start here:
 
 - **[Python Development](python-development.md)** - Modern Python workflow with uv
 - **[Secrets Management](secrets-management.md)** - 1Password + SSH authentication
-- **[WeeChat Setup](weechat-setup.md)** - IRC client configuration
 
 ## Claude Code Configuration
 
