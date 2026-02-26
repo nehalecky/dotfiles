@@ -1,126 +1,46 @@
 #!/bin/bash
-# myTUI development workspace automation
-# Usage: dev-workspace [project-name]
-
-# Require WezTerm
-if [[ "$TERM_PROGRAM" != "WezTerm" ]]; then
-  echo "Warning: This workspace script requires WezTerm. Current terminal: ${TERM_PROGRAM:-unknown}"
-  echo "   Install WezTerm or adapt this script for your terminal."
-  exit 1
-fi
+# Dev workspace — launch or attach to a named project session
+# Usage: workspace-dev [project-name]
+#   In a project directory:  workspace-dev
+#   From anywhere:           workspace-dev myproject
 
 set -euo pipefail
 
-# Get project name (default to current directory name)
 PROJECT_NAME=${1:-$(basename "$PWD")}
 PROJECT_DIR=${PROJECT_DIR:-$PWD}
 
-# Special handling for HOME directory - provide guidance
+# Guard: HOME directory with no explicit name is ambiguous
 if [[ "$PROJECT_DIR" == "$HOME" ]] && [[ -z "${1:-}" ]]; then
-    echo "⚠️  No project detected in HOME directory"
-    echo ""
-    echo "Options:"
-    echo "  • workspace-home     - Launch Home Command Center (dotfiles)"
-    echo "  • workspace-dev foo  - Create 'foo' project workspace here"
-    echo "  • cd /path/to/project && workspace-dev"
-    echo ""
-    exit 0
+  echo "⚠️  No project detected in HOME directory"
+  echo ""
+  echo "Options:"
+  echo "  workspace-home               Launch Home Command Center"
+  echo "  workspace-dev <name>         Create named workspace here"
+  echo "  cd /path/to/project && workspace-dev"
+  exit 0
 fi
 
-echo "🚀 Launching development workspace for: $PROJECT_NAME"
-echo "📁 Working directory: $PROJECT_DIR"
+SESSION="dev-$PROJECT_NAME"
 
-# Detect project type
-PROJECT_TYPE="generic"
+# Attach to existing session if available
+if zellij list-sessions --short 2>/dev/null | grep -qx "$SESSION"; then
+  echo "💻 Attaching to existing $PROJECT_NAME workspace..."
+  exec zellij attach "$SESSION"
+fi
+
+echo "🚀 Launching workspace: $PROJECT_NAME"
+echo "📁 Directory: $PROJECT_DIR"
+
+# Detect and announce project type
 if [[ -f "$PROJECT_DIR/pyproject.toml" ]]; then
-    PROJECT_TYPE="python"
-    echo "🐍 Python project detected (uv managed)"
+  echo "🐍 Python project (uv managed)"
 elif [[ -f "$PROJECT_DIR/package.json" ]]; then
-    PROJECT_TYPE="node"
-    echo "📦 Node.js project detected"
+  echo "📦 Node.js project"
 elif [[ -f "$PROJECT_DIR/Cargo.toml" ]]; then
-    PROJECT_TYPE="rust"
-    echo "🦀 Rust project detected"
+  echo "🦀 Rust project"
 elif [[ -f "$PROJECT_DIR/go.mod" ]]; then
-    PROJECT_TYPE="go"
-    echo "🐹 Go project detected"
+  echo "🐹 Go project"
 fi
 
-# Create new WezTerm window for the project (fullscreen via manual Cmd+Enter if desired)
-WINDOW_ID=$(wezterm cli spawn --new-window --cwd "$PROJECT_DIR" -- zsh)
-
-# Split for editor (right side, 60% width)  
-EDITOR_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --right --percent 60 -- hx .)
-
-# Split bottom of left pane for git
-GIT_PANE=$(wezterm cli split-pane --pane-id "$WINDOW_ID" --bottom --percent 50 -- lazygit)
-
-# Split bottom of right pane based on project type
-case "$PROJECT_TYPE" in
-    python)
-        # For Python projects, show dependency tree
-        if command -v uv >/dev/null; then
-            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- zsh -c "uv tree; exec zsh")
-        else
-            MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- btop)
-        fi
-        ;;
-    node)
-        # For Node projects, could show npm list
-        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- btop)
-        ;;
-    *)
-        # Default to system monitor
-        MONITOR_PANE=$(wezterm cli split-pane --pane-id "$EDITOR_PANE" --bottom --percent 30 -- btop)
-        ;;
-esac
-
-# Set window title
-wezterm cli set-tab-title --pane-id "$WINDOW_ID" "Dev: $PROJECT_NAME"
-
-# Project-specific hints based on type
-case "$PROJECT_TYPE" in
-    python)
-        echo "💡 Python hints:"
-        echo "   - Virtual environment will auto-activate with direnv"
-        echo "   - Use 'uv run <command>' to run in virtual environment"
-        echo "   - Use 'uv add <package>' to add dependencies"
-        if [[ -f "$PROJECT_DIR/manage.py" ]]; then
-            echo "   - Django detected: 'uv run python manage.py runserver'"
-        elif [[ -f "$PROJECT_DIR/main.py" ]] && grep -q "FastAPI" "$PROJECT_DIR/main.py" 2>/dev/null; then
-            echo "   - FastAPI detected: 'uv run uvicorn main:app --reload'"
-        fi
-        ;;
-    node)
-        echo "💡 Node.js hints:"
-        echo "   - Run 'npm install' to install dependencies"
-        echo "   - Run 'npm run dev' to start development server"
-        ;;
-    rust)
-        echo "💡 Rust hints:"
-        echo "   - Run 'cargo build' to build project"
-        echo "   - Run 'cargo watch -x run' for auto-rebuild"
-        ;;
-    go)
-        echo "💡 Go hints:"
-        echo "   - Run 'go mod download' to fetch dependencies"
-        echo "   - Run 'go run .' to run the project"
-        ;;
-esac
-
-# Docker compose hint if exists
-if [[ -f "$PROJECT_DIR/docker-compose.yml" ]]; then
-    echo "🐳 Docker Compose detected - consider running 'docker-compose up'"
-fi
-
-# Makefile hint if exists
-if [[ -f "$PROJECT_DIR/Makefile" ]]; then
-    echo "🔨 Makefile detected - consider running 'make' or 'make help'"
-fi
-
-echo "✅ Development workspace ready!"
-echo "💡 Use Ctrl+a to access leader key shortcuts:"
-echo "   f = File manager (yazi)    g = Git (lazygit)      k = Kubernetes (k9s)"
-echo "   e = Editor (helix)         d = Docker (lazydocker) a = API client (atac)"
-echo "   m = System monitor (btop)  n = Network (bandwhich) u = Disk usage (dust)"
-echo "   h = Home workspace         W = New dev workspace"
+cd "$PROJECT_DIR"
+exec zellij --session "$SESSION" --layout dev

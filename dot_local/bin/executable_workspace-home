@@ -1,94 +1,16 @@
 #!/bin/bash
-# Home Command Center - Daily operations workspace
-# A persistent workspace for dotfiles management, AI assistance, and Jira task management
-
-# Require WezTerm
-if [[ "$TERM_PROGRAM" != "WezTerm" ]]; then
-  echo "Warning: This workspace script requires WezTerm. Current terminal: ${TERM_PROGRAM:-unknown}"
-  echo "   Install WezTerm or adapt this script for your terminal."
-  exit 1
-fi
+# Home Command Center — persistent daily operations workspace
+# Attaches to an existing session or creates a new one with the home layout.
 
 set -euo pipefail
 
-echo "🏠 Launching Home Command Center workspace"
-echo "📁 Working directory: $HOME"
+SESSION="home"
 
-# Start in HOME directory
+if zellij list-sessions --short 2>/dev/null | grep -qx "$SESSION"; then
+  echo "🏠 Attaching to existing Home Command Center..."
+  exec zellij attach "$SESSION"
+fi
+
+echo "🏠 Launching Home Command Center..."
 cd "$HOME"
-
-# Create new WezTerm window (fullscreen via manual Cmd+Enter if desired)
-ROOT_PANE=$(wezterm cli spawn --new-window --cwd "$HOME" -- zsh)
-
-# Top weather strip - Rich-formatted enhanced display  
-WEATHER_PANE=$(wezterm cli split-pane --pane-id "$ROOT_PANE" --top --cells 3 -- zsh -c "
-while true; do
-    # Use Rich-based weather display (now with global Rich install)
-    ~/.local/bin/weather-display || {
-        # Fallback to simple display if weather-display fails
-        echo '⚠️ Weather display error, using basic fallback'
-        echo '📍 \$(curl -s \"wttr.in/?format=%l\" 2>/dev/null | tr -d \'\n\' || echo \"Location unknown\"): \$(curl -s \"wttr.in/?format=%t\" 2>/dev/null || echo \"?°C\")'
-        echo '🔄 Retrying in 5 minutes...'
-    }
-    
-    sleep 300  # Update every 5 minutes
-done
-")
-
-# Upper right: File manager (yazi) - 50% width of remaining space
-FILE_PANE=$(wezterm cli split-pane --pane-id "$ROOT_PANE" --right --percent 50 -- yazi "$HOME")
-
-# Lower left: Claude Code - 50% height of left side, auto-launch
-CLAUDE_PANE=$(wezterm cli split-pane --pane-id "$ROOT_PANE" --bottom --percent 50 -- zsh -c "
-echo '🤖 Launching Claude Code...'
-sleep 1
-claude
-")
-
-# Lower right: Task dashboard - 50% height of right side
-# Jira integration and system management commands
-TASK_PANE=$(wezterm cli split-pane --pane-id "$FILE_PANE" --bottom --percent 50 -- zsh -c "
-echo '📋 Task Management Center'
-echo '────────────────────────'
-echo ''
-echo 'Jira Integration:'
-echo '  acli issue list          - List current issues'
-echo '  claude jira search       - Search Jira via Claude'
-echo '  gh dash                  - GitHub dashboard'
-echo ''
-echo 'System Management:'
-echo '  chezmoi status           - Check dotfile changes'
-echo '  chezmoi diff             - Review pending changes'
-echo '  brew outdated            - Check for updates'
-echo ''
-echo 'Workspace Shortcuts (Ctrl+a):'
-echo '  W = Launch project workspace'
-echo '  h = Return to home workspace'
-echo '  r = Refresh workspace'
-echo ''
-echo '✅ TaskWarrior successfully migrated to Jira!'
-echo '   All tasks now managed via middledata.atlassian.net'
-echo ''
-exec zsh
-")
-
-# Set window title
-wezterm cli set-tab-title --pane-id "$ROOT_PANE" "🏠 Home Command Center"
-
-echo "✅ Home Command Center ready!"
-echo ""
-echo "Layout:"
-echo "┌─────────────────┬─────────────────┐"
-echo "│ Terminal (zsh)  │ Files (yazi)    │"
-echo "│ HOME directory  │ File browser    │"
-echo "├─────────────────┼─────────────────┤"
-echo "│ Claude Code     │ Jira Tasks      │"
-echo "│ AI assistance   │ & System Mgmt   │"
-echo "└─────────────────┴─────────────────┘"
-echo ""
-echo "💡 Tips:"
-echo "  • Terminal starts in HOME directory"
-echo "  • Use 'cd ~/.local/share/chezmoi' for dotfiles source"
-echo "  • Use 'chezmoi edit <file>' to modify configs"
-echo "  • Run 'workspace-dev <project>' to launch project workspace"
-echo "  • This workspace is for system management, not project development"
+exec zellij --session "$SESSION" --layout home

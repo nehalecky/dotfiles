@@ -1,0 +1,24 @@
+// Dev workspace layout
+// Project development: terminal, editor, git, system monitor
+
+layout {
+  tab name="Dev" {
+    pane split_direction="vertical" {
+
+      // Left 40%: terminal + lazygit stacked
+      pane size="40%" split_direction="horizontal" {
+        pane name="terminal" focus=true
+        pane name="git" command="lazygit"
+      }
+
+      // Right 60%: editor + monitor stacked
+      pane split_direction="horizontal" {
+        pane name="editor" command="hx" {
+          args "."
+        }
+        pane size="30%" name="monitor" command="btop"
+      }
+
+    }
+  }
+}

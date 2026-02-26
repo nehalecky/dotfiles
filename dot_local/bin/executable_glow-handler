@@ -1,9 +1,17 @@
 #!/bin/bash
-# Handler for opening markdown files in glow within WezTerm
+# Open a markdown file in a glow pane
 
-# Extract the file path from the URL or argument
 FILE="$1"
 FILE="${FILE#file://}"  # Remove file:// prefix if present
 
-# Open in a new WezTerm pane with glow
-/Applications/WezTerm.app/Contents/MacOS/wezterm cli split-pane --right --percent 60 -- glow "$FILE"
+if [[ -z "$FILE" ]]; then
+  echo "Usage: glow-handler <file>" >&2
+  exit 1
+fi
+
+# Open in a new right-side pane if inside zellij, otherwise fall back
+if command -v zellij >/dev/null 2>&1 && [[ -n "${ZELLIJ:-}" ]]; then
+  exec zellij action new-pane --direction right --close-on-exit -- glow "$FILE"
+else
+  exec glow "$FILE"
+fi

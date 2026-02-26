@@ -1,0 +1,32 @@
+// Home Command Center layout
+// Daily operations: weather, files, Claude Code, task management
+
+layout {
+  tab name="🏠 Home Command Center" {
+    // Weather strip — auto-refreshes every 5 minutes
+    pane size=4 name="weather" command="zsh" {
+      args "-c" "while true; do ~/.local/bin/weather-display 2>/dev/null || echo 'Weather unavailable'; sleep 300; done"
+    }
+
+    // Main area: left/right split
+    pane split_direction="vertical" {
+
+      // Left column: terminal + Claude Code
+      pane split_direction="horizontal" {
+        pane name="terminal" focus=true
+        pane name="claude" command="zsh" {
+          args "-c" "claude"
+        }
+      }
+
+      // Right column: file manager + tasks
+      pane split_direction="horizontal" {
+        pane name="files" command="zsh" {
+          args "-c" "yazi ~"
+        }
+        pane name="tasks"
+      }
+
+    }
+  }
+}
