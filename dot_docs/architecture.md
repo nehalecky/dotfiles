@@ -15,7 +15,7 @@ single init decision.
 ### Init-Time Identity Injection
 
 ```
-chezmoi init https://github.com/nehalecky/dotfiles.git
+chezmoi init https://github.com/<your-github-username>/dotfiles.git
     |
     v
 .chezmoi.toml.tmpl
@@ -175,7 +175,7 @@ theming, and file inclusion throughout the repository.
 
 | Component              | personal                           | work                                  |
 |------------------------|------------------------------------|---------------------------------------|
-| Git email              | nehalecky@gmail.com (default)      | user@company.com                      |
+| Git email              | `<git_email prompt default>`       | user@company.com                      |
 | Git signing key        | personal ed25519 key               | work ed25519 key                      |
 | 1Password auth key     | "GitHub SSH Auth Key"              | "GitHub Auth Key"                     |
 | 1Password signing key  | "Git Commit Signing Key"           | "Signing Key"                         |
