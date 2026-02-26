@@ -1,273 +1,377 @@
 # Dotfiles Architecture
 
-## 🌐 100K' View
+## Overview
 
-```mermaid
-graph TB
-    subgraph "User's System"
-        CM[chezmoi<br/>manager] --> DF[dotfiles<br/>repo]
-        DF --> OP[1Password<br/>secrets]
-        CM --> HOME[$HOME<br/>configs]
-        DF --> HB[Homebrew<br/>deps]
-        DF --> AGE[Age<br/>fallback]
-    end
-    
-    style CM fill:#e8f4f8,stroke:#2e86de
-    style DF fill:#f0f9ff,stroke:#0ea5e9
-    style OP fill:#fff4e6,stroke:#f97316
-    style HOME fill:#f0fdf4,stroke:#22c55e
-    style HB fill:#fef3c7,stroke:#f59e0b
-    style AGE fill:#fef2f2,stroke:#ef4444
-```
+This repository uses [chezmoi](https://chezmoi.io) to manage dotfiles across two machine profiles
+(`personal` and `work`). The central design principle is **init-time identity injection**: machine
+identity (name, email, SSH keys, 1Password vault items) is captured once at `chezmoi init` and
+stored in a local config file that is never committed. All profile-specific behavior flows from that
+single init decision.
 
-**Text Alternative:**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        User's System                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │   chezmoi   │───▶│   dotfiles   │───▶│  1Password   │  │
-│  │  (manager)  │    │    (repo)    │    │  (secrets)   │  │
-│  └─────────────┘    └──────────────┘    └──────────────┘  │
-│         │                   │                    │          │
-│         ▼                   ▼                    ▼          │
-│  ┌─────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │    $HOME    │    │   Homebrew   │    │     Age      │  │
-│  │   configs   │    │   (deps)     │    │  (fallback)  │  │
-│  └─────────────┘    └──────────────┘    └──────────────┘  │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+---
 
-## 🏗️ Detailed Architecture
+## Data Flow
 
-### Core Systems
+### Init-Time Identity Injection
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                         Dotfiles Repository                       │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  Source Control           Configuration          Documentation   │
-│  ┌─────────────┐         ┌─────────────┐       ┌─────────────┐ │
-│  │   GitHub    │         │  Templates  │       │    docs/    │ │
-│  │  nehalecky/ │◀───────▶│   (.tmpl)   │       │  *.md files │ │
-│  │  dotfiles   │         └─────────────┘       └─────────────┘ │
-│  └─────────────┘                │                               │
-│         ▲                       │                               │
-│         │                       ▼                               │
-│  ┌─────────────┐         ┌─────────────┐       ┌─────────────┐ │
-│  │   chezmoi   │────────▶│    Hooks    │       │   Scripts   │ │
-│  │   manage    │         │  (install)  │       │ (workflow)  │ │
-│  └─────────────┘         └─────────────┘       └─────────────┘ │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
-                                 │
-                                 ▼
-┌──────────────────────────────────────────────────────────────────┐
-│                          Local System                             │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  XDG Directories          Home Files           Package Manager   │
-│  ┌─────────────┐         ┌─────────────┐       ┌─────────────┐ │
-│  │  ~/.config  │         │   ~/.zshrc  │       │  Homebrew   │ │
-│  │  ~/.cache   │         │   ~/.ssh    │       │  /opt/brew  │ │
-│  │  ~/.local   │         │   README.md │       │  Brewfile   │ │
-│  └─────────────┘         └─────────────┘       └─────────────┘ │
-│         │                       │                       │        │
-│         └───────────────────────┴───────────────────────┘        │
-│                                 │                                │
-│                                 ▼                                │
-│                         ┌─────────────┐                         │
-│                         │   Secrets   │                         │
-│                         │  Management │                         │
-│                         └─────────────┘                         │
-│                                 │                                │
-│                ┌────────────────┴────────────────┐              │
-│                ▼                                 ▼              │
-│         ┌─────────────┐                  ┌─────────────┐       │
-│         │  1Password  │                  │     Age     │       │
-│         │   (live)    │                  │ (encrypted) │       │
-│         └─────────────┘                  └─────────────┘       │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
+chezmoi init https://github.com/nehalecky/dotfiles.git
+    |
+    v
+.chezmoi.toml.tmpl
+    Prompts (captured once via promptStringOnce / promptChoiceOnce):
+      - profile        ("personal" | "work")
+      - git_name       (full name)
+      - preferred_name (casual name, defaults to first word of git_name)
+      - git_email      (profile-defaulted)
+      - github_username
+      - git_signing_key  (SSH public key, ed25519)
+      - op_auth_key_name    (1Password item name for SSH auth key)
+      - op_signing_key_name (1Password item name for signing key)
+    |
+    v
+~/.config/chezmoi/chezmoi.toml   <-- LOCAL ONLY, never committed
+    [data] section with all identity values resolved
+    |
+    v
+chezmoi apply
+    |
+    +-- .chezmoidata.yaml  (behavioral defaults, committed)
+    |     starship.* settings, no identity data
+    |
+    +-- chezmoi.toml [data] (identity overrides, local)
+    |
+    v
+Template variables available in all *.tmpl files:
+  .profile            "personal" | "work"
+  .isPersonal         bool
+  .isWork             bool
+  .git_name           string
+  .preferred_name     string
+  .git_email          string
+  .github_username    string
+  .git_signing_key    SSH public key string
+  .op_auth_key_name   1Password item name
+  .op_signing_key_name 1Password item name
+  .chezmoi.homeDir    $HOME (chezmoi built-in)
+  .chezmoi.os         "darwin" | "linux" (chezmoi built-in)
+  .starship.*         from .chezmoidata.yaml
+    |
+    v
+*.tmpl files rendered  ->  deployed to $HOME
+.chezmoiignore evaluated ->  files excluded per profile
+run_onchange_* scripts  ->  executed when content hash changes
+run_once_* scripts      ->  executed once per machine
 ```
 
-### Directory Structure
+### Apply-Time: Two Data Sources
+
+The template rendering merges two sources, with `chezmoi.toml` taking precedence:
 
 ```
-$HOME/
-├── .config/                    # XDG Config (managed by chezmoi)
-│   ├── git/                    # Git configuration
-│   ├── npm/                    # NPM config
-│   ├── docker/                 # Docker config
-│   ├── chezmoi/                # Chezmoi config
-│   │   └── chezmoi.toml        # Chezmoi settings
-│   ├── op/                     # 1Password CLI
-│   ├── iterm2/                 # Terminal config
-│   ├── starship.toml           # Starship prompt config
-│   └── shell/                  # Shell environment
-│       └── xdg-env.sh          # XDG variables
-│
-├── .local/                     # XDG Data
-│   ├── share/
-│   │   ├── chezmoi/            # Dotfiles repository
-│   │   │   ├── README.md       # Main documentation
-│   │   │   ├── CLAUDE.md       # Global AI assistant context
-│   │   │   ├── Brewfile        # Dependency manifest
-│   │   │   ├── docs/           # Documentation
-│   │   │   │   ├── ARCHITECTURE.md
-│   │   │   │   ├── TERMINAL-SETUP.md
-│   │   │   │   └── archive/    # Historical docs
-│   │   │   ├── .claude/        # Claude Code memory system
-│   │   │   │   └── memories/   # Modular memory modules
-│   │   │   ├── scripts/        # Automation scripts
-│   │   │   ├── .secrets/       # Encrypted secrets
-│   │   │   └── *.tmpl          # Template files
-│   │   └── gnupg/              # GPG keys
-│   └── bin/                    # User scripts
-│
-├── .cache/                     # XDG Cache
-│   ├── pip/                    # Python packages
-│   └── yarn/                   # Node packages
-│
-├── .ssh/                       # SSH (must stay in $HOME)
-├── .zshrc                      # Shell config (sourced by zsh)
-├── .gitconfig                  # Git config (minimal, uses includes)
-├── .wezterm.lua                # WezTerm terminal config
-├── .p10k.zsh                   # Powerlevel10k prompt config
-├── README.md                   # Repository documentation
-├── CLAUDE.md                   # Project-specific AI context (auto-generated)
-├── .docs/                      # Symlink to ~/.local/share/chezmoi/docs
-└── .1password/                 # 1Password agent socket
-    └── agent.sock
+.chezmoidata.yaml          chezmoi.toml [data]
+(committed defaults)       (local identity, never committed)
+        |                          |
+        +----------+----------+----+
+                   |
+                   v
+           Template variables
 ```
 
-### Workflow Layers
+This separation keeps behavioral defaults version-controlled and identity data machine-local.
 
-```mermaid
-graph TD
-    subgraph "User Interaction"
-        USER[User] --> CM[chezmoi CLI]
-        USER --> GIT[git commands]
-    end
-    
-    subgraph "Management Layer"
-        CM --> APPLY[chezmoi apply]
-        CM --> EDIT[chezmoi edit]
-        CM --> ADD[chezmoi add]
-        GIT --> COMMIT[Commit & Push]
-    end
-    
-    subgraph "Automation Layer"
-        APPLY --> HOOKS[Chezmoi Hooks]
-        HOOKS --> BREW[Brewfile Sync]
-        HOOKS --> ITERM[iTerm2 Profiles]
-    end
-    
-    style USER fill:#e0e7ff,stroke:#6366f1
-    style CM fill:#dbeafe,stroke:#3b82f6
-    style HOOKS fill:#fef3c7,stroke:#f59e0b
+---
+
+## Source Tree
+
+```
+~/.local/share/chezmoi/                  # The git repository
+|
+|-- .chezmoi.toml.tmpl                   # Init-time prompt definitions
+|-- .chezmoidata.yaml                    # Behavioral defaults (starship settings)
+|-- .chezmoiignore                       # Profile-conditional file exclusions
+|-- .gitignore                           # Repo-internal ignore rules
+|
+|-- .chezmoiscripts/
+|   |-- run_once_install-homebrew.sh     # Bootstrap Homebrew (once)
+|   |-- run_onchange_after_20-brew-bundle.sh.tmpl  # brew bundle (on Brewfile change)
+|   |-- run_onchange_install-starship.sh.tmpl       # Install starship (on change)
+|   `-- run_once_after_40-starship-check.sh         # Verify starship post-install
+|
+|-- dot_Brewfile.tmpl                    # Profile-aware package manifest -> ~/.Brewfile
+|-- dot_wezterm.lua.tmpl                 # WezTerm config with profile theming -> ~/.wezterm.lua
+|-- dot_zshrc                            # Zsh interactive config -> ~/.zshrc
+|-- dot_zshenv                           # Zsh environment (always sourced) -> ~/.zshenv
+|-- dot_zprofile                         # Zsh login profile -> ~/.zprofile
+|-- dot_zlogin                           # Zsh post-login -> ~/.zlogin
+|-- dot_zlogout                          # Zsh logout -> ~/.zlogout
+|-- dot_zpreztorc                        # Prezto configuration -> ~/.zpreztorc
+|-- dot_bashrc                           # Bash config (fallback) -> ~/.bashrc
+|-- dot_gitignore                        # Global gitignore -> ~/.gitignore
+|-- dot_taskrc                           # Taskwarrior config -> ~/.taskrc
+|-- symlink_dot_git                      # Symlink: ~/.git -> chezmoi source
+|
+|-- private_dot_env.tmpl                 # Environment variables (600 perms) -> ~/.env
+|-- private_dot_gitconfig                # Git config (600 perms) -> ~/.gitconfig
+|
+|-- private_dot_ssh/
+|   |-- private_config                   # SSH client config (600 perms) -> ~/.ssh/config
+|   |-- allowed_signers.tmpl             # SSH signing allowlist -> ~/.ssh/allowed_signers
+|   `-- id_ed25519_signing.pub           # Signing public key (personal only)
+|
+|-- dot_claude/                          # Claude Code configuration -> ~/.claude/
+|   |-- agents/                          # Specialized sub-agents
+|   |-- commands/                        # Custom slash commands
+|   |-- hooks/                           # Python workflow automation hooks
+|   |-- memories/                        # Project context and methodology files
+|   |   `-- personal/user-info.md.tmpl   # Identity-aware memory template
+|   |-- output-styles/                   # Response formatting styles
+|   |-- status_lines/                    # Status bar configurations
+|   |-- settings.json                    # Global Claude settings
+|   |-- settings.framework.json          # Framework variant settings
+|   |-- settings.minimal.json            # Minimal variant settings
+|   `-- settings.production.json         # Production variant settings
+|
+|-- dot_config/
+|   |-- 1Password/ssh/agent.toml.tmpl    # SSH agent key list -> ~/.config/1Password/ssh/agent.toml
+|   |-- git/config.tmpl                  # Git identity config -> ~/.config/git/config
+|   |-- starship.toml.tmpl               # Starship prompt (profile-conditional) -> ~/.config/starship.toml
+|   |-- iterm2/DynamicProfiles/
+|   |   `-- default.json.tmpl            # iTerm2 profile (work badge) -> ~/.config/iterm2/...
+|   |-- exact_starship/themes/           # Additional starship theme files
+|   |-- conda/condarc                    # Conda configuration
+|   |-- doom/                            # Doom Emacs configuration
+|   |-- lazygit/config.yml               # Lazygit configuration
+|   |-- shell/xdg-env.sh                 # XDG environment variable definitions
+|   |-- weechat/                         # WeeChat IRC configuration (private_*)
+|   |-- yazi/                            # Yazi file manager configuration
+|   `-- zed/                             # Zed editor configuration
+|
+|-- dot_local/bin/                       # User scripts -> ~/.local/bin/
+|   |-- executable_claude-sessions       # Claude session management
+|   |-- executable_doc                   # Documentation browser
+|   |-- executable_glow-handler          # Glow markdown viewer helper
+|   |-- executable_sync-secrets          # Secrets synchronization
+|   |-- executable_weather / weather-display
+|   |-- executable_wezterm-shortcuts     # WezTerm keybinding reference
+|   |-- executable_workspace-dev         # Development workspace launcher
+|   |-- executable_workspace-home        # Home/dotfiles workspace launcher
+|   `-- executable_workspace-refresh     # Workspace refresh utility
+|
+|-- dot_docs/                            # Documentation -> ~/.docs/
+|-- dot_task/hooks/                      # Taskwarrior hooks
+|-- dot_vscode/settings.json             # VS Code settings -> ~/.vscode/settings.json
+`-- exact_dot_scripts/                   # Shell scripts -> ~/.scripts/ (exact sync)
 ```
 
-**Text Alternative:**
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Interactive Layer                        │
-│                  ┌─────────────────┐                        │
-│                  │   chezmoi CLI   │                        │
-│                  │  (direct use)   │                        │
-│                  └────────┬────────┘                        │
-│                          │                                  │
-├──────────────────────────┼──────────────────────────────────┤
-│                          ▼                                  │
-│                   Workflow Layer                            │
-│  ┌──────────┬──────────┬──────────┬──────────┐           │
-│  │  Apply   │  Edit    │  Add     │  Diff    │           │
-│  │  System  │  Deps    │  Secrets │  Issues  │           │
-│  └──────────┴──────────┴──────────┴──────────┘           │
-│                          │                                  │
-├──────────────────────────┼──────────────────────────────────┤
-│                          ▼                                  │
-│                    Tool Layer                               │
-│  ┌──────────┬──────────┬──────────┬──────────┐           │
-│  │ chezmoi  │Homebrew  │1Password │   Age    │           │
-│  │ manage   │ bundle   │   CLI    │ encrypt  │           │
-│  └──────────┴──────────┴──────────┴──────────┘           │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+---
 
-## 🔄 Key Workflows
+## Profile System
 
-### Initial Setup
+Two profiles are defined. The profile choice at `chezmoi init` gates identity, packages, terminal
+theming, and file inclusion throughout the repository.
+
+### Profile Comparison
+
+| Component              | personal                           | work                                  |
+|------------------------|------------------------------------|---------------------------------------|
+| Git email              | nehalecky@gmail.com (default)      | user@company.com                      |
+| Git signing key        | personal ed25519 key               | work ed25519 key                      |
+| 1Password auth key     | "GitHub SSH Auth Key"              | "GitHub Auth Key"                     |
+| 1Password signing key  | "Git Commit Signing Key"           | "Signing Key"                         |
+| Brewfile extras        | Signal, Spotify, Steam, Telegram   | cosign, k9s, kubectl, helm, Docker, Slack, Zoom |
+| Starship prompt        | Minimal; k8s/aws/gcloud disabled   | k8s context, AWS profile/region, hostname, bold colors |
+| WezTerm tab bar        | Default dark theme                 | Muted red tab bar + "WORK" right-status badge |
+| iTerm2 profile         | No badge                           | "WORK" badge, red-tinted              |
+| SSH allowed_signers    | Personal key                       | Work key                              |
+| 1Password agent.toml   | Personal vault key items           | Work vault key items                  |
+| .chezmoiignore         | Excludes .kube/, .aws/             | Excludes id_ed25519_signing.pub       |
+| Claude user-info.md    | Personal identity context          | Work identity context                 |
+
+### Profile-Conditional .chezmoiignore
+
+The `.chezmoiignore` file evaluates template logic at apply time:
+
 ```
-User ──▶ Install Homebrew ──▶ Install chezmoi ──▶ chezmoi init
-                                      │
-                                      ▼
-                              Run install hooks
-                                      │
-                    ┌─────────────────┴─────────────────┐
-                    ▼                                   ▼
-            Install 1Password CLI              Apply dotfiles
-                    │                                   │
-                    └─────────────────┬─────────────────┘
-                                      ▼
-                                 brew bundle
+{{ if .isWork }}
+.ssh/id_ed25519_signing.pub   # personal signing pubkey not deployed to work machines
+{{ end }}
+
+{{ if .isPersonal }}
+.kube/                        # kubernetes config excluded on personal machines
+.aws/                         # AWS config excluded on personal machines
+{{ end }}
 ```
 
-### Secret Management
+---
+
+## Template Files
+
+All `.tmpl` files are rendered by chezmoi at apply time. Identity variables are injected from
+`chezmoi.toml`; behavioral variables come from `.chezmoidata.yaml`.
+
+| Source file                                     | Deployed to                              | What it parameterizes                                       |
+|-------------------------------------------------|------------------------------------------|-------------------------------------------------------------|
+| `.chezmoi.toml.tmpl`                            | `~/.config/chezmoi/chezmoi.toml`         | Init prompts only; sets all identity variables              |
+| `dot_Brewfile.tmpl`                             | `~/.Brewfile`                            | `.isWork` / `.isPersonal` gates package sections            |
+| `dot_wezterm.lua.tmpl`                          | `~/.wezterm.lua`                         | `.profile` for tab bar color and right-status WORK badge    |
+| `dot_config/git/config.tmpl`                    | `~/.config/git/config`                   | `.git_name`, `.git_email`, `.git_signing_key`, `homeDir`    |
+| `dot_config/starship.toml.tmpl`                 | `~/.config/starship.toml`                | `.profile` for k8s/aws modules and color theme              |
+| `dot_config/1Password/ssh/agent.toml.tmpl`      | `~/.config/1Password/ssh/agent.toml`     | `.op_auth_key_name`, `.op_signing_key_name`                 |
+| `dot_config/iterm2/DynamicProfiles/default.json.tmpl` | `~/.config/iterm2/DynamicProfiles/default.json` | `.isWork` for WORK badge                         |
+| `private_dot_env.tmpl`                          | `~/.env` (mode 600)                      | Placeholder for `onepasswordRead` API token injection       |
+| `private_dot_ssh/allowed_signers.tmpl`          | `~/.ssh/allowed_signers`                 | `.git_email`, `.git_signing_key` for SSH commit verification |
+| `dot_claude/memories/personal/user-info.md.tmpl`| `~/.claude/memories/personal/user-info.md` | Identity context for Claude Code agent memory             |
+| `.chezmoiscripts/run_onchange_after_20-brew-bundle.sh.tmpl` | (executed, not deployed)   | Includes Brewfile hash to trigger re-run on content change  |
+| `.chezmoiscripts/run_onchange_install-starship.sh.tmpl`     | (executed, not deployed)   | `.chezmoi.os` for OS-conditional install path               |
+
+---
+
+## Secret Management
+
+There is no encrypted secrets store in this repository. The approach relies on two mechanisms:
+
+### 1Password SSH Agent
+
+SSH keys (auth and signing) live in 1Password and are served via the 1Password SSH agent socket.
+The `agent.toml` template controls which vault items are offered:
+
+```toml
+# ~/.config/1Password/ssh/agent.toml (rendered from template)
+[[ssh-keys]]
+item = "GitHub SSH Auth Key"   # value from .op_auth_key_name
+
+[[ssh-keys]]
+item = "Git Commit Signing Key"  # value from .op_signing_key_name
 ```
-Development Environment                    Restricted Environment
-         │                                          │
-         ▼                                          ▼
-Check for 'op' command ─────────┐       No 'op' command found
-         │                      │                   │
-         ▼                      │                   ▼
-Pull from 1Password             │         Use .secrets/*.age files
-         │                      │                   │
-         └──────────────────────┴───────────────────┘
-                                │
-                                ▼
-                        Render templates
+
+Git is configured to sign commits using the 1Password op-ssh-sign binary:
+
+```
+[gpg "ssh"]
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+    allowedSignersFile = ~/.ssh/allowed_signers
 ```
 
-### Update Workflow
+No private key material is stored in the repository or in `~/.ssh/` for authentication or signing.
+
+### Environment Variable Templating
+
+`private_dot_env.tmpl` (deployed as `~/.env`, mode 600) is the intended location for
+`onepasswordRead` calls that inject API tokens at apply time. It currently contains only commented
+examples. Entries follow the pattern:
+
+```bash
+export GITHUB_TOKEN='{{ onepasswordRead "op://Private/github-pat/token" }}'
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Check     │────▶│   Update    │────▶│    Test     │
-│  Updates    │     │  Packages   │     │   Changes   │
-└─────────────┘     └─────────────┘     └─────────────┘
-       │                    │                    │
-       ▼                    ▼                    ▼
-   chezmoi           brew upgrade         chezmoi diff
-   update            brew bundle          chezmoi apply
+
+The `private_` prefix ensures chezmoi deploys the file with restricted permissions (600).
+
+### What Does Not Exist
+
+- No `.secrets/` directory
+- No Age encryption
+- No GPG-encrypted files
+- No `.1password/` directory in source
+
+---
+
+## Automation Scripts
+
+### run_once vs run_onchange
+
+chezmoi distinguishes two script types:
+
+- `run_once_*` — executes once per machine, tracked by script name in chezmoi state
+- `run_onchange_*` — executes whenever the script content changes (re-evaluated each apply)
+
+| Script                                       | Type         | Trigger                          | Purpose                              |
+|----------------------------------------------|--------------|----------------------------------|--------------------------------------|
+| `run_once_install-homebrew.sh`               | run_once     | First apply on new machine       | Bootstrap Homebrew                   |
+| `run_onchange_after_20-brew-bundle.sh.tmpl`  | run_onchange | Brewfile content hash changes    | Run `brew bundle --global`           |
+| `run_onchange_install-starship.sh.tmpl`      | run_onchange | Script content changes           | Install starship via brew or curl    |
+| `run_once_after_40-starship-check.sh`        | run_once     | After other run_once scripts     | Verify starship installation         |
+
+The brew-bundle script uses a content hash trick to couple its trigger to Brewfile changes:
+
+```bash
+#!/bin/bash
+# Brewfile hash: {{ include "dot_Brewfile.tmpl" | sha256sum }}
 ```
 
-## 🎯 Design Principles
+Including the Brewfile hash in the script body means chezmoi detects a content change and
+re-executes the script whenever the Brewfile is modified.
 
-1. **Single Source of Truth**
-   - Dotfiles: GitHub repository
-   - Secrets: 1Password
-   - Dependencies: Brewfile
+---
 
-2. **Environment Flexibility**
-   - Works with/without 1Password
-   - Adapts to system capabilities
-   - Graceful fallbacks
+## Design Decisions
 
-3. **Security First**
-   - No plaintext secrets
-   - SSH keys in 1Password
-   - Encrypted backups
+### Templates Over Branches
 
-4. **Automation**
-   - Hooks for setup
-   - Scripts for workflows
-   - Unified CLI tool
+A single branch handles both profiles through template conditionals rather than maintaining
+separate `personal` and `work` branches. This ensures:
 
-5. **Documentation**
-   - Self-documenting code
-   - Comprehensive guides
-   - Historical tracking
+- One commit history with no divergence
+- Profile differences are explicit and auditable in source
+- Adding a new profile-conditional behavior requires one edit, not a branch merge
+
+### promptStringOnce / promptChoiceOnce
+
+Init prompts use the `Once` variants, which store answers in `chezmoi.toml` after the first run.
+Subsequent `chezmoi apply` calls reuse stored values without re-prompting. This makes apply
+idempotent and safe to run frequently.
+
+### run_onchange for Brew Bundle
+
+The brew-bundle script is `run_onchange` rather than `run_once`. This ensures new packages added
+to the Brewfile are actually installed on existing machines, not just new ones. The sha256 hash
+injection in the script body is the coupling mechanism.
+
+### Lua-Native Profile Logic in WezTerm
+
+The WezTerm config (`dot_wezterm.lua.tmpl`) uses a minimal template: only the profile string is
+injected (`local chezmoi_profile = "{{ .profile }}"`). All conditional logic (tab bar colors,
+status badge) is implemented in Lua rather than template conditionals. This approach:
+
+- Keeps the deployed `.wezterm.lua` valid Lua regardless of profile
+- Allows WezTerm to reload configuration at runtime without requiring chezmoi re-apply
+- Makes the profile-conditional logic readable in a single file
+
+### private_ Prefix for Permissions
+
+Files prefixed with `private_` are deployed with mode 600. This is used for:
+
+- `~/.env` — environment variables may include API tokens
+- `~/.gitconfig` — contains email and signing key identity
+- `~/.ssh/config` — SSH client configuration
+- `~/.config/weechat/*.conf` — IRC credentials
+
+### XDG Base Directory Compliance
+
+Configuration follows the XDG Base Directory specification where tools support it:
+
+- `~/.config/git/config` (not `~/.gitconfig` as primary)
+- `~/.config/starship.toml`
+- `~/.config/lazygit/config.yml`
+- `~/.local/bin/` for user scripts
+
+`~/.gitconfig` exists as a `private_` file for tools that do not follow XDG.
+
+---
+
+## Key File Locations
+
+| Purpose                         | Source path                                  | Deployed path                              |
+|---------------------------------|----------------------------------------------|--------------------------------------------|
+| Init prompts                    | `.chezmoi.toml.tmpl`                         | `~/.config/chezmoi/chezmoi.toml` (local)   |
+| Behavioral defaults             | `.chezmoidata.yaml`                          | (read by chezmoi, not deployed)            |
+| Git identity                    | `dot_config/git/config.tmpl`                 | `~/.config/git/config`                     |
+| SSH signing allowlist           | `private_dot_ssh/allowed_signers.tmpl`       | `~/.ssh/allowed_signers`                   |
+| 1Password SSH agent keys        | `dot_config/1Password/ssh/agent.toml.tmpl`   | `~/.config/1Password/ssh/agent.toml`       |
+| Package manifest                | `dot_Brewfile.tmpl`                          | `~/.Brewfile`                              |
+| Terminal config                 | `dot_wezterm.lua.tmpl`                       | `~/.wezterm.lua`                           |
+| Shell prompt                    | `dot_config/starship.toml.tmpl`              | `~/.config/starship.toml`                  |
+| Environment variables           | `private_dot_env.tmpl`                       | `~/.env` (mode 600)                        |
+| Claude Code config              | `dot_claude/`                                | `~/.claude/`                               |
+| Documentation                   | `dot_docs/`                                  | `~/.docs/`                                 |
+| User scripts                    | `dot_local/bin/`                             | `~/.local/bin/`                            |
