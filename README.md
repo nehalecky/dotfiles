@@ -18,25 +18,23 @@ Claude Code is not bolted on as an afterthought. Twelve specialized agents, a pe
 
 ## Quick Setup
 
-Fork this repository first, then:
+> **Fork this repo first.** `chezmoi init` pulls from your own fork so your identity, keys, and profile choices stay private. See [SETUP.md](SETUP.md) for the full walkthrough.
 
 ```bash
 # Install Homebrew package manager
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install chezmoi and deploy dotfiles
+# Install chezmoi and deploy dotfiles from your fork
 brew install chezmoi
 chezmoi init --apply <your-github-username>
 ```
 
-This installs WezTerm with GPU acceleration, 60+ command-line tools, 12 Claude Code agents, and XDG-compliant dotfile organization.
-
-See [SETUP.md](SETUP.md) for detailed first-time setup, profile selection (personal/work), and customization options.
+`chezmoi init` prompts for your profile (personal/work), git identity, SSH keys, and terminal emulator (WezTerm, iTerm2, Ghostty, and others supported). It installs only the packages and configs for your choices — 60+ command-line tools, 12 Claude Code agents, and XDG-compliant dotfile organization.
 
 ## Key Components
 
 ### Core Stack
-- **Terminal**: WezTerm (GPU-accelerated, multiplexed)
+- **Terminal**: WezTerm, iTerm2, Ghostty, Kitty, or Alacritty (chosen at init)
 - **Shell**: Zsh + Starship prompt
 - **Editor**: Helix/Emacs with LSP integration
 - **Package Management**: Homebrew + uv (Python)
