@@ -16,6 +16,7 @@ Development environment built around terminal-first tools, managed with [chezmoi
 
 # Install chezmoi and deploy dotfiles
 brew install chezmoi && chezmoi init --apply https://github.com/nehalecky/dotfiles.git
+# Replace 'nehalecky' with your GitHub username if forking
 ```
 
 This installs WezTerm with GPU acceleration, 60+ command-line tools, Claude Code with 12 specialized agents, and XDG-compliant dotfile organization.
@@ -48,8 +49,6 @@ See [SETUP.md](SETUP.md) for detailed first-time setup, profile selection (perso
 - **Workflow automation** via Python hooks and custom commands
 - **MCP integrations** for GitHub, Google Workspace, Atlassian APIs
 - **Superpowers plugin** for enhanced capabilities (October 2024)
-
-Recent consolidation improved token efficiency by 42% (818 lines, ~65K tokens saved) through unified agent architecture.
 
 *Initial Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery).*
 
