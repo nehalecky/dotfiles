@@ -74,6 +74,70 @@ After running `chezmoi init --apply` with the `work` profile:
    op signin
    ```
 
+## Understanding the HOME→Source Workflow
+
+All dotfile changes follow a consistent workflow:
+
+1. **Edit** the actual file in your HOME directory (`~/.zshrc`, `~/.config/starship.toml`, etc.)
+2. **Test** that the changes work correctly (reload shell, test configuration)
+3. **Sync** to chezmoi with `chezmoi add <file>`
+4. **Commit** changes with `chezmoi git -- commit -m "description"`
+
+**Why this workflow**: Direct editing ensures immediate testing. Chezmoi handles synchronization to the source repository.
+
+**Never edit directly in** `~/.local/share/chezmoi/` — always edit in HOME first.
+
+**Example — editing your shell config:**
+```bash
+# Edit the actual file in HOME
+vim ~/.zshrc
+
+# Test changes work
+source ~/.zshrc
+
+# Sync to chezmoi source
+chezmoi add ~/.zshrc
+
+# Commit with a descriptive message
+chezmoi git -- commit -m "feat: add custom shell aliases"
+```
+
+## Tool Verification Checklist
+
+After setup, verify everything works:
+
+### Core System
+- [ ] Shell loads without errors (`exec zsh`)
+- [ ] Starship prompt displays correctly
+- [ ] PATH includes `~/.local/bin`
+- [ ] Leader key shortcuts work (`Ctrl+a f` opens yazi)
+
+### Authentication
+- [ ] 1Password SSH agent working (`ssh-add -L`)
+- [ ] GitHub CLI authenticated (`gh auth status`)
+- [ ] Git signing configured (`git config commit.gpgsign` — should be `true`)
+
+### Development Tools
+- [ ] Python/uv installed (`uv --version`)
+- [ ] Node.js installed (`node --version`)
+- [ ] Git configured with name and email (`git config --global user.name`)
+
+### TUI Tools
+- [ ] File manager launches (`Ctrl+a f` or `yazi`)
+- [ ] Editor launches (`Ctrl+a e` or `hx`)
+- [ ] Git client launches (`Ctrl+a g` or `lazygit`)
+- [ ] System monitor launches (`Ctrl+a p` or `btop`)
+
+### Workspaces
+- [ ] Home workspace launches (`workspace-home`)
+- [ ] Development workspace launches (`workspace-dev test`)
+- [ ] All panes populate correctly
+
+### Chezmoi
+- [ ] Status command works (`chezmoi status`)
+- [ ] Diff shows no unexpected changes (`chezmoi diff`)
+- [ ] Can commit changes (`chezmoi git -- status`)
+
 ## Troubleshooting
 
 ### Config template changed warning
@@ -91,10 +155,96 @@ If commits fail with `1Password: agent returned an error`, ensure:
 2. The SSH agent is enabled in 1Password Settings > Developer > SSH Agent
 3. The correct key names are set in `~/.config/chezmoi/chezmoi.toml` (`op_auth_key_name`, `op_signing_key_name`)
 
+Verify the agent is active:
+```bash
+ssh-add -L              # Should list keys from 1Password
+echo $SSH_AUTH_SOCK     # Should point to 1Password socket
+```
+
 ### Checking what chezmoi will change
 
 ```bash
 chezmoi diff          # Preview all pending changes
 chezmoi apply --dry-run  # Dry-run without writing
 chezmoi verify        # Validate all managed files
+```
+
+### Leader key not working
+
+**Symptoms**: Pressing `Ctrl+a` followed by shortcut keys does nothing.
+
+**Solutions**:
+1. Verify you're running WezTerm: `echo $TERM_PROGRAM` should output `WezTerm`
+2. Check if another application captures `Ctrl+a` (System Settings > Keyboard > Shortcuts, or tmux/screen running)
+3. Restart WezTerm: `Cmd+Q` then relaunch
+4. Look for "LEADER" indicator in the status bar when pressing `Ctrl+a`
+
+### Tools not found
+
+**Symptoms**: Commands like `yazi`, `lazygit`, or `hx` return "command not found".
+
+```bash
+# Check what's missing
+brew bundle check --global
+
+# Install missing packages
+brew bundle --global
+
+# Verify PATH includes Homebrew
+echo $PATH | grep homebrew
+```
+
+### Font or symbol issues
+
+**Symptoms**: Boxes, missing icons, or garbled text in the prompt or TUI tools.
+
+```bash
+# Install Nerd Font
+brew install --cask font-meslo-lg-nerd-font
+
+# Restart WezTerm, then verify font in config
+grep "font.*family" ~/.wezterm.lua
+```
+
+### Workspace launch failures
+
+**Symptoms**: `workspace-home` or `workspace-dev` commands fail or hang.
+
+```bash
+# Check workspace scripts exist
+ls -la ~/.local/bin/workspace-*
+
+# Test individual tools
+yazi       # File manager
+hx         # Editor
+lazygit    # Git client
+
+# Check WezTerm pane splitting works
+# Ctrl+a |  (vertical split)
+# Ctrl+a -  (horizontal split)
+```
+
+### Git authentication problems
+
+**Symptoms**: Git push/pull asks for credentials or fails with authentication errors.
+
+```bash
+gh auth status          # Check GitHub CLI auth state
+gh auth login           # Re-authenticate if needed
+gh auth setup-git       # Configure git to use GitHub CLI
+ssh -T git@github.com   # Test SSH to GitHub
+```
+
+### Performance issues
+
+**Slow prompt:**
+```bash
+starship timings        # Diagnose which modules are slow
+vim ~/.config/starship.toml  # Comment out slow modules
+```
+
+**High CPU or memory:**
+```bash
+btop                    # Identify runaway processes
+# Exit unused TUI apps with 'q'
 ```

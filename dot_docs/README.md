@@ -6,14 +6,12 @@ Development environment documentation for this dotfiles setup. The repository su
 
 New to this system? Start here:
 1. [SETUP.md](../SETUP.md) - New machine onboarding and profile selection
-2. [Setup Guide](setup-guide.md) - Installation and configuration details
-3. [Tool Reference](tool-reference.md) - Commands and shortcuts
-4. [Architecture](architecture.md) - System design
+2. [Tool Reference](tool-reference.md) - Commands and shortcuts
+3. [Architecture](architecture.md) - System design
 
 ## Core Documentation
 
-- **[SETUP.md](../SETUP.md)** - New machine setup, profile selection, and onboarding
-- **[Setup Guide](setup-guide.md)** - First-time setup and customization
+- **[SETUP.md](../SETUP.md)** - New machine setup, profile selection, HOME→Source workflow, and tool verification
 - **[Tool Reference](tool-reference.md)** - Complete catalog of 67+ tools, commands, shortcuts
 - **[Architecture](architecture.md)** - System design and technical decisions
 - **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
@@ -38,4 +36,4 @@ This setup leverages [Superpowers](https://github.com/obra/superpowers) - a Clau
 
 ---
 
-*Start with [Setup Guide](setup-guide.md) for first-time configuration.*
+*Start with [SETUP.md](../SETUP.md) for first-time setup and onboarding.*
