@@ -360,10 +360,10 @@ Task(subagent_type="document-writer", ...)
 
 ## References
 
-- [Agent design patterns](/Users/nehalecky/.claude/agents/)
-- [Workflow coordination](/Users/nehalecky/.claude/memories/workflows/)
-- [Modern CLI tools](/Users/nehalecky/.docs/tool-reference.md)
-- [Routing rules](/Users/nehalecky/.claude/memories/private_core-behavior/mandatory-checks.md)
+- [Agent design patterns](~/.claude/agents/)
+- [Workflow coordination](~/.claude/memories/workflows/)
+- [Modern CLI tools](~/.docs/tool-reference.md)
+- [Routing rules](~/.claude/memories/private_core-behavior/mandatory-checks.md)
 
 ---
 
