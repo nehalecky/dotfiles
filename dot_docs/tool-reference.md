@@ -1,6 +1,6 @@
 # Tool Reference
 
-Complete catalog of installed tools, commands, and shortcuts for development and system management.
+Catalog of installed tools, commands, and shortcuts for development and system management.
 
 ## Table of Contents
 - [Core Tools](#core-tools)
@@ -15,35 +15,35 @@ Complete catalog of installed tools, commands, and shortcuts for development and
 | Tool | Purpose | Key Commands |
 |------|---------|--------------|
 | [Homebrew](https://brew.sh/) | macOS package manager | `brew install`, `brew upgrade`, `brew bundle` |
-| [uv](https://docs.astral.sh/uv/) | Python package manager (primary) | `uv add`, `uv run`, `uv sync` |
-| npm/pnpm | Node.js package manager | `npm install`, `pnpm add` (pnpm installable via `npm install -g pnpm`) |
+| [uv](https://docs.astral.sh/uv/) | Primary Python package manager | `uv add`, `uv run`, `uv sync` |
+| npm/pnpm | Node.js package manager | `npm install`, `pnpm add` (install pnpm via `npm install -g pnpm`) |
 
-> **Note:** The Brewfile is profile-aware. `personal` and `work` profiles install different package sets — see the Desktop Applications section below and [SETUP.md](../SETUP.md) for details.
+> **Note:** The Brewfile is profile-aware: `personal` and `work` profiles install different package sets. See Desktop Applications below and [SETUP.md](../SETUP.md).
 
 ### Modern CLI Replacements
 
 | Traditional | Modern Tool | Key Benefit | Installation |
 |-------------|-------------|-------------|--------------|
 | `cat` | [bat](https://github.com/sharkdp/bat) | Syntax highlighting, Git integration | `brew install bat` |
-| `ls` | [eza](https://eza.rocks/) | Colors, icons, Git status | `brew install eza` |
+| `ls` | [eza](https://eza.rocks/) | Color output, icons, Git status | `brew install eza` |
 | `grep` | [ripgrep](https://github.com/BurntSushi/ripgrep) | Faster search, smart defaults | `brew install ripgrep` |
-| `find` | [fd](https://github.com/sharkdp/fd) | Simpler syntax, faster | `brew install fd` |
-| `diff` | [delta](https://github.com/dandavison/delta) | Enhanced git diffs | `brew install git-delta` |
-| `top` | [btop](https://github.com/aristocratos/btop) | Mouse support, better UI | `brew install btop` |
-| `ps` | [procs](https://github.com/dalance/procs) | Colored output, tree view | `brew install procs` |
-| `du` | [dust](https://github.com/bootandy/dust) | Visual tree, faster | `brew install dust` |
-| `man` | [tealdeer](https://github.com/dbrgn/tealdeer) | Simplified examples | `brew install tealdeer` |
+| `find` | [fd](https://github.com/sharkdp/fd) | Simpler syntax, faster execution | `brew install fd` |
+| `diff` | [delta](https://github.com/dandavison/delta) | Enhanced Git diffs | `brew install git-delta` |
+| `top` | [btop](https://github.com/aristocratos/btop) | Mouse support, richer UI | `brew install btop` |
+| `ps` | [procs](https://github.com/dalance/procs) | Color output, tree view | `brew install procs` |
+| `du` | [dust](https://github.com/bootandy/dust) | Visual tree, faster execution | `brew install dust` |
+| `man` | [tealdeer](https://github.com/dbrgn/tealdeer) | Concise usage examples | `brew install tealdeer` |
 
 ### Development Tools
 
 **Version Control**
 - [git](https://git-scm.com/) - Distributed version control
-- [gh](https://cli.github.com/) - GitHub CLI for PRs and issues
-- [lazygit](https://github.com/jesseduffield/lazygit) - Terminal UI for git
+- [gh](https://cli.github.com/) - GitHub CLI for PRs, issues, and repos
+- [lazygit](https://github.com/jesseduffield/lazygit) - Terminal UI for Git
 
 **Containerization**
 - [lazydocker](https://github.com/jesseduffield/lazydocker) - Terminal UI for Docker
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Container management with GUI (work profile only)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) - Docker GUI (work profile only)
 
 **Kubernetes** (work profile only)
 - [k9s](https://k9scli.io/) - Terminal UI for Kubernetes
@@ -52,9 +52,9 @@ Complete catalog of installed tools, commands, and shortcuts for development and
 
 **Text Editors**
 - [helix](https://helix-editor.com/) - Modal editor with built-in LSP
-- [emacs](https://www.gnu.org/software/emacs/) - Extensible editor
+- [emacs](https://www.gnu.org/software/emacs/) - Extensible text editor
 - [Visual Studio Code](https://code.visualstudio.com/) - GUI editor with extensions
-- [Cursor](https://cursor.sh/) - AI-first code editor (optional, both profiles)
+- [Cursor](https://cursor.sh/) - AI-native code editor (optional, both profiles)
 
 **Languages & Runtimes**
 - [node](https://nodejs.org/) - JavaScript runtime
@@ -84,10 +84,10 @@ Complete catalog of installed tools, commands, and shortcuts for development and
 
 ### Desktop Applications
 
-The Brewfile is profile-aware: `personal` and `work` profiles install different cask sets. Apps are grouped below by profile scope. See [SETUP.md](../SETUP.md) for profile configuration.
+The Brewfile is profile-aware: `personal` and `work` profiles install different cask sets. Apps below are grouped by profile scope. See [SETUP.md](../SETUP.md) for profile configuration.
 
 **Development (all profiles)**
-- WezTerm - Terminal emulator
+- WezTerm - GPU-accelerated terminal emulator
 - Visual Studio Code - GUI editor with extensions
 
 **Development (optional, both profiles)**
@@ -95,17 +95,17 @@ The Brewfile is profile-aware: `personal` and `work` profiles install different 
 - Cursor - AI-first code editor
 
 **Security & Privacy (all profiles)**
-- 1Password - Password manager with SSH agent
+- 1Password - Password manager and SSH agent
 - 1Password CLI - Command-line credential access
 - ProtonVPN - Privacy-focused VPN (optional)
 
 **Productivity (all profiles)**
-- Obsidian - Knowledge base and notes
-- Raycast - Launcher (replaces Spotlight)
+- Obsidian - Knowledge base and note-taking
+- Raycast - Spotlight replacement launcher
 - Claude - AI assistant
 
 **Productivity (optional, both profiles)**
-- Zotero - Reference and citation manager
+- Zotero - Reference manager and citation tool
 
 **Communication (work profile only)**
 - Slack - Team communication
@@ -117,7 +117,7 @@ The Brewfile is profile-aware: `personal` and `work` profiles install different 
 - WhatsApp - Personal messaging
 
 **Containers & Platform Engineering (work profile only)**
-- Docker Desktop - Container management with GUI
+- Docker Desktop - Docker GUI
 - k9s - Terminal UI for Kubernetes
 
 **Browsers (optional, both profiles)**
@@ -126,7 +126,7 @@ The Brewfile is profile-aware: `personal` and `work` profiles install different 
 
 **Media (personal profile only)**
 - Spotify - Music streaming
-- Sonic Pi - Code-based music creation
+- Sonic Pi - Live-coding music synthesis
 - Steam - Gaming platform
 
 **Media (optional, both profiles)**
@@ -319,7 +319,7 @@ zellij kill-session name        # Terminate session
 
 ### WezTerm Leader Key System (Ctrl+a)
 
-The leader key system provides quick access to all tools and workspace management.
+The leader key provides quick access to all TUI tools and workspace management.
 
 **Core TUI Applications**
 ```
@@ -584,9 +584,9 @@ chezmoi diff                    # Review pending changes
 ```
 
 **WezTerm Leader Key Not Working**
-- Check if timeout expired (1000ms)
-- Verify no conflicting key bindings
-- Restart WezTerm if necessary
+- Check whether the timeout expired (1000ms)
+- Verify no conflicting key bindings exist
+- Restart WezTerm if needed
 
 **TUI Application Crashes**
 ```bash

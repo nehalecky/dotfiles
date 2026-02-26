@@ -1,14 +1,14 @@
 # Secrets Management Guide
 
-This guide explains the secrets management strategy using chezmoi with 1Password as the single source of truth.
+This guide covers secrets management with chezmoi and 1Password as the single source of truth.
 
 ## Overview
 
-All secrets are managed through **1Password**. There is no encrypted-file fallback. The approach is:
+**1Password** manages all secrets. There is no encrypted-file fallback.
 
 1. **1Password** - Single canonical source for all secrets
-2. **Dynamic Resolution** - Templates pull from 1Password at `chezmoi apply` time
-3. **Profile-Aware Keys** - SSH key names are configurable per profile (personal vs. work)
+2. **Dynamic Resolution** - Templates pull secrets from 1Password at `chezmoi apply` time
+3. **Profile-Aware Keys** - SSH key names vary per profile (personal vs. work)
 
 ## Architecture
 
@@ -26,7 +26,7 @@ All secrets are managed through **1Password**. There is no encrypted-file fallba
 
 ## Profile-Aware 1Password Key Names
 
-At `chezmoi init` time, you are prompted for profile identity and key names. These are stored in `~/.config/chezmoi/chezmoi.toml` (local machine config, never committed to the repository).
+At `chezmoi init` time, chezmoi prompts for profile identity and key names. It stores them in `~/.config/chezmoi/chezmoi.toml` (local machine config, never committed).
 
 ### Prompted Variables
 
@@ -35,11 +35,11 @@ At `chezmoi init` time, you are prompted for profile identity and key names. The
 | `op_auth_key_name` | 1Password item name for your SSH authentication key | "GitHub SSH Auth Key" |
 | `op_signing_key_name` | 1Password item name for your SSH signing key | "Git Commit Signing Key" |
 
-Work profiles have no defaults — you must specify the vault item names that match your work 1Password setup.
+Work profiles have no defaults — specify the vault item names that match your work 1Password setup.
 
-### How They Are Used
+### How Chezmoi Uses Them
 
-These variables are rendered into `~/.config/1Password/ssh/agent.toml` via the chezmoi template at `dot_config/1Password/ssh/agent.toml.tmpl`:
+Chezmoi renders these variables into `~/.config/1Password/ssh/agent.toml` via `dot_config/1Password/ssh/agent.toml.tmpl`:
 
 ```toml
 # Rendered from dot_config/1Password/ssh/agent.toml.tmpl
@@ -61,11 +61,11 @@ item = {{ .op_signing_key_name | quote }}
 
 ## SSH Commit Signing
 
-This setup uses SSH commit signing with 1Password instead of GPG for verified commits.
+This setup signs commits with SSH keys via 1Password instead of GPG.
 
 ### Configuration
 
-The git configuration is managed as a chezmoi template at `dot_config/git/config.tmpl`. The signing key is injected at `chezmoi init` time from the `git_signing_key` prompt and stored in `~/.config/chezmoi/chezmoi.toml`.
+Chezmoi manages the git configuration as a template at `dot_config/git/config.tmpl`. At `chezmoi init` time, the `git_signing_key` prompt injects the signing key into `~/.config/chezmoi/chezmoi.toml`.
 
 The template:
 ```gitconfig
@@ -90,7 +90,7 @@ The template:
 {{- end }}
 ```
 
-After rendering, `~/.config/git/config` contains the actual public key value from your `git_signing_key` prompt — for example:
+After rendering, `~/.config/git/config` contains the actual public key from `git_signing_key`:
 
 ```gitconfig
 [user]
@@ -98,18 +98,18 @@ After rendering, `~/.config/git/config` contains the actual public key value fro
 ```
 
 ### Benefits
-- **Unified Key Management**: Same 1Password vault manages SSH auth and signing keys
-- **Profile Portability**: Different machines or profiles specify their own 1Password item names at init time
+- **Unified Key Management**: One 1Password vault manages both SSH auth and signing keys
+- **Profile Portability**: Each machine or profile specifies its own 1Password item names at init time
 - **Simpler Setup**: No GPG key generation, distribution, or expiration management
-- **Consistent Workflow**: Leverages existing SSH infrastructure
+- **Consistent Workflow**: Builds on existing SSH infrastructure
 - **GitHub Native Support**: Full verification support since 2022
 
 ### Usage
-Once configured, all commits are automatically signed. The SSH public key must be added to GitHub as a "Signing Key" (separate from authentication keys).
+Once configured, git signs all commits automatically. Add the SSH public key to GitHub as a "Signing Key" (separate from authentication keys).
 
 ## Implementation Guide
 
-### 1. Store Secret in 1Password (Canonical Source)
+### 1. Store the Secret in 1Password
 
 ```bash
 # Create an entry in 1Password
@@ -120,7 +120,7 @@ op item create \
   api_key="sk-xxxxxxxxxxxx"
 ```
 
-### 2. Reference Secret in a Chezmoi Template
+### 2. Reference the Secret in a Chezmoi Template
 
 File: `~/.config/myapp/config.yml.tmpl`
 ```yaml
@@ -129,7 +129,7 @@ api:
   key: {{ onepasswordRead "op://Personal/MyApp API Key/api_key" }}
 ```
 
-### 3. Add to Chezmoi
+### 3. Add the Template to Chezmoi
 
 ```bash
 # Add the template file (from HOME directory)
@@ -158,7 +158,7 @@ token: {{ onepasswordRead "op://Vault/Item/field" }}
 
 ### Environment-Specific Secrets
 
-Use chezmoi data variables (set in `chezmoi.toml`) to branch on profile:
+Branch on profile using chezmoi data variables (set in `chezmoi.toml`):
 
 ```yaml
 {{- if .isWork }}
@@ -170,12 +170,12 @@ key: {{ onepasswordRead "op://Personal/api/key" }}
 
 ## Best Practices
 
-1. **1Password is the only source of truth**
+1. **Keep 1Password as the only source of truth**
    - Never hardcode secrets in templates or committed files
    - Never store secrets in `.chezmoidata.yaml` (committed to repo)
 
-2. **Profile identity lives in `~/.config/chezmoi/chezmoi.toml`**
-   - This file is local to the machine and never committed
+2. **Store profile identity in `~/.config/chezmoi/chezmoi.toml`**
+   - This file stays local to the machine and is never committed
    - Contains `op_auth_key_name`, `op_signing_key_name`, `git_signing_key`, etc.
 
 3. **Document secret requirements**
@@ -193,10 +193,10 @@ key: {{ onepasswordRead "op://Personal/api/key" }}
 
 ## Security Considerations
 
-- **No encrypted fallback files** - 1Password is required; there is no offline secret storage in this repo
+- **No encrypted fallback files** - 1Password is required; the repo contains no offline secret storage
 - **Local config only** - `~/.config/chezmoi/chezmoi.toml` holds identity data and is never committed
-- **Git Storage** - No secrets or encrypted blobs are stored in the repository
-- **Rotation** - Update the secret in 1Password; run `chezmoi apply` to pick up the new value
+- **No secrets in Git** - The repository stores no secrets or encrypted blobs
+- **Rotation** - Update the secret in 1Password, then run `chezmoi apply` to propagate the new value
 
 ## Troubleshooting
 
@@ -229,7 +229,7 @@ op item get "GitHub SSH Auth Key" --vault Personal
 
 ### Wrong key name after profile switch
 
-If you need to update the key names (e.g., switching from personal to work setup), edit `~/.config/chezmoi/chezmoi.toml` directly:
+To update key names (e.g., when switching from personal to work), edit `~/.config/chezmoi/chezmoi.toml` directly:
 
 ```toml
 [data]
@@ -237,7 +237,7 @@ If you need to update the key names (e.g., switching from personal to work setup
   op_signing_key_name = "Work Git Signing Key"
 ```
 
-Then run `chezmoi apply` to re-render the affected templates.
+Then run `chezmoi apply` to re-render affected templates.
 
 ## References
 
