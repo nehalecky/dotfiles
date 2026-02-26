@@ -32,7 +32,12 @@ truncation_symbol = "…/"
 "Downloads" = " "
 "Music" = " "
 "Pictures" = " "
-
+{{ if eq .profile "personal" -}}
+"~/Projects" = " "
+"~/Code" = " "
+"~/Documents/Writing" = " "
+"~/Photos" = " "
+{{ end }}
 [git_branch]
 symbol = ""
 style = "bg:#394260"
@@ -70,12 +75,6 @@ format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
 
 {{ if eq .profile "personal" -}}
 # Personal theme - minimal, clean
-[directory.substitutions]
-"~/Projects" = " "
-"~/Code" = " "
-"~/Documents/Writing" = " "
-"~/Photos" = " "
-
 [kubernetes]
 disabled = true
 
