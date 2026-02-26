@@ -64,7 +64,7 @@ Everything is automated! Just:
 brew install --cask iterm2
 
 # Apply dotfiles (includes iTerm2 setup)
-chezmoi init --apply nehalecky/dotfiles
+chezmoi init --apply <your-github-username>/dotfiles
 
 # Launch iTerm2 - your profile is already loaded!
 open -a iTerm
