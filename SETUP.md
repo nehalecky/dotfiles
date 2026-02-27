@@ -65,9 +65,11 @@ Or edit the value directly in `~/.config/chezmoi/chezmoi.toml` and run `chezmoi 
 
 After running `chezmoi init --apply` with the `work` profile:
 
-1. Authenticate GitHub CLI:
+1. Authenticate GitHub CLI and verify org access:
    ```bash
    gh auth login
+   gh auth status                                                    # confirm logged in
+   gh api user/memberships/orgs --jq '.[].organization.login'       # confirm org membership
    ```
 
 2. Set up GCP credentials:
@@ -80,6 +82,8 @@ After running `chezmoi init --apply` with the `work` profile:
    ```bash
    op signin
    ```
+
+4. **Hand off to your corp onboarding assistant.** Your environment is ready. Open your corporate Claude account and say: *"I just ran chezmoi init on a new work machine — what's next?"* It has access to internal docs, team tooling, and project context to guide the rest of setup.
 
 ## Understanding the HOME→Source Workflow
 
@@ -117,7 +121,6 @@ After setup, verify everything works:
 - [ ] Shell loads without errors (`exec zsh`)
 - [ ] Starship prompt displays correctly
 - [ ] PATH includes `~/.local/bin`
-- [ ] Leader key shortcuts work (`Ctrl+a f` opens yazi)
 
 ### Authentication
 - [ ] 1Password SSH agent working (`ssh-add -L`)
@@ -181,10 +184,9 @@ chezmoi verify        # Validate all managed files
 **Symptoms**: Pressing `Ctrl+a` followed by shortcut keys does nothing.
 
 **Solutions**:
-1. Verify you're running WezTerm: `echo $TERM_PROGRAM` should output `WezTerm`
-2. Check if another application captures `Ctrl+a` (System Settings > Keyboard > Shortcuts, or tmux/screen running)
-3. Restart WezTerm: `Cmd+Q` then relaunch
-4. Look for "LEADER" indicator in the status bar when pressing `Ctrl+a`
+1. Check if another application captures `Ctrl+a` (System Settings > Keyboard > Shortcuts, or tmux/screen running)
+2. Restart your terminal
+3. Look for "LEADER" indicator in the status bar when pressing `Ctrl+a`
 
 ### Tools not found
 
