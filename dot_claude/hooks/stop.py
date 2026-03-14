@@ -62,81 +62,99 @@ def get_tts_script_path():
     return None
 
 
-def get_llm_completion_message():
+def extract_transcript_context(transcript_path, max_chars=600):
+    """Extract recent assistant text from transcript to give LLM context."""
+    try:
+        messages = []
+        with open(transcript_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    entry = json.loads(line)
+                    if entry.get('type') == 'assistant':
+                        for block in entry.get('message', {}).get('content', []):
+                            if isinstance(block, dict) and block.get('type') == 'text':
+                                text = block.get('text', '').strip()
+                                if text:
+                                    messages.append(text)
+                except (json.JSONDecodeError, KeyError):
+                    pass
+        if not messages:
+            return None
+        # Use last 2 assistant messages for context
+        recent = ' | '.join(messages[-2:])
+        return recent[:max_chars]
+    except Exception:
+        return None
+
+
+def get_llm_completion_message(transcript_path=None):
     """
     Generate completion message using available LLM services.
     Priority order: OpenAI > Anthropic > Ollama > fallback to random message
-    
+
     Returns:
         str: Generated or fallback completion message
     """
+    # Extract context from transcript if available
+    context = None
+    if transcript_path and os.path.exists(transcript_path):
+        context = extract_transcript_context(transcript_path)
+
     # Get current script directory and construct utils/llm path
     script_dir = Path(__file__).parent
     llm_dir = script_dir / "utils" / "llm"
-    
-    # Try OpenAI first (highest priority)
-    if os.getenv('OPENAI_API_KEY'):
-        oai_script = llm_dir / "oai.py"
-        if oai_script.exists():
-            try:
-                result = subprocess.run([
-                    "uv", "run", str(oai_script), "--completion"
-                ], 
-                capture_output=True,
-                text=True,
-                timeout=10
-                )
-                if result.returncode == 0 and result.stdout.strip():
-                    return result.stdout.strip()
-            except (subprocess.TimeoutExpired, subprocess.SubprocessError):
-                pass
-    
-    # Try Anthropic second
-    if os.getenv('ANTHROPIC_API_KEY'):
-        anth_script = llm_dir / "anth.py"
-        if anth_script.exists():
-            try:
-                result = subprocess.run([
-                    "uv", "run", str(anth_script), "--completion"
-                ], 
-                capture_output=True,
-                text=True,
-                timeout=10
-                )
-                if result.returncode == 0 and result.stdout.strip():
-                    return result.stdout.strip()
-            except (subprocess.TimeoutExpired, subprocess.SubprocessError):
-                pass
-    
-    # Try Ollama third (local LLM)
-    ollama_script = llm_dir / "ollama.py"
-    if ollama_script.exists():
+
+    def run_llm(script_path):
+        cmd = ["uv", "run", str(script_path), "--completion"]
+        if context:
+            cmd += ["--context", context]
         try:
-            result = subprocess.run([
-                "uv", "run", str(ollama_script), "--completion"
-            ], 
-            capture_output=True,
-            text=True,
-            timeout=10
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
             if result.returncode == 0 and result.stdout.strip():
                 return result.stdout.strip()
         except (subprocess.TimeoutExpired, subprocess.SubprocessError):
             pass
-    
+        return None
+
+    # Try OpenAI first (highest priority)
+    if os.getenv('OPENAI_API_KEY'):
+        oai_script = llm_dir / "oai.py"
+        if oai_script.exists():
+            msg = run_llm(oai_script)
+            if msg:
+                return msg
+
+    # Try Anthropic second
+    if os.getenv('ANTHROPIC_API_KEY'):
+        anth_script = llm_dir / "anth.py"
+        if anth_script.exists():
+            msg = run_llm(anth_script)
+            if msg:
+                return msg
+
+    # Try Ollama third (local LLM)
+    ollama_script = llm_dir / "ollama.py"
+    if ollama_script.exists():
+        msg = run_llm(ollama_script)
+        if msg:
+            return msg
+
     # Fallback to random predefined message
     messages = get_completion_messages()
     return random.choice(messages)
 
-def announce_completion():
+def announce_completion(transcript_path=None):
     """Announce completion using the best available TTS service."""
     try:
         tts_script = get_tts_script_path()
         if not tts_script:
             return  # No TTS scripts available
-        
-        # Get completion message (LLM-generated or fallback)
-        completion_message = get_llm_completion_message()
+
+        # Get completion message (LLM-generated with context, or fallback)
+        completion_message = get_llm_completion_message(transcript_path=transcript_path)
         
         # Call the TTS script with the completion message
         subprocess.run([
@@ -216,7 +234,7 @@ def main():
 
         # Announce completion via TTS (only if --notify flag is set)
         if args.notify:
-            announce_completion()
+            announce_completion(transcript_path=input_data.get('transcript_path'))
 
         sys.exit(0)
 
