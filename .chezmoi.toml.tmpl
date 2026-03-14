@@ -1,10 +1,16 @@
 {{- /* ── Profile Selection ─────────────────────────────────── */ -}}
-{{- $profiles := list "personal" "work" -}}
-{{- $profile := promptChoiceOnce . "profile" "Machine profile" $profiles "personal" -}}
+{{- /* Using promptStringOnce (not promptChoiceOnce) so input waits for Enter */ -}}
+{{- $profile := promptStringOnce . "profile" "Machine profile (personal/work)" "personal" -}}
+{{- if not (has $profile (list "personal" "work")) -}}
+{{-   fail (printf "Invalid profile: %q — must be 'personal' or 'work'. Re-run chezmoi init." $profile) -}}
+{{- end -}}
 
 {{- /* ── Terminal ─────────────────────────────────────────────── */ -}}
-{{- $terminals := list "wezterm" "iterm2" "ghostty" "kitty" "alacritty" "default" -}}
-{{- $terminal := promptChoiceOnce . "terminal" "Terminal emulator" $terminals "wezterm" -}}
+{{- $validTerminals := list "wezterm" "iterm2" "ghostty" "kitty" "alacritty" "default" -}}
+{{- $terminal := promptStringOnce . "terminal" "Terminal emulator (wezterm/iterm2/ghostty/kitty/alacritty/default)" "wezterm" -}}
+{{- if not (has $terminal $validTerminals) -}}
+{{-   fail (printf "Invalid terminal: %q — must be one of: %s. Re-run chezmoi init." $terminal ($validTerminals | join ", ")) -}}
+{{- end -}}
 
 {{- /* ── Identity ──────────────────────────────────────────── */ -}}
 {{- $git_name := promptStringOnce . "git_name" "Git author name" "Nicholaus Halecky" -}}
