@@ -258,6 +258,21 @@ run_lint_tests() {
     fi
   done
 
+  # Lint shell scripts in dot_local/bin/
+  for script in "$DOTFILES_DIR"/dot_local/bin/executable_*; do
+    [[ -f "$script" ]] || continue
+    head -1 "$script" | grep -qE '#!/.*bash|#!/.*sh' || continue
+    local script_name
+    script_name="$(basename "$script")"
+    label="Lint: dot_local/bin/${script_name} passes bash -n"
+    if bash -n "$script" 2>/tmp/ci-lint-err; then
+      pass "$label"
+    else
+      fail "$label"
+      cat /tmp/ci-lint-err >&2
+    fi
+  done
+
   # Lint the test script itself
   label="Lint: tests/ci-test.sh passes bash -n"
   if bash -n "${BASH_SOURCE[0]}" 2>/tmp/ci-lint-err; then
@@ -265,6 +280,92 @@ run_lint_tests() {
   else
     fail "$label"
     cat /tmp/ci-lint-err >&2
+  fi
+}
+
+# ---------------------------------------------------------------------------
+# Category 4: Hook tests (Python syntax + settings validation)
+# ---------------------------------------------------------------------------
+
+run_hook_tests() {
+  echo ""
+  echo "=== Hook Tests ==="
+
+  local label
+
+  # Python syntax check for all hook scripts
+  for py_file in \
+    "$DOTFILES_DIR"/dot_claude/hooks/*.py \
+    "$DOTFILES_DIR"/dot_claude/hooks/utils/llm/*.py \
+    "$DOTFILES_DIR"/dot_claude/hooks/utils/tts/*.py; do
+    [[ -f "$py_file" ]] || continue
+    local rel_name
+    rel_name="${py_file#$DOTFILES_DIR/dot_claude/}"
+    label="Hook: ${rel_name} passes Python syntax check"
+    if python3 -m py_compile "$py_file" 2>/tmp/ci-hook-err; then
+      pass "$label"
+    else
+      fail "$label"
+      cat /tmp/ci-hook-err >&2
+    fi
+  done
+
+  # settings.json is valid JSON
+  local settings="$DOTFILES_DIR/dot_claude/settings.json"
+  label="Config: dot_claude/settings.json is valid JSON"
+  if python3 -c "import json, sys; json.load(open(sys.argv[1]))" \
+       "$settings" 2>/tmp/ci-hook-err; then
+    pass "$label"
+  else
+    fail "$label"
+    cat /tmp/ci-hook-err >&2
+  fi
+
+  # settings.json hook event names are valid Claude Code events
+  label="Config: dot_claude/settings.json hook events are all valid"
+  if python3 - "$settings" 2>/tmp/ci-hook-err <<'PYEOF'
+import json, sys
+VALID = {"Stop","Notification","SubagentStop","SessionStart",
+         "PreCompact","PreToolUse","PostToolUse","UserPromptSubmit"}
+data = json.load(open(sys.argv[1]))
+invalid = set(data.get("hooks", {}).keys()) - VALID
+if invalid:
+    print(f"Invalid hook events: {invalid}", file=sys.stderr)
+    sys.exit(1)
+PYEOF
+  then
+    pass "$label"
+  else
+    fail "$label"
+    cat /tmp/ci-hook-err >&2
+  fi
+
+  # settings.json hook commands reference scripts that exist in the repo
+  label="Config: dot_claude/settings.json hook commands reference existing scripts"
+  if python3 - "$settings" "$DOTFILES_DIR" 2>/tmp/ci-hook-err <<'PYEOF'
+import json, sys, re
+from pathlib import Path
+data = json.load(open(sys.argv[1]))
+dotfiles = Path(sys.argv[2])
+missing = []
+for hooks_list in data.get("hooks", {}).values():
+    for matcher in hooks_list:
+        for hook in matcher.get("hooks", []):
+            cmd = hook.get("command", "")
+            m = re.search(r'/Users/\S+/\.claude/hooks/(\S+\.py)', cmd)
+            if m:
+                rel = "dot_claude/hooks/" + m.group(1)
+                if not (dotfiles / rel).exists():
+                    missing.append(rel)
+if missing:
+    print("Missing hook scripts:\n" + "\n".join(missing), file=sys.stderr)
+    sys.exit(1)
+PYEOF
+  then
+    pass "$label"
+  else
+    fail "$label"
+    cat /tmp/ci-hook-err >&2
   fi
 }
 
@@ -281,6 +382,7 @@ setup_config
 run_template_tests
 run_syntax_tests
 run_lint_tests
+run_hook_tests
 
 echo ""
 echo "========================================"

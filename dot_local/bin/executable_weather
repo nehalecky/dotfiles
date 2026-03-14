@@ -3,18 +3,15 @@
 # Usage: weather [location]
 
 case ${1:-} in
-  ""|local|home)
-    echo "🏠 La Lucila (Home):"
-    curl -s "wttr.in/La_Lucila,Buenos_Aires?format=3"
-    echo
-    ;;
-  auto|detect)
-    echo "📍 Auto-detected location:"
-    curl -s "wttr.in?format=3"
+  ""|local|home|auto|detect)
+    CITY=$(curl -s ipinfo.io/city 2>/dev/null)
+    REGION=$(curl -s ipinfo.io/region 2>/dev/null)
+    echo "📍 ${CITY}, ${REGION}:"
+    curl -s "wttr.in/${CITY},${REGION}?format=3"
     echo
     ;;
   reno|nv)
-    echo "🎰 Reno, Nevada:"
+    echo "🏠 Reno, Nevada:"
     curl -s "wttr.in/Reno,NV?format=3"
     echo
     ;;
@@ -24,24 +21,22 @@ case ${1:-} in
     echo
     ;;
   forecast|f)
-    echo "📊 3-day forecast for La Lucila:"
-    curl -s "wttr.in/La_Lucila,Buenos_Aires"
+    echo "📊 3-day forecast for Reno:"
+    curl -s "wttr.in/Reno,NV"
     ;;
   today|t)
-    echo "⏰ Today's hourly breakdown for La Lucila:"
-    curl -s "wttr.in/La_Lucila,Buenos_Aires?0"
+    echo "⏰ Today's hourly breakdown for Reno:"
+    curl -s "wttr.in/Reno,NV?0"
     ;;
   all|summary)
     echo "🌍 Weather Summary:"
-    echo -n "🏠 Home: "; curl -s "wttr.in/La_Lucila,Buenos_Aires?format=3"
-    echo -n "🎰 Reno: "; curl -s "wttr.in/Reno,NV?format=3"
+    echo -n "🏠 Reno: "; curl -s "wttr.in/Reno,NV?format=3"
     echo -n "🏔️ Futaleufú: "; curl -s "wttr.in/Futaleufu,Chile?format=3"
     echo
     ;;
   help|h)
     echo "Weather command usage:"
-    echo "  weather          # La Lucila (default/home)"
-    echo "  weather reno     # Reno, Nevada"
+    echo "  weather          # Reno, NV (default/home)"
     echo "  weather futaleufu # Futaleufú, Chile"
     echo "  weather auto     # Auto-detected (Ituzaingo)"
     echo "  weather forecast # 3-day forecast"

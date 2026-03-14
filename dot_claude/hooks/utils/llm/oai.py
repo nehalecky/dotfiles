@@ -46,7 +46,7 @@ def prompt_llm(prompt_text):
         return None
 
 
-def generate_completion_message():
+def generate_completion_message(context=None):
     """
     Generate a completion message using OpenAI LLM.
 
@@ -57,27 +57,28 @@ def generate_completion_message():
 
     if engineer_name:
         name_instruction = f"Sometimes (about 30% of the time) include the engineer's name '{engineer_name}' in a natural way."
-        examples = f"""Examples of the style: 
+        examples = f"""Examples of the style:
 - Standard: "Work complete!", "All done!", "Task finished!", "Ready for your next move!"
 - Personalized: "{engineer_name}, all set!", "Ready for you, {engineer_name}!", "Complete, {engineer_name}!", "{engineer_name}, we're done!" """
     else:
         name_instruction = ""
         examples = """Examples of the style: "Work complete!", "All done!", "Task finished!", "Ready for your next move!" """
 
-    prompt = f"""Generate a short, friendly completion message for when an AI coding assistant finishes a task. 
+    context_section = f"\nContext of what was just completed:\n{context}\n" if context else ""
+
+    prompt = f"""Generate a short, friendly spoken announcement for when an AI coding assistant finishes a task.
 
 Requirements:
-- Keep it under 10 words
-- Make it positive and future focused
-- Use natural, conversational language
-- Focus on completion/readiness
+- Keep it under 12 words
+- Be specific to the work done if context is provided
+- Natural, conversational language suitable for text-to-speech
 - Do NOT include quotes, formatting, or explanations
-- Return ONLY the completion message text
+- Return ONLY the announcement text
 {name_instruction}
-
+{context_section}
 {examples}
 
-Generate ONE completion message:"""
+Generate ONE announcement:"""
 
     response = prompt_llm(prompt)
 
@@ -169,11 +170,16 @@ def main():
     
     if len(sys.argv) > 1:
         if sys.argv[1] == "--completion":
-            message = generate_completion_message()
+            context = None
+            if "--context" in sys.argv:
+                ctx_idx = sys.argv.index("--context")
+                if ctx_idx + 1 < len(sys.argv):
+                    context = sys.argv[ctx_idx + 1]
+            message = generate_completion_message(context=context)
             if message:
                 print(message)
             else:
-                print("Error generating completion message")
+                sys.exit(1)
         elif sys.argv[1] == "--agent-name":
             # Generate agent name (no input needed)
             name = generate_agent_name()

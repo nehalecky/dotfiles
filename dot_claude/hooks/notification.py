@@ -50,35 +50,35 @@ def get_tts_script_path():
     return None
 
 
-def announce_notification():
-    """Announce that the agent needs user input."""
+def announce_notification(message=None):
+    """Announce that the agent needs user input, using the actual message as context."""
     try:
         tts_script = get_tts_script_path()
         if not tts_script:
-            return  # No TTS scripts available
-        
-        # Get engineer name if available
+            return
+
         engineer_name = os.getenv('ENGINEER_NAME', '').strip()
-        
-        # Create notification message with 30% chance to include name
-        if engineer_name and random.random() < 0.3:
-            notification_message = f"{engineer_name}, your agent needs your input"
+
+        # Use the actual notification message when it carries real context.
+        # Fall back to a generic prompt only for the bare "waiting" placeholder.
+        generic = 'Claude is waiting for your input'
+        if message and message.strip() and message.strip() != generic:
+            spoken = message.strip()[:200]
         else:
-            notification_message = "Your agent needs your input"
-        
-        # Call the TTS script with the notification message
-        subprocess.run([
-            "uv", "run", tts_script, notification_message
-        ], 
-        capture_output=True,  # Suppress output
-        timeout=10  # 10-second timeout
+            if engineer_name and random.random() < 0.3:
+                spoken = f"{engineer_name}, your input is needed"
+            else:
+                spoken = "Your input is needed"
+
+        subprocess.run(
+            ["uv", "run", tts_script, spoken],
+            capture_output=True,
+            timeout=10,
         )
-        
+
     except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):
-        # Fail silently if TTS encounters issues
         pass
     except Exception:
-        # Fail silently for any other errors
         pass
 
 
@@ -115,10 +115,8 @@ def main():
         with open(log_file, 'w') as f:
             json.dump(log_data, f, indent=2)
         
-        # Announce notification via TTS only if --notify flag is set
-        # Skip TTS for the generic "Claude is waiting for your input" message
-        if args.notify and input_data.get('message') != 'Claude is waiting for your input':
-            announce_notification()
+        if args.notify:
+            announce_notification(message=input_data.get('message'))
         
         sys.exit(0)
         

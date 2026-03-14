@@ -27,5 +27,57 @@
     "superpowers-developing-for-claude-code@superpowers-marketplace": true,
     "episodic-memory@superpowers-marketplace": true,
     "obsidian@obsidian-skills": true
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/stop.py --notify"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/notification.py --notify"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/subagent_stop.py --notify"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/session_start.py --announce --load-context"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/pre_compact.py --backup"
+          }
+        ]
+      }
+    ]
   }
 }
