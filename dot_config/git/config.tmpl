@@ -4,6 +4,9 @@
 [user]
     name = {{ .git_name }}
     email = {{ .git_email }}
+{{- if .git_signing_key }}
+    signingkey = {{ .git_signing_key }}
+{{- end }}
 
 [commit]
     gpgsign = true
@@ -14,11 +17,6 @@
 [gpg "ssh"]
     allowedSignersFile = {{ .chezmoi.homeDir }}/.ssh/allowed_signers
     program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-
-{{- if .git_signing_key }}
-[user]
-    signingkey = {{ .git_signing_key }}
-{{- end }}
 
 [init]
     defaultBranch = main

@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly Monday 9am UTC
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell scripts
+        run: |
+          shopt -s nullglob
+          for f in .chezmoiscripts/*.sh; do
+            echo "Checking $f..."
+            shellcheck --shell=bash --exclude=SC1091,SC2034 "$f"
+          done
+      - name: Validate YAML
+        run: |
+          python3 -c "import yaml; yaml.safe_load(open('.chezmoidata.yaml'))"
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [personal, work]
+        terminal: [wezterm, iterm2, default]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/bin"
+      - name: Install Python deps
+        run: pip install tomli
+      - name: Run tests
+        env:
+          PROFILE: ${{ matrix.profile }}
+          TERMINAL: ${{ matrix.terminal }}
+        run: |
+          export PATH="$HOME/bin:$PATH"
+          bash tests/ci-test.sh

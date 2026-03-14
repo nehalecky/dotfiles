@@ -26,5 +26,9 @@ test_*.sh
 test-*.py
 test*.py
 
+# CI tests are tracked (override test* patterns)
+!tests/
+!tests/**
+
 # Go workspace (if using local development)
 go/

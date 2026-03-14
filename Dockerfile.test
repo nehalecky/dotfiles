@@ -1,0 +1,19 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    curl git bash python3 shellcheck \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+RUN useradd -m -s /bin/bash testuser
+USER testuser
+WORKDIR /home/testuser
+
+COPY --chown=testuser:testuser . /home/testuser/dotfiles
+
+ENV PROFILE=personal
+ENV TERMINAL=wezterm
+ENV DOTFILES_DIR=/home/testuser/dotfiles
+
+ENTRYPOINT ["bash", "/home/testuser/dotfiles/tests/ci-test.sh"]

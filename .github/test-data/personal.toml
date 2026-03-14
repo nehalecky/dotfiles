@@ -1,0 +1,18 @@
+# Mock chezmoi config for CI testing (personal profile)
+# Source of truth for required keys: .chezmoi.toml.tmpl
+# Derived booleans (isWork, isPersonal, isWezTerm, isITerm2) are
+# recomputed by tests/ci-test.sh setup_config() based on profile/terminal.
+[data]
+    profile = "personal"
+    isWork = false
+    isPersonal = true
+    terminal = "wezterm"
+    isWezTerm = true
+    isITerm2 = false
+    git_name = "CI Test User"
+    preferred_name = "CI"
+    git_email = "ci@test.example.com"
+    github_username = "ci-test"
+    git_signing_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAItest"
+    op_auth_key_name = "CI Auth Key"
+    op_signing_key_name = "CI Signing Key"

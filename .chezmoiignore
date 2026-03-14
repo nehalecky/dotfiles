@@ -1,3 +1,8 @@
+# CI infrastructure (not dotfiles)
+.github/
+tests/
+Dockerfile.test
+
 # Claude runtime data (never manage these)
 dot_claude/data
 dot_claude/projects
