@@ -62,30 +62,108 @@ def get_tts_script_path():
     return None
 
 
-def extract_transcript_context(transcript_path, max_chars=600):
-    """Extract recent assistant text from transcript to give LLM context."""
+def _shorten_path(path):
+    """Shorten an absolute path to ~/last/two/parts for readability."""
+    short = path.replace(os.path.expanduser('~'), '~')
+    parts = short.split('/')
+    return '/'.join(parts[-2:]) if len(parts) > 2 else short
+
+
+def extract_transcript_context(transcript_path, max_entries=60):
+    """Build a rich 3-part context summary from recent transcript activity.
+
+    Returns a string with up to three sections:
+      Request: <last user message>
+      Actions: <deduplicated tool calls with key inputs>
+      Outcome: <last assistant text>
+    """
     try:
-        messages = []
+        entries = []
         with open(transcript_path, 'r') as f:
             for line in f:
                 line = line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                    if entry.get('type') == 'assistant':
-                        for block in entry.get('message', {}).get('content', []):
-                            if isinstance(block, dict) and block.get('type') == 'text':
-                                text = block.get('text', '').strip()
-                                if text:
-                                    messages.append(text)
-                except (json.JSONDecodeError, KeyError):
-                    pass
-        if not messages:
+                if line:
+                    try:
+                        entries.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        pass
+
+        recent = entries[-max_entries:]
+
+        last_user_message = None
+        tool_actions = []       # ordered list of action strings
+        seen_action_keys = {}   # key -> count, for deduplication
+        last_assistant_text = None
+
+        for entry in recent:
+            etype = entry.get('type')
+
+            # Capture the last real user text message (skip tool results)
+            if etype == 'user' and not entry.get('toolUseResult'):
+                content = entry.get('message', {}).get('content', '')
+                if isinstance(content, str) and content.strip():
+                    last_user_message = content.strip()[:200]
+                elif isinstance(content, list):
+                    for block in content:
+                        if isinstance(block, dict) and block.get('type') == 'text':
+                            text = block.get('text', '').strip()
+                            if text:
+                                last_user_message = text[:200]
+
+            # Capture tool calls and assistant text from assistant entries
+            elif etype == 'assistant':
+                for block in entry.get('message', {}).get('content', []):
+                    if not isinstance(block, dict):
+                        continue
+                    btype = block.get('type')
+
+                    if btype == 'text':
+                        text = block.get('text', '').strip()
+                        if text:
+                            last_assistant_text = text[:300]
+
+                    elif btype == 'tool_use':
+                        name = block.get('name', '')
+                        inp = block.get('input', {})
+
+                        if name in ('Edit', 'Write', 'Read', 'MultiEdit'):
+                            short = _shorten_path(inp.get('file_path', ''))
+                            key = f"{name}:{short}"
+                            if key in seen_action_keys:
+                                seen_action_keys[key] += 1
+                            else:
+                                seen_action_keys[key] = 1
+                                tool_actions.append(f"{name} {short}")
+
+                        elif name == 'Bash':
+                            cmd = inp.get('command', '').split('\n')[0].strip()[:60]
+                            key = f"Bash:{cmd[:30]}"
+                            if key not in seen_action_keys:
+                                seen_action_keys[key] = 1
+                                tool_actions.append(f"Bash({cmd})")
+
+                        elif name == 'Agent':
+                            desc = inp.get('description', '')[:60]
+                            tool_actions.append(f"Agent({desc})")
+
+                        elif name in ('Glob', 'Grep', 'WebFetch', 'WebSearch'):
+                            key = name
+                            if key not in seen_action_keys:
+                                seen_action_keys[key] = 1
+                                tool_actions.append(name)
+
+        parts = []
+        if last_user_message:
+            parts.append(f"Request: {last_user_message}")
+        if tool_actions:
+            parts.append(f"Actions: {', '.join(tool_actions[-8:])}")
+        if last_assistant_text:
+            parts.append(f"Outcome: {last_assistant_text}")
+
+        if not parts:
             return None
-        # Use last 2 assistant messages for context
-        recent = ' | '.join(messages[-2:])
-        return recent[:max_chars]
+        return '\n'.join(parts)[:800]
+
     except Exception:
         return None
 
