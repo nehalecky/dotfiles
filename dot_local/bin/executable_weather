@@ -3,14 +3,14 @@
 # Usage: weather [location]
 
 case ${1:-} in
-  ""|local|home|reno|nv)
-    echo "🏠 Reno, Nevada (Home):"
-    curl -s "wttr.in/Reno,NV?format=3"
+  ""|local|home|auto|detect)
+    echo "📍 Current location:"
+    curl -s "wttr.in?format=3"
     echo
     ;;
-  auto|detect)
-    echo "📍 Auto-detected location:"
-    curl -s "wttr.in?format=3"
+  reno|nv)
+    echo "🏠 Reno, Nevada:"
+    curl -s "wttr.in/Reno,NV?format=3"
     echo
     ;;
   futaleufu|chile|patagonia)
