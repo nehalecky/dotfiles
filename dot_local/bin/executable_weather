@@ -4,8 +4,10 @@
 
 case ${1:-} in
   ""|local|home|auto|detect)
-    echo "📍 Current location:"
-    curl -s "wttr.in?format=3"
+    CITY=$(curl -s ipinfo.io/city 2>/dev/null)
+    REGION=$(curl -s ipinfo.io/region 2>/dev/null)
+    echo "📍 ${CITY}, ${REGION}:"
+    curl -s "wttr.in/${CITY},${REGION}?format=3"
     echo
     ;;
   reno|nv)
