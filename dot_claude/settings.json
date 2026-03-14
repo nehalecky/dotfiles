@@ -64,7 +64,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/session_start.py"
+            "command": "uv run /Users/nico/.claude/hooks/session_start.py --announce --load-context"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/pre_compact.py --backup"
           }
         ]
       }
