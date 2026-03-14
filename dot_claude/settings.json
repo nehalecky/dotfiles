@@ -56,6 +56,26 @@
           }
         ]
       }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/subagent_stop.py --notify"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run /Users/nico/.claude/hooks/session_start.py"
+          }
+        ]
+      }
     ]
   }
 }
