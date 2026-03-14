@@ -27,6 +27,14 @@ Examples:
 - `chezmoi git -- commit -m "msg"` (not `git commit`)
 - Edit in HOME → `chezmoi add` (not `git add`)
 
+### PR WORKFLOW (MANDATORY):
+**Never push directly to master.** All changes go through PRs:
+1. `chezmoi git -- checkout -b fix/description` or `feat/description`
+2. Commit and push the branch
+3. Open a PR with `gh pr create` — CI validates across 2 profiles × 3 terminals
+4. Ask user for review before merging
+5. Close related GitHub issues with commit references when fixes land
+
 
 ## Core Development Context
 
