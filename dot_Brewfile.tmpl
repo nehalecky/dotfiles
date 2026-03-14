@@ -18,8 +18,6 @@ brew "glow"
 brew "jq"
 brew "just"
 brew "lazygit"
-brew "llm"
-brew "marksman"
 brew "node"
 brew "ripgrep"
 brew "starship"
@@ -32,38 +30,23 @@ brew "yazi"
 brew "zellij"
 brew "zsh"
 
-# ── Editors ─────────────────────────────────────────────────
-brew "helix"
-
 # ── System Utilities ────────────────────────────────────────
 brew "btop"
 brew "dust"
 brew "procs"
 
-# ── AI & ML Tools ──────────────────────────────────────────
-brew "fabric-ai"
-
 # ── Containers & Infra ──────────────────────────────────────
 brew "lazydocker"
-
-# ── Productivity ────────────────────────────────────────────
-brew "task"
-brew "taskwarrior-tui"
-
-# ── API & Networking ────────────────────────────────────────
-brew "atac"
-brew "bandwhich"
 
 # ── Cask - All Profiles ────────────────────────────────────
 cask "1password"
 cask "1password-cli"
 cask "claude"
 cask "claude-code"
+cask "cursor"
 cask "font-awesome-terminal-fonts"
 cask "font-meslo-lg-nerd-font"
-cask "obsidian"
 cask "raycast"
-cask "visual-studio-code"
 
 {{ if eq .terminal "wezterm" -}}
 # ── Terminal: WezTerm ───────────────────────────────────────
@@ -83,45 +66,54 @@ cask "alacritty"
 {{ end -}}
 
 {{ if .isWork -}}
-# ── Platform Engineering (work only) ────────────────────────
+# ── Work: Platform Engineering ──────────────────────────────
 brew "cosign"
+brew "helm"
 brew "k9s"
 brew "kubectl"
-brew "helm"
 brew "kustomize"
-cask "google-cloud-sdk"
-{{ end -}}
-
-{{ if .isWork -}}
-# ── Work Applications ───────────────────────────────────────
 cask "docker"
+cask "google-cloud-sdk"
+
+# ── Work: Applications ─────────────────────────────────────
 cask "slack"
 cask "zoom"
 {{ end -}}
 
 {{ if .isPersonal -}}
-# ── Personal Applications ───────────────────────────────────
+# ── Personal: Development Tools ─────────────────────────────
+brew "emacs", restart_service: :changed
+brew "fabric-ai"
+brew "helix"
+brew "llm"
+brew "marksman"
+
+# ── Personal: Productivity & Task Management ────────────────
+brew "task"
+brew "taskwarrior-tui"
+
+# ── Personal: API & Networking ──────────────────────────────
+brew "atac"
+brew "bandwhich"
+
+# ── Personal: Applications ──────────────────────────────────
+cask "arc"
+cask "firefox"
+cask "github"
+cask "obsidian"
 cask "pokemon-tcg-live"
+cask "protonvpn"
 cask "signal"
 cask "sonic-pi"
 cask "spotify"
 cask "steam"
 cask "telegram"
-cask "whatsapp"
-{{ end -}}
-
-# ── Optional (both profiles) ───────────────────────────────
-brew "emacs", restart_service: :changed
-brew "speedtest-cli"
-cask "arc"
-cask "cursor"
-cask "firefox"
-cask "github"
-cask "protonvpn"
+cask "visual-studio-code"
 cask "vlc"
+cask "whatsapp"
 cask "zotero"
 
-# ── VS Code Extensions ─────────────────────────────────────
+# ── Personal: VS Code Extensions ────────────────────────────
 vscode "davidanson.vscode-markdownlint"
 vscode "github.copilot"
 vscode "github.copilot-chat"
@@ -135,3 +127,4 @@ vscode "ms-toolsai.vscode-jupyter-cell-tags"
 vscode "ms-toolsai.vscode-jupyter-slideshow"
 vscode "shd101wyy.markdown-preview-enhanced"
 vscode "yzhang.markdown-all-in-one"
+{{ end -}}
