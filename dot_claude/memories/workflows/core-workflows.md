@@ -30,11 +30,11 @@ Workflow memories provide high-level patterns. For detailed execution, delegate 
 
 | Claude Memory | Superpowers Skill | When to Use |
 |---------------|-------------------|-------------|
-| test-driven.md | `testing/test-driven-development/SKILL.md` | Strict RED-GREEN-REFACTOR TDD |
-| discovery-first.md | `collaboration/brainstorming/SKILL.md` | Refining ideas into designs |
-| - | `collaboration/writing-plans/SKILL.md` | Bite-sized task planning |
-| - | `collaboration/executing-plans/SKILL.md` | Batch execution with review |
-| - | `collaboration/subagent-driven-development/SKILL.md` | Task-by-task with code review |
+| test-driven.md | `test-driven-development` skill | Strict RED-GREEN-REFACTOR TDD |
+| discovery-first.md | `brainstorming` skill | Refining ideas into designs |
+| - | `writing-plans` skill | Bite-sized task planning |
+| - | `executing-plans` skill | Batch execution with review |
+| - | `subagent-driven-development` skill | Task-by-task with code review |
 
 **Unique to Claude:** verification-driven.md, visual-feedback.md (no Superpowers equivalents)
 

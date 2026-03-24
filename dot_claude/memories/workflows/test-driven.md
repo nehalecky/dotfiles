@@ -6,7 +6,7 @@ For adding new functionality with clear requirements where the interface and exp
 ## 🔗 Superpowers Skill Integration
 
 **For strict RED-GREEN-REFACTOR TDD execution:**
-`${SUPERPOWERS_SKILLS_ROOT}/skills/testing/test-driven-development/SKILL.md`
+`test-driven-development` skill (Superpowers plugin)
 
 The Superpowers TDD skill provides rigid discipline, TodoWrite enforcement, and bulletproof process. Use it for detailed step-by-step TDD execution.
 
