@@ -293,6 +293,20 @@ def run_syntax_tests() -> None:
     except Exception as e:
         fail_test(label, str(e))
 
+    # Starship: validate that starship can actually parse the format string.
+    # TOML validity (above) is not enough — starship has its own format parser
+    # that rejects bad escapes (e.g. \\ line-endings) with "expected escaped_char".
+    label = "Config: starship parses starship.toml format string without errors"
+    if not shutil.which("starship"):
+        pass_test(f"{label} (skipped — starship not installed)")
+    else:
+        env = {**os.environ, "STARSHIP_CONFIG": "/tmp/ci-starship.toml"}
+        result = run("starship", "explain", env=env)
+        if result.returncode == 0:
+            pass_test(label)
+        else:
+            fail_test(label, result.stderr or result.stdout)
+
     # 1Password agent TOML
     label = "Config: 1Password/ssh/agent.toml is valid TOML"
     try:
