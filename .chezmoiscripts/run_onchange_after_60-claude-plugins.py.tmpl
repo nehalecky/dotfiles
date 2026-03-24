@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+# Install Claude Code plugins and register marketplaces.
+# Re-runs automatically when either config file changes.
+#
+# Marketplaces hash: {{ include "dot_claude/plugin-marketplaces.json" | sha256sum }}
+# Settings hash:     {{ include "dot_claude/settings.json" | sha256sum }}
+
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+SETTINGS = Path.home() / ".claude" / "settings.json"
+PLUGIN_MARKETPLACES = Path.home() / ".claude" / "plugin-marketplaces.json"
+
+# Official marketplace plugins are pre-installed by the Claude CLI — skip them
+OFFICIAL_MARKETPLACE = "claude-plugins-official"
+
+
+def run(cmd):
+    return subprocess.run(cmd, capture_output=True, text=True)
+
+
+def main():
+    # Pre-flight checks
+    if not shutil.which("claude"):
+        print("⏭️  claude CLI not found — skipping plugin setup")
+        return
+
+    try:
+        marketplaces = json.loads(PLUGIN_MARKETPLACES.read_text())
+        settings = json.loads(SETTINGS.read_text())
+    except FileNotFoundError as e:
+        print(f"⏭️  Config file missing ({e.filename}) — skipping plugin setup")
+        return
+    except json.JSONDecodeError as e:
+        print(f"❌ Failed to parse config: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    enabled_plugins = settings.get("enabledPlugins", {})
+
+    # Register marketplaces
+    print("🔍 Checking marketplace registrations...")
+    registered = run(["claude", "plugin", "marketplace", "list"]).stdout
+
+    for name, info in marketplaces.items():
+        if name in registered:
+            print(f"✅ Marketplace '{name}' already registered")
+        else:
+            print(f"📦 Registering marketplace '{name}' ({info['repo']})...")
+            result = run(["claude", "plugin", "marketplace", "add", info["repo"]])
+            if result.returncode != 0:
+                print(f"⚠️  Failed to register '{name}': {result.stderr.strip()}", file=sys.stderr)
+
+    # Install plugins
+    print("🔍 Checking plugin installations...")
+    installed = run(["claude", "plugin", "list"]).stdout
+
+    for plugin_key, enabled in enabled_plugins.items():
+        if not enabled or "@" not in plugin_key:
+            continue
+
+        _, marketplace = plugin_key.rsplit("@", 1)
+
+        if marketplace == OFFICIAL_MARKETPLACE:
+            continue
+
+        if marketplace not in marketplaces:
+            print(f"⚠️  '{plugin_key}' references unknown marketplace '{marketplace}' — add it to plugin-marketplaces.json", file=sys.stderr)
+            continue
+
+        if plugin_key in installed:
+            print(f"✅ Plugin '{plugin_key}' already installed")
+            continue
+
+        print(f"📦 Installing plugin '{plugin_key}'...")
+        result = run(["claude", "plugin", "install", plugin_key, "--scope", "user"])
+        if result.returncode != 0:
+            print(f"⚠️  Failed to install '{plugin_key}': {result.stderr.strip()}", file=sys.stderr)
+
+    print("✨ Plugin setup complete.")
+
+
+if __name__ == "__main__":
+    main()

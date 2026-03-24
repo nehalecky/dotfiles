@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/stop.py --notify"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/stop.py --notify"
           }
         ]
       }
@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/notification.py --notify"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/notification.py --notify"
           }
         ]
       }
@@ -54,7 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/subagent_stop.py --notify"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/subagent_stop.py --notify"
           }
         ]
       }
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/session_start.py --announce --load-context"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/session_start.py --announce --load-context"
           }
         ]
       }
@@ -74,7 +74,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/pre_compact.py --backup"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/pre_compact.py --backup"
           }
         ]
       }
