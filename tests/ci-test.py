@@ -540,9 +540,8 @@ def run_hook_unit_tests() -> None:
         fail_test(label, f"test file not found: {test_file}")
         return
 
-    # Use uv to ensure pytest is available across environments (local + CI)
     result = run(
-        "uv", "run", "--with", "pytest", "python3", "-m", "pytest", str(test_file), "-v",
+        "python3", "-m", "pytest", str(test_file), "-v",
         cwd=str(DOTFILES_DIR),
     )
     if result.returncode == 0:
