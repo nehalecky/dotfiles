@@ -1,98 +1,121 @@
-#!/bin/bash
-# Claude Code Session Browser
-# Makes it easier to identify and resume Claude Code sessions
+#!/usr/bin/env python3
+"""Browse and resume Claude Code sessions.
 
-set -euo pipefail
+Lists sessions sorted by most-recently-modified, with agent name,
+modification date, todo progress, and a preview of the first prompt.
+"""
+import json
+import sys
+from datetime import datetime
+from pathlib import Path
 
-CLAUDE_DIR="$HOME/.claude"
-SESSIONS_DIR="$CLAUDE_DIR/data/sessions"
-TODOS_DIR="$CLAUDE_DIR/todos"
+CLAUDE_DIR = Path.home() / ".claude"
+SESSIONS_DIR = CLAUDE_DIR / "data" / "sessions"
+TODOS_DIR = CLAUDE_DIR / "todos"
 
-# Check if Claude directory exists
-if [[ ! -d "$CLAUDE_DIR" ]]; then
-    echo "❌ Claude directory not found at $CLAUDE_DIR"
-    exit 1
-fi
+# Column widths matching the original layout
+COL = {"id": 8, "agent": 12, "date": 16, "progress": 15, "prompt": 63}
 
-echo "🔍 Claude Code Session Browser"
-echo "================================"
 
-if [[ ! -d "$SESSIONS_DIR" ]] || [[ -z "$(ls -A "$SESSIONS_DIR" 2>/dev/null)" ]]; then
-    echo "📭 No sessions found in $SESSIONS_DIR"
-    exit 0
-fi
+def get_todo_info(session_id: str) -> str:
+    if not TODOS_DIR.exists():
+        return "No todos"
+    todo_files = list(TODOS_DIR.glob(f"*{session_id}*"))
+    if not todo_files:
+        return "No todos"
 
-# Function to get todo count for a session
-get_todo_info() {
-    local session_id="$1"
-    local todo_files=($(find "$TODOS_DIR" -name "*${session_id}*" 2>/dev/null || true))
-    
-    if [[ ${#todo_files[@]} -eq 0 ]]; then
-        echo "No todos"
-        return
-    fi
-    
-    local total_todos=0
-    local completed_todos=0
-    
-    for file in "${todo_files[@]}"; do
-        if [[ -f "$file" ]] && [[ $(stat -f%z "$file") -gt 10 ]]; then
-            local todos_in_file=$(jq -r '.[] | select(.status) | .status' "$file" 2>/dev/null | wc -l | tr -d ' ')
-            local completed_in_file=$(jq -r '.[] | select(.status == "completed") | .status' "$file" 2>/dev/null | wc -l | tr -d ' ')
-            total_todos=$((total_todos + todos_in_file))
-            completed_todos=$((completed_todos + completed_in_file))
-        fi
-    done
-    
-    if [[ $total_todos -gt 0 ]]; then
-        echo "${completed_todos}/${total_todos} todos"
-    else
-        echo "Empty todos"
-    fi
-}
+    total = completed = 0
+    for f in todo_files:
+        if not f.is_file() or f.stat().st_size <= 10:
+            continue
+        try:
+            for item in json.loads(f.read_text()):
+                if "status" in item:
+                    total += 1
+                    if item["status"] == "completed":
+                        completed += 1
+        except (json.JSONDecodeError, TypeError):
+            continue
 
-# Function to extract meaningful info from session
-get_session_summary() {
-    local session_file="$1"
-    local session_id=$(basename "$session_file" .json)
-    
-    if [[ ! -f "$session_file" ]]; then
-        return
-    fi
-    
-    local agent_name=$(jq -r '.agent_name // "Unknown"' "$session_file" 2>/dev/null)
-    local prompt_count=$(jq -r '.prompts | length' "$session_file" 2>/dev/null)
-    local first_prompt=$(jq -r '.prompts[0] // "No prompts"' "$session_file" 2>/dev/null | head -c 60)
-    local todo_info=$(get_todo_info "$session_id")
-    local modified_date=$(stat -f "%Sm" -t "%Y-%m-%d %H:%M" "$session_file" 2>/dev/null)
-    
-    # Truncate first prompt if too long
-    if [[ ${#first_prompt} -eq 60 ]] && [[ $(jq -r '.prompts[0] // ""' "$session_file" 2>/dev/null | wc -c) -gt 60 ]]; then
-        first_prompt="${first_prompt}..."
-    fi
-    
-    printf "%-8s │ %-12s │ %-16s │ %-15s │ %-63s │ %s\n" \
-        "${session_id:0:8}" \
-        "$agent_name" \
-        "$modified_date" \
-        "$todo_info" \
-        "$first_prompt" \
-        "$session_id"
-}
+    return f"{completed}/{total} todos" if total else "Empty todos"
 
-# Header
-printf "%-8s │ %-12s │ %-16s │ %-15s │ %-63s │ %s\n" \
-    "SHORT-ID" "AGENT" "MODIFIED" "PROGRESS" "FIRST PROMPT" "FULL SESSION ID"
-echo "─────────┼──────────────┼──────────────────┼─────────────────┼─────────────────────────────────────────────────────────────────┼────────────────────────────────────────"
 
-# Sort sessions by modification time (newest first)
-for session_file in $(ls -t "$SESSIONS_DIR"/*.json 2>/dev/null); do
-    get_session_summary "$session_file"
-done
+def get_session_summary(session_file: Path) -> str | None:
+    session_id = session_file.stem
+    try:
+        data = json.loads(session_file.read_text())
+    except (json.JSONDecodeError, OSError):
+        return None
 
-echo ""
-echo "💡 Usage:"
-echo "   claude --continue                              # Resume most recent session"
-echo "   claude --resume                                # Interactive session selector"  
-echo "   claude --resume <session-id>                   # Resume specific session"
-echo "   claude --resume \$(claude-sessions | tail -n +4 | head -1 | awk '{print \$NF}') # Resume newest"
+    agent_name = data.get("agent_name", "Unknown")
+    prompts = data.get("prompts", [])
+    raw_first = str(prompts[0]) if prompts else "No prompts"
+    first_prompt = (raw_first[:60] + "...") if len(raw_first) > 60 else raw_first
+
+    modified = datetime.fromtimestamp(session_file.stat().st_mtime).strftime(
+        "%Y-%m-%d %H:%M"
+    )
+    todo_info = get_todo_info(session_id)
+
+    c = COL
+    return (
+        f"{session_id[:c['id']]:<{c['id']}} │ "
+        f"{agent_name:<{c['agent']}} │ "
+        f"{modified:<{c['date']}} │ "
+        f"{todo_info:<{c['progress']}} │ "
+        f"{first_prompt:<{c['prompt']}} │ "
+        f"{session_id}"
+    )
+
+
+def main() -> None:
+    print("🔍 Claude Code Session Browser")
+    print("================================")
+
+    if not CLAUDE_DIR.exists():
+        print(f"❌ Claude directory not found at {CLAUDE_DIR}")
+        sys.exit(1)
+
+    if not SESSIONS_DIR.exists() or not any(SESSIONS_DIR.glob("*.json")):
+        print(f"📭 No sessions found in {SESSIONS_DIR}")
+        sys.exit(0)
+
+    c = COL
+    print(
+        f"{'SHORT-ID':<{c['id']}} │ {'AGENT':<{c['agent']}} │ "
+        f"{'MODIFIED':<{c['date']}} │ {'PROGRESS':<{c['progress']}} │ "
+        f"{'FIRST PROMPT':<{c['prompt']}} │ FULL SESSION ID"
+    )
+    # Separator mirrors original bash layout exactly
+    print(
+        "─" * (c["id"] + 1) + "┼" +
+        "─" * (c["agent"] + 2) + "┼" +
+        "─" * (c["date"] + 2) + "┼" +
+        "─" * (c["progress"] + 2) + "┼" +
+        "─" * (c["prompt"] + 2) + "┼" +
+        "─" * 40
+    )
+
+    sessions = sorted(
+        SESSIONS_DIR.glob("*.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for session_file in sessions:
+        summary = get_session_summary(session_file)
+        if summary:
+            print(summary)
+
+    print()
+    print("💡 Usage:")
+    print("   claude --continue                              # Resume most recent session")
+    print("   claude --resume                                # Interactive session selector")
+    print("   claude --resume <session-id>                   # Resume specific session")
+    print(
+        r"   claude --resume $(claude-sessions | tail -n +4 | head -1 | awk '{print $NF}')"
+        "  # Resume newest"
+    )
+
+
+if __name__ == "__main__":
+    main()
