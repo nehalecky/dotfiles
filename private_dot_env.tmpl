@@ -5,8 +5,8 @@
 # Example: Add your API tokens here
 # Uncomment and update with your 1Password references:
 
-# GitHub Personal Access Token
-# export GITHUB_TOKEN='{{"{{"}} onepasswordRead "op://Private/github-pat/token" {{"}}"}}'
+# GitHub token — sourced dynamically from gh CLI auth (always fresh, no PAT needed)
+export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
 
 # CloudFlare API
 # export CF_API_TOKEN='{{"{{"}} onepasswordRead "op://Private/cloudflare/api_token" {{"}}"}}'
