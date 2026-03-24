@@ -25,8 +25,6 @@ from utils.common import append_to_log, build_service, copy_transcript_to_chat
 
 def main():
     try:
-        # Recursion guard: bail if we're inside a hook-generating subprocess.
-        # Prevents infinite loop when claude -p fires its own Stop hook.
         if os.getenv("_CLAUDE_HOOK_GENERATING"):
             sys.exit(0)
 
@@ -40,14 +38,14 @@ def main():
         input_data = json.load(sys.stdin)
 
         # Log the event
-        log_dir = os.path.join(os.getcwd(), "logs")
-        append_to_log(os.path.join(log_dir, "stop.json"), input_data)
+        log_dir = os.path.join(os.path.expanduser("~"), ".claude", "logs")
+        append_to_log(os.path.join(log_dir, "subagent_stop.json"), input_data)
 
         # Handle --chat switch
         if args.chat and 'transcript_path' in input_data:
             copy_transcript_to_chat(input_data['transcript_path'], log_dir)
 
-        # Announce completion via TTS (only if --notify flag is set)
+        # Announce subagent completion via TTS (only if --notify flag is set)
         if args.notify:
             build_service().speak_completion(transcript_path=input_data.get('transcript_path'))
 

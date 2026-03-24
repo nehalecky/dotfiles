@@ -38,7 +38,7 @@ def main():
         input_data = json.loads(sys.stdin.read())
 
         # Log the event
-        log_dir = os.path.join(os.getcwd(), 'logs')
+        log_dir = os.path.join(os.path.expanduser("~"), ".claude", "logs")
         append_to_log(os.path.join(log_dir, 'notification.json'), input_data)
 
         if args.notify:

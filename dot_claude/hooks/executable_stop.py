@@ -40,7 +40,7 @@ def main():
         input_data = json.load(sys.stdin)
 
         # Log the event
-        log_dir = os.path.join(os.getcwd(), "logs")
+        log_dir = os.path.join(os.path.expanduser("~"), ".claude", "logs")
         append_to_log(os.path.join(log_dir, "stop.json"), input_data)
 
         # Handle --chat switch
