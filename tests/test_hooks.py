@@ -118,6 +118,7 @@ class TestBackend:
         assert result == ""        # success: is not None
         assert result is not None  # caller uses `is not None` to detect success
 
+
     def test_run_returns_none_on_nonzero_returncode(self, tmp_script):
         b = Backend(name="test", script=tmp_script)
         mock_result = MagicMock(returncode=1, stdout="error output")
@@ -333,6 +334,7 @@ class TestNotificationService:
         tts1.run.assert_called_once_with("hello")
         tts2.run.assert_called_once_with("hello")
 
+
     def test_speak_completion_skips_unavailable_llm(self, tmp_path):
         tts = _make_backend(tmp_path, name="tts1")
         llm1 = _make_backend(tmp_path, name="llm_bad")
@@ -443,7 +445,7 @@ class TestBuildService:
     def test_tts_backends_in_correct_order(self, tmp_path):
         svc = build_service(hooks_dir=tmp_path)
         names = [b.name for b in svc.tts_backends]
-        assert names == ["elevenlabs", "openai", "pyttsx3"]
+        assert names == ["elevenlabs", "openai", "kokoro", "pyttsx3"]
 
     def test_llm_backends_in_correct_order(self, tmp_path):
         svc = build_service(hooks_dir=tmp_path)

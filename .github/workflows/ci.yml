@@ -39,7 +39,7 @@ jobs:
       - name: Install starship
         run: curl -sS https://starship.rs/install.sh | sh -s -- --yes
       - name: Install Python deps
-        run: pip install tomli
+        run: pip install tomli pytest
       - name: Run tests
         env:
           PROFILE: ${{ matrix.profile }}
