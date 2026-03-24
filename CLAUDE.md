@@ -167,11 +167,11 @@ Local runtime data (NOT managed):
 - **Integration:** Graceful degradation - Claude works standalone, enhances with Superpowers
 
 ### Key Skills Integrated
-- `testing/test-driven-development/SKILL.md` - Strict RED-GREEN-REFACTOR TDD
-- `collaboration/brainstorming/SKILL.md` - Interactive idea refinement
-- `collaboration/writing-plans/SKILL.md` - Bite-sized task planning
-- `collaboration/executing-plans/SKILL.md` - Batch execution with checkpoints
-- `collaboration/subagent-driven-development/SKILL.md` - Task-by-task with code review
+- `test-driven-development` skill - Strict RED-GREEN-REFACTOR TDD
+- `brainstorming` skill - Interactive idea refinement
+- `writing-plans` skill - Bite-sized task planning
+- `executing-plans` skill - Batch execution with checkpoints
+- `subagent-driven-development` skill - Task-by-task with code review
 
 ### Workflow Memory Updates
 All workflow memories updated with Superpowers skill references:

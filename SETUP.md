@@ -143,6 +143,21 @@ After setup, verify everything works:
 - [ ] Development workspace launches (`workspace-dev test`)
 - [ ] All panes populate correctly
 
+### Claude Code Plugins
+- [ ] Claude CLI available (`claude --version`)
+- [ ] Superpowers marketplace registered (`claude plugin marketplace list` shows `superpowers-marketplace`)
+- [ ] Core plugins installed (`claude plugin list` includes `superpowers`, `elements-of-style`, `episodic-memory`)
+- [ ] No dead marketplace entries in `~/.claude/settings.json`
+
+> **Note:** `chezmoi init --apply` automates marketplace registration and plugin installation when the Claude CLI is present. If you need to set up plugins manually:
+> ```bash
+> claude plugin marketplace add obra/superpowers-marketplace
+> claude plugin install superpowers@superpowers-marketplace --scope user
+> claude plugin install elements-of-style@superpowers-marketplace --scope user
+> claude plugin install episodic-memory@superpowers-marketplace --scope user
+> claude plugin install superpowers-developing-for-claude-code@superpowers-marketplace --scope user
+> ```
+
 ### Chezmoi
 - [ ] Status command works (`chezmoi status`)
 - [ ] Diff shows no unexpected changes (`chezmoi diff`)

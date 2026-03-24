@@ -23,10 +23,10 @@
     "atlassian@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "huggingface-skills@claude-plugins-official": true,
+    "superpowers@superpowers-marketplace": true,
     "elements-of-style@superpowers-marketplace": true,
     "superpowers-developing-for-claude-code@superpowers-marketplace": true,
-    "episodic-memory@superpowers-marketplace": true,
-    "obsidian@obsidian-skills": true
+    "episodic-memory@superpowers-marketplace": true
   },
   "hooks": {
     "Stop": [
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/stop.py --notify"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/stop.py --notify"
           }
         ]
       }
@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/notification.py --notify"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/notification.py --notify"
           }
         ]
       }
@@ -54,7 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/subagent_stop.py --notify"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/subagent_stop.py --notify"
           }
         ]
       }
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/session_start.py --announce --load-context"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/session_start.py --announce --load-context"
           }
         ]
       }
@@ -74,7 +74,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run /Users/nico/.claude/hooks/pre_compact.py --backup"
+            "command": "uv run {{ .chezmoi.homeDir }}/.claude/hooks/pre_compact.py --backup"
           }
         ]
       }

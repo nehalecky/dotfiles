@@ -6,8 +6,8 @@ For complex features or unfamiliar codebases where requirements aren't fully cle
 ## 🔗 Superpowers Skills Integration
 
 For structured refinement after exploration:
-- **Brainstorming:** `${SUPERPOWERS_SKILLS_ROOT}/skills/collaboration/brainstorming/SKILL.md`
-- **Writing Plans:** `${SUPERPOWERS_SKILLS_ROOT}/skills/collaboration/writing-plans/SKILL.md`
+- **Brainstorming:** `brainstorming` skill (Superpowers plugin)
+- **Writing Plans:** `writing-plans` skill (Superpowers plugin)
 
 ## When to Use
 - Complex features with unclear requirements
