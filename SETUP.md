@@ -158,6 +158,26 @@ After setup, verify everything works:
 > claude plugin install superpowers-developing-for-claude-code@superpowers-marketplace --scope user
 > ```
 
+### Voice Notifications
+
+Hooks speak task completion and input prompts via text-to-speech. The local Kokoro neural TTS backend (~90 MB model) downloads from Hugging Face on first use. Pre-warm it before your first Claude Code session to avoid a silent first notification:
+
+```bash
+uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "Kokoro ready"
+```
+
+For higher-quality cloud voices, add to `~/.env`:
+
+```bash
+ELEVENLABS_API_KEY=your-key   # ElevenLabs (recommended)
+OPENAI_API_KEY=your-key       # OpenAI TTS (alternative)
+```
+
+Full reference: [`.docs/claude-hooks.md`](dot_docs/claude-hooks.md).
+
+- [ ] Kokoro TTS pre-warmed (`uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "hello"`)
+- [ ] (Optional) Cloud TTS key set in `~/.env` for higher-quality voice
+
 ### Chezmoi
 - [ ] Status command works (`chezmoi status`)
 - [ ] Diff shows no unexpected changes (`chezmoi diff`)
