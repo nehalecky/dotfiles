@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
 # Install all packages from Brewfile after Homebrew is available.
 # Re-runs automatically when the Brewfile changes.
 #
@@ -7,11 +11,12 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
 
 ESSENTIAL_TOOLS = ["rg", "fd", "eza", "bat", "delta", "yazi", "lazygit", "gh", "glow"]
 
 
-def find_brew() -> str | None:
+def find_brew() -> Optional[str]:
     if shutil.which("brew"):
         return "brew"
     for path in ("/opt/homebrew/bin/brew", "/usr/local/bin/brew"):

@@ -14,12 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Lint shell scripts
+      - name: Lint Python scripts
         run: |
-          shopt -s nullglob
-          for f in .chezmoiscripts/*.sh; do
-            echo "Checking $f..."
-            shellcheck --shell=bash --exclude=SC1091,SC2034 "$f"
+          for f in .chezmoiscripts/*.py; do
+            python3 -m py_compile "$f" && echo "OK: $f"
           done
       - name: Validate YAML
         run: |
