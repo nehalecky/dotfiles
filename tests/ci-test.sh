@@ -90,6 +90,17 @@ setup_config() {
   config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/chezmoi"
   mkdir -p "$config_dir"
 
+  # Outside Docker/CI, back up the real config and restore it on exit
+  # so running tests locally never permanently clobbers chezmoi identity.
+  if [[ ! -f "/.dockerenv" ]] && [[ -z "${CI:-}" ]]; then
+    if [[ -f "$config_dir/chezmoi.toml" ]]; then
+      local _backup
+      _backup=$(mktemp)
+      cp "$config_dir/chezmoi.toml" "$_backup"
+      trap "mv '$_backup' '$config_dir/chezmoi.toml'" EXIT
+    fi
+  fi
+
   local src_config="$DOTFILES_DIR/.github/test-data/${PROFILE}.toml"
   if [[ ! -f "$src_config" ]]; then
     echo "ERROR: test-data config not found: $src_config" >&2
