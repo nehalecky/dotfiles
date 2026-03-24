@@ -124,9 +124,8 @@ def chezmoi_config(
                         f"WARNING: failed to restore {config_file}: {e}",
                         file=sys.stderr,
                     )
-                finally:
-                    if backup_path and backup_path.exists():
-                        backup_path.unlink(missing_ok=True)
+                    # Do NOT delete backup_path on failure — it's the last
+                    # copy of the real config. Leave it for manual recovery.
             else:
                 # No prior config existed — remove the mock so we don't leave
                 # a phantom config behind (fixes M3)
@@ -371,6 +370,33 @@ def run_lint_tests() -> None:
         else:
             fail_test(label, result.stderr)
 
+    # Lint plain .py scripts in .chezmoiscripts/
+    for script in sorted(scripts_dir.glob("*.py")):
+        script_name = script.name
+        label = f"Lint: .chezmoiscripts/{script_name} passes python3 -m py_compile"
+        result = run("python3", "-m", "py_compile", str(script))
+        if result.returncode == 0:
+            pass_test(label)
+        else:
+            fail_test(label, result.stderr)
+
+    # Lint rendered .py.tmpl scripts
+    for tmpl_script in sorted(scripts_dir.glob("*.py.tmpl")):
+        script_name = tmpl_script.name
+        rendered_name = script_name.removesuffix(".tmpl")
+        rendered_file = Path(f"/tmp/ci-script-{rendered_name}")
+        label = f"Lint: .chezmoiscripts/{script_name} (rendered) passes python3 -m py_compile"
+        if rendered_file.exists():
+            result = run("python3", "-m", "py_compile", str(rendered_file))
+            if result.returncode == 0:
+                pass_test(label)
+            else:
+                fail_test(label, result.stderr)
+        else:
+            fail_test(
+                label, "rendered file missing — template rendering must have failed"
+            )
+
     # Lint the test script itself
     label = "Lint: tests/ci-test.py passes python3 -m py_compile"
     result = run("python3", "-m", "py_compile", str(Path(__file__).resolve()))
@@ -470,7 +496,8 @@ def run_hook_tests() -> None:
         for matcher in hooks_list:
             for hook in matcher.get("hooks", []):
                 cmd = hook.get("command", "")
-                m = re.search(r"/Users/\S+/\.claude/hooks/(\S+\.py)", cmd)
+                # Use a portable pattern — home dir varies by OS/user
+                m = re.search(r"\.claude/hooks/(\S+\.py)", cmd)
                 if m:
                     rel = "dot_claude/hooks/" + m.group(1)
                     if not (DOTFILES_DIR / rel).exists():
