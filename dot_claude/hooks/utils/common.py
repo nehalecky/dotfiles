@@ -51,7 +51,14 @@ class Backend:
         return True
 
     def run(self, *args: str) -> Optional[str]:
-        """Execute the backend script and return stripped stdout, or None on failure."""
+        """Execute the backend script and return stdout on success, or None on failure.
+
+        Returns the stripped stdout string on exit code 0, which may be empty
+        for TTS backends (they produce audio, not text output). Returns None on
+        non-zero exit, timeout, or missing executable. Callers distinguish
+        success from failure with ``is not None``; LLM callers additionally
+        check truthiness to detect empty responses.
+        """
         try:
             result = subprocess.run(
                 ["uv", "run", str(self.script), *args],
@@ -59,8 +66,8 @@ class Backend:
                 text=True,
                 timeout=self.timeout,
             )
-            if result.returncode == 0 and result.stdout.strip():
-                return result.stdout.strip()
+            if result.returncode == 0:
+                return result.stdout.strip()  # "" for TTS backends, text for LLM backends
         except (subprocess.TimeoutExpired, FileNotFoundError, subprocess.SubprocessError):
             pass
         return None
@@ -227,13 +234,6 @@ class NotificationService:
         self.llm_backends = llm_backends
         self.fallback_messages = fallback_messages
 
-    def _first_available_tts(self) -> Optional[Backend]:
-        """Return the first available TTS backend, or None."""
-        for b in self.tts_backends:
-            if b.is_available():
-                return b
-        return None
-
     def _generate_message(self, transcript_path: Optional[str] = None) -> str:
         """Generate a completion message via LLM, with transcript context."""
         available_llms = [b for b in self.llm_backends if b.is_available()]
@@ -250,20 +250,26 @@ class NotificationService:
         return random.choice(self.fallback_messages)
 
     def speak_completion(self, transcript_path: Optional[str] = None) -> None:
-        """Generate an LLM completion message and speak it via TTS."""
-        tts = self._first_available_tts()
-        if not tts:
-            return
+        """Generate an LLM completion message and speak it via TTS.
 
-        message = self._generate_message(transcript_path)
-        tts.run(message)
+        Tries TTS backends in priority order, falling through to the next on
+        failure. Message is generated lazily — only when the first available
+        TTS backend is reached.
+        """
+        message: Optional[str] = None
+        for tts in self.tts_backends:
+            if not tts.is_available():
+                continue
+            if message is None:
+                message = self._generate_message(transcript_path)
+            if tts.run(message) is not None:
+                return  # spoken successfully
 
     def speak_notification(self, message: Optional[str] = None) -> None:
-        """Speak a notification message verbatim, or a generic fallback."""
-        tts = self._first_available_tts()
-        if not tts:
-            return
+        """Speak a notification message verbatim, or a generic fallback.
 
+        Tries TTS backends in priority order, falling through on failure.
+        """
         if message and message.strip() and message.strip() != _GENERIC_NOTIFICATION:
             spoken = message.strip()[:_MAX_SPOKEN_CHARS]
         else:
@@ -273,7 +279,11 @@ class NotificationService:
             else:
                 spoken = "Your input is needed"
 
-        tts.run(spoken)
+        for tts in self.tts_backends:
+            if not tts.is_available():
+                continue
+            if tts.run(spoken) is not None:
+                return  # spoken successfully
 
 
 def build_service(hooks_dir: Optional[Path] = None) -> NotificationService:
