@@ -21,6 +21,7 @@ dot_claude/logs
 
 # System files
 **/.DS_Store
+**/__pycache__/
 
 # Project directories (not dotfiles)
 Projects/
