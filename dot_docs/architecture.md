@@ -123,6 +123,7 @@ This separation keeps behavioral defaults version-controlled and identity data m
 |   |-- agents/                          # Specialized sub-agents
 |   |-- commands/                        # Custom slash commands
 |   |-- hooks/                           # Python workflow automation hooks
+|   |   `-- utils/                       # Shared TTS/LLM backends (common.py, tts/, llm/)
 |   |-- memories/                        # Project context and methodology files
 |   |   `-- personal/user-info.md.tmpl   # Identity-aware memory template
 |   |-- output-styles/                   # Response formatting styles
@@ -306,13 +307,14 @@ re-execute the script whenever the Brewfile changes.
 
 The `dot_claude/hooks/` directory contains a Python-based notification system driven by Claude
 Code's lifecycle hooks. Three hook scripts (`stop.py`, `subagent_stop.py`, `notification.py`) fire
-on session events, log structured JSON, and optionally announce completions or input requests via
-speech synthesis.
+on session events, log structured JSON to `~/.claude/logs/`, and optionally announce completions
+or input requests via speech synthesis.
 
-The system uses a priority-chain architecture: multiple TTS backends (ElevenLabs, OpenAI, Kokoro,
-pyttsx3/macOS say) and LLM backends (claude_cli, OpenAI, Anthropic, Ollama) are tried in quality
-order, falling through on unavailability. A recursion guard (`_CLAUDE_HOOK_GENERATING=1`) prevents
-infinite loops when the `claude_cli` backend invokes `claude -p`.
+The system uses a priority-chain architecture: multiple TTS backends (ElevenLabs → OpenAI → Kokoro
+→ pyttsx3/macOS say) and LLM backends (claude_cli → OpenAI → Anthropic → Ollama) are tried in
+quality order, falling through on unavailability. Shared logic lives in `utils/common.py`.
+A recursion guard (`_CLAUDE_HOOK_GENERATING=1`) prevents infinite loops when the `claude_cli`
+backend invokes `claude -p`.
 
 All hooks exit 0 unconditionally -- a failed notification never blocks a Claude session.
 
