@@ -4,6 +4,14 @@ description: Comprehensive repository management specialist handling ALL version
 tools: Read, Write, Edit, MultiEdit, Bash, Glob, Grep, LS, WebFetch
 color: blue
 model: sonnet
+mcpServers:
+  - github:
+      type: stdio
+      command: /opt/homebrew/bin/github-mcp-server
+      args: ["stdio"]
+      env:
+        GITHUB_PERSONAL_ACCESS_TOKEN: "${GITHUB_TOKEN}"
+        GITHUB_TOOLSETS: "repos,issues,pull_requests,notifications,context"
 ---
 
 # Purpose
