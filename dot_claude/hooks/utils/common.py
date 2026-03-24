@@ -301,7 +301,7 @@ def build_service(hooks_dir: Optional[Path] = None) -> NotificationService:
     tts_backends = [
         Backend("elevenlabs", tts_dir / "elevenlabs_tts.py", env_key="ELEVENLABS_API_KEY", timeout=10),
         Backend("openai", tts_dir / "openai_tts.py", env_key="OPENAI_API_KEY", timeout=10),
-        Backend("kokoro", tts_dir / "kokoro_tts.py", timeout=30),
+        Backend("kokoro", tts_dir / "kokoro_tts.py", timeout=60),
         Backend("pyttsx3", tts_dir / "pyttsx3_tts.py", timeout=10),
     ]
 

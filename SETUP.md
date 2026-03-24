@@ -166,11 +166,14 @@ Hooks speak task completion and input prompts via text-to-speech. The local Koko
 uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "Kokoro ready"
 ```
 
-For higher-quality cloud voices, add to `~/.env`:
+To change the Kokoro voice or use a cloud backend, add to `~/.env`:
 
 ```bash
-ELEVENLABS_API_KEY=your-key   # ElevenLabs (recommended)
-OPENAI_API_KEY=your-key       # OpenAI TTS (alternative)
+KOKORO_VOICE=af_heart         # default: warm American female ("Her" aesthetic)
+# KOKORO_VOICE=bf_emma        # British female alternative
+# See https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md for all options
+ELEVENLABS_API_KEY=your-key   # ElevenLabs (highest quality, overrides Kokoro)
+OPENAI_API_KEY=your-key       # OpenAI TTS (alternative cloud voice)
 ```
 
 Full reference: [`.docs/claude-hooks.md`](dot_docs/claude-hooks.md).
