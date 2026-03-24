@@ -153,3 +153,6 @@ fi
 
 # just command completion
 eval "$(just --completions zsh)"
+
+# Secrets from 1Password (via chezmoi-managed ~/.env)
+[ -f "$HOME/.env" ] && source "$HOME/.env"
