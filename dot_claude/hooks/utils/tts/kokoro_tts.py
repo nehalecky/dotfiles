@@ -2,8 +2,7 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#     "kokoro-onnx>=0.4.0",
-#     "huggingface_hub",
+#     "kokoro>=0.9.4",
 #     "sounddevice",
 # ]
 # ///
@@ -11,7 +10,7 @@
 """
 Kokoro TTS backend — local neural speech synthesis, no API key required.
 
-Downloads the Kokoro-82M ONNX model (~90MB) from Hugging Face on first run;
+Downloads the Kokoro-82M v1.0 model from Hugging Face on first run;
 subsequent runs use the local HF cache. Produces higher-quality, more varied
 speech than macOS `say`.
 
@@ -30,10 +29,6 @@ _VOICES = [
     "am_michael",
 ]
 
-_REPO_ID = "hexgrad/Kokoro-82M"
-_MODEL_FILE = "kokoro-v0_19.onnx"
-_VOICES_FILE = "voices.bin"
-
 
 def main():
     text = " ".join(sys.argv[1:]).strip() if len(sys.argv) > 1 else "Task complete!"
@@ -41,19 +36,21 @@ def main():
         sys.exit(1)
 
     try:
-        from huggingface_hub import hf_hub_download
-        from kokoro_onnx import Kokoro
+        from kokoro import KPipeline
         import sounddevice as sd
+        import numpy as np
 
-        model_path = hf_hub_download(repo_id=_REPO_ID, filename=_MODEL_FILE)
-        voices_path = hf_hub_download(repo_id=_REPO_ID, filename=_VOICES_FILE)
-
-        kokoro = Kokoro(model_path, voices_path)
+        pipeline = KPipeline(lang_code="a")  # 'a' = American English
         voice = random.choice(_VOICES)
-        samples, sample_rate = kokoro.create(text, voice=voice, speed=1.0, lang="en-us")
 
-        sd.play(samples, sample_rate)
-        sd.wait()
+        samples = []
+        for _, _, audio in pipeline(text, voice=voice, speed=1.0):
+            samples.append(audio)
+
+        if samples:
+            audio_out = np.concatenate(samples)
+            sd.play(audio_out, samplerate=24000)
+            sd.wait()
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
