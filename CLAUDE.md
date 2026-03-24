@@ -53,7 +53,8 @@ Examples:
 **Profiles:** personal/work via `.chezmoi.toml.tmpl` — see `SETUP.md`
 
 ### Code Standards
-- 2-space indentation for shell scripts
+- **Prefer Python over bash for all scripts** — Python context managers, pathlib, and subprocess eliminate bash quoting/trap/scope footguns. When editing any shell script, migrate the whole file to Python. Update callers (Dockerfiles, CI configs) accordingly.
+- 2-space indentation for shell scripts (legacy only); 4-space for Python
 - Comment non-obvious configuration choices
 - Group related settings with clear headers
 - Never commit secrets or credentials
