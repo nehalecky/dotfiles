@@ -36,6 +36,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install chezmoi
         run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/bin"
+      - name: Install starship
+        run: curl -sS https://starship.rs/install.sh | sh -s -- --yes
       - name: Install Python deps
         run: pip install tomli
       - name: Run tests
