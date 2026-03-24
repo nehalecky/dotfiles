@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Optional
 
 BREW_INSTALL_URL = "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
 BREW_PATHS = [
@@ -12,7 +13,7 @@ BREW_PATHS = [
 ]
 
 
-def find_brew() -> Path | None:
+def find_brew() -> Optional[Path]:
     for p in BREW_PATHS:
         if p.exists():
             return p
