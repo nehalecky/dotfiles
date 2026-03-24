@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+# Install Starship prompt — re-runs when this script changes.
+import shutil
+import subprocess
+import sys
+
+OS = "{{ .chezmoi.os }}"
+
+
+def main() -> None:
+    print("🚀 Checking Starship installation...")
+
+    if OS == "darwin":
+        if not shutil.which("brew"):
+            print("❌ Homebrew not found. Please install Homebrew first.", file=sys.stderr)
+            sys.exit(1)
+        already = subprocess.run(
+            ["brew", "list", "starship"], capture_output=True
+        ).returncode == 0
+        if not already:
+            print("📦 Installing Starship via Homebrew...")
+            subprocess.run(["brew", "install", "starship"], check=True)
+        else:
+            print("✅ Starship is already installed")
+
+    elif OS == "linux":
+        if not shutil.which("starship"):
+            print("📦 Installing Starship on Linux...")
+            fetch = subprocess.run(
+                ["curl", "-sS", "https://starship.rs/install.sh"],
+                capture_output=True,
+                text=True,
+            )
+            subprocess.run(
+                ["sh", "-s", "--", "--yes"], input=fetch.stdout, text=True, check=True
+            )
+        else:
+            print("✅ Starship is already installed")
+
+    else:
+        print(f"⚠️  Unsupported OS: {OS}", file=sys.stderr)
+        print("Please install Starship manually: https://starship.rs/guide/#🚀-installation")
+        sys.exit(1)
+
+    result = subprocess.run(["starship", "--version"], capture_output=True, text=True)
+    if result.returncode == 0:
+        print(f"✨ {result.stdout.strip().splitlines()[0]} is ready!")
+    else:
+        print("❌ Starship installation failed", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

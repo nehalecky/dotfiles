@@ -16,4 +16,4 @@ ENV PROFILE=personal
 ENV TERMINAL=wezterm
 ENV DOTFILES_DIR=/home/testuser/dotfiles
 
-ENTRYPOINT ["bash", "/home/testuser/dotfiles/tests/ci-test.sh"]
+ENTRYPOINT ["python3", "/home/testuser/dotfiles/tests/ci-test.py"]

@@ -44,4 +44,4 @@ jobs:
           TERMINAL: ${{ matrix.terminal }}
         run: |
           export PATH="$HOME/bin:$PATH"
-          bash tests/ci-test.sh
+          python3 tests/ci-test.py
