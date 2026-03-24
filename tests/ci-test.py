@@ -523,6 +523,32 @@ def run_hook_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Category 5: Hook unit tests (pytest)
+# ---------------------------------------------------------------------------
+
+
+def run_hook_unit_tests() -> None:
+    print()
+    print("=== Hook Unit Tests ===")
+
+    test_file = DOTFILES_DIR / "tests" / "test_hooks.py"
+    label = "Hook unit tests (pytest)"
+    if not test_file.exists():
+        fail_test(label, f"test file not found: {test_file}")
+        return
+
+    # Use uv to ensure pytest is available across environments (local + CI)
+    result = run(
+        "uv", "run", "--with", "pytest", "python3", "-m", "pytest", str(test_file), "-v",
+        cwd=str(DOTFILES_DIR),
+    )
+    if result.returncode == 0:
+        pass_test(label)
+    else:
+        fail_test(label, result.stdout + "\n" + result.stderr)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -542,6 +568,7 @@ def main() -> None:
         run_syntax_tests()
         run_lint_tests()
         run_hook_tests()
+        run_hook_unit_tests()
 
     print()
     print("=" * 40)
