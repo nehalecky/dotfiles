@@ -513,8 +513,11 @@ def run_hook_tests() -> None:
                 # Use a portable pattern — home dir varies by OS/user
                 m = re.search(r"\.claude/hooks/(\S+\.py)", cmd)
                 if m:
-                    rel = "dot_claude/hooks/" + m.group(1)
-                    if not (DOTFILES_DIR / rel).exists():
+                    name = m.group(1)
+                    # chezmoi strips "executable_" prefix on deploy; check both forms
+                    rel = "dot_claude/hooks/" + name
+                    rel_exec = "dot_claude/hooks/executable_" + name
+                    if not (DOTFILES_DIR / rel).exists() and not (DOTFILES_DIR / rel_exec).exists():
                         missing.append(rel)
     if not missing:
         pass_test(label)
