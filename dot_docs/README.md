@@ -20,6 +20,7 @@ New to this system? Start here:
 
 - **[Python Development](python-development.md)** - Modern Python workflow with uv
 - **[Secrets Management](secrets-management.md)** - 1Password + SSH authentication
+- **[Claude Code Hooks](claude-hooks.md)** - Voice notification system via Claude Code lifecycle hooks
 
 ## Claude Code Configuration
 

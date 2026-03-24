@@ -302,6 +302,25 @@ re-execute the script whenever the Brewfile changes.
 
 ---
 
+## Claude Code Hooks
+
+The `dot_claude/hooks/` directory contains a Python-based notification system driven by Claude
+Code's lifecycle hooks. Three hook scripts (`stop.py`, `subagent_stop.py`, `notification.py`) fire
+on session events, log structured JSON, and optionally announce completions or input requests via
+speech synthesis.
+
+The system uses a priority-chain architecture: multiple TTS backends (ElevenLabs, OpenAI, Kokoro,
+pyttsx3/macOS say) and LLM backends (claude_cli, OpenAI, Anthropic, Ollama) are tried in quality
+order, falling through on unavailability. A recursion guard (`_CLAUDE_HOOK_GENERATING=1`) prevents
+infinite loops when the `claude_cli` backend invokes `claude -p`.
+
+All hooks exit 0 unconditionally -- a failed notification never blocks a Claude session.
+
+For full architecture diagrams, backend details, configuration reference, and extensibility guide,
+see [Claude Code Hooks](claude-hooks.md).
+
+---
+
 ## Design Decisions
 
 ### Templates Over Branches
