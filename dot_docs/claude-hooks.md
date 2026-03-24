@@ -242,7 +242,8 @@ Without context (no LLM available), the system speaks a random generic message f
 
 - Script: [`utils/tts/kokoro_tts.py`](../.claude/hooks/utils/tts/kokoro_tts.py)
 - Requires: nothing (model auto-downloaded from [HF hexgrad/Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) on first use, ~90 MB)
-- Five voices: `af_heart`, `af_bella`, `af_sky`, `am_adam`, `am_michael`
+- Default voice: `af_heart` (warm American female; configurable via `KOKORO_VOICE` in `~/.env`)
+- [Explore all voices](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md): American/British, female/male (`af_`, `am_`, `bf_`, `bm_` prefixes)
 - Runs entirely locally; no API key required
 - `HF_TOKEN` required only for gated models (Kokoro-82M is public)
 
