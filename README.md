@@ -6,15 +6,7 @@
 
 ## Why
 
-Every developer has set up a new machine from scratch. You install Homebrew, then your editor, then your shell plugins, then your git config, then the CLI tools you forgot you depended on. Two days later you realize you still don't have delta configured and your commit signing is broken. Six months later, you do it again on a work laptop and remember none of the steps.
-
-Your development environment is software. It deserves version control, documentation, and reproducible builds — the same discipline you apply to production code.
-
-This repository treats that idea seriously. [Chezmoi](https://chezmoi.io) manages every configuration file. A single `chezmoi init` on a fresh machine prompts for a profile — personal or work — then injects the correct git identity, SSH keys, 1Password items, Brewfile packages, and terminal theme. One repo, two machines, zero manual steps.
-
-The environment is terminal-first, not out of nostalgia, but because terminals compose. Pipes chain tools together. SSH gives you the same interface on a remote server. Muscle memory transfers across machines. Sub-second launch times compound into hours saved over a year.
-
-Claude Code is not bolted on as an afterthought. Twelve specialized agents, a persistent memory system, workflow automation hooks, and MCP integrations ship as versioned configuration alongside the shell and editor. Because the agents and memories live in the dotfiles repo, they deploy to every machine automatically — and the same configuration works whether you are in Claude Code at the terminal or Claude on the web. Your AI workflow is as reproducible as your shell config.
+Your development environment is software. It deserves version control, documentation, and reproducible builds — the same discipline you apply to production code. [Chezmoi](https://chezmoi.io) manages every configuration file here; a single `chezmoi init` on a fresh machine prompts for a profile — personal or work — then wires up the correct git identity, SSH keys, Brewfile packages, and terminal theme automatically. Twelve specialized Claude Code agents, a persistent memory system, and workflow hooks ship as versioned configuration alongside the shell and editor, so the same AI workflow reproduces on every machine as reliably as the shell config does.
 
 ## Quick Setup
 
@@ -57,6 +49,7 @@ chezmoi init --apply <your-github-username>
 - **Workflow automation** through Python hooks and custom commands
 - **MCP integrations** connecting GitHub, Google Workspace, and Atlassian
 - **Superpowers plugin** adding structured TDD, planning, and execution skills
+- **Voice notifications** announcing task completion and input prompts, powered by local neural TTS (Kokoro) with ElevenLabs and OpenAI as optional cloud upgrades
 
 Agents, memories, and skills are version-controlled alongside the rest of the dotfiles. Deploy to a new machine with `chezmoi apply` and your full AI configuration — context, behavior, and tooling — arrives with it. The same files power both Claude Code in the terminal and Claude on the web.
 
