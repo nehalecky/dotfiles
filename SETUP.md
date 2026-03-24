@@ -11,7 +11,22 @@ This repo is a personal dotfiles template. To use it:
 
 ## Quick Start
 
-### New machine setup
+### Option A: Direct config setup (recommended when adapting this repo)
+
+Copy the example config, fill in your values, then apply:
+
+```bash
+mkdir -p ~/.config/chezmoi
+curl -o ~/.config/chezmoi/chezmoi.toml \
+  https://raw.githubusercontent.com/<your-github-username>/dotfiles/master/examples/chezmoi.toml.example
+# Edit ~/.config/chezmoi/chezmoi.toml with your values
+chezmoi init <your-github-username>   # clones the repo without overwriting your config
+chezmoi apply
+```
+
+The example config at `examples/chezmoi.toml.example` documents every field with instructions on where to find the values (especially the 1Password key names, which must match your vault exactly).
+
+### Option B: Interactive guided setup
 
 1. Install Homebrew (if not already installed):
    ```bash

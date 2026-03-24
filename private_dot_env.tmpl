@@ -1,19 +1,30 @@
-# Environment variables managed by 1Password
-# This file is generated from a template - do not edit directly
+# ~/.env — Environment variables for this machine.
+# Managed by chezmoi via private_dot_env.tmpl — do not edit ~/.env directly.
+# Edit this template: chezmoi edit ~/.env
+# Apply changes:      chezmoi apply ~/.env
+#
+# Secrets pattern: store in 1Password, reference here with op:// URIs.
+# chezmoi injects them at apply time — keys never touch the repo.
 # Reference: https://www.chezmoi.io/user-guide/password-managers/1password/
 
-# Example: Add your API tokens here
-# Uncomment and update with your 1Password references:
-
-# GitHub token — sourced dynamically from gh CLI auth (always fresh, no PAT needed)
+# ── GitHub ────────────────────────────────────────────────────────────────────
+# Sourced dynamically from gh CLI — always fresh, no PAT needed
 export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
 
-# CloudFlare API
-# export CF_API_TOKEN='{{"{{"}} onepasswordRead "op://Private/cloudflare/api_token" {{"}}"}}'
+# ── Voice Notifications (Claude Code hooks) ───────────────────────────────────
+# TTS priority: ElevenLabs → OpenAI → Kokoro (local, default) → pyttsx3
+#
+# Kokoro is the default — no key needed. ~90MB model downloads from HuggingFace
+# on first use. Pre-warm: uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "ready"
+# Voices: af_heart af_bella af_sky af_nova af_sarah bf_emma bf_alice bf_lily
+# export KOKORO_VOICE=af_heart   # default: warm American female
+#
+# Uncomment and point to your 1Password items for higher-quality cloud TTS:
+# export ELEVENLABS_API_KEY='{{ onepasswordRead "op://Personal/ElevenLabs/api_key" }}'
+# export OPENAI_API_KEY='{{ onepasswordRead "op://Personal/OpenAI/api_key" }}'
 
-# OpenAI API Key
-# export OPENAI_API_KEY='{{"{{"}} onepasswordRead "op://Private/openai/api_key" {{"}}"}}'
-
-# AWS Credentials
-# export AWS_ACCESS_KEY_ID='{{"{{"}} onepasswordRead "op://Work/aws/access_key_id" {{"}}"}}'
-# export AWS_SECRET_ACCESS_KEY='{{"{{"}} onepasswordRead "op://Work/aws/secret_access_key" {{"}}"}}'
+# ── Cloud / Infrastructure ────────────────────────────────────────────────────
+# Uncomment and update with your 1Password item paths:
+# export CF_API_TOKEN='{{ onepasswordRead "op://Personal/Cloudflare/api_token" }}'
+# export AWS_ACCESS_KEY_ID='{{ onepasswordRead "op://Work/AWS/access_key_id" }}'
+# export AWS_SECRET_ACCESS_KEY='{{ onepasswordRead "op://Work/AWS/secret_access_key" }}'

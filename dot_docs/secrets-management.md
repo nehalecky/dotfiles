@@ -30,10 +30,12 @@ At `chezmoi init` time, chezmoi prompts for profile identity and key names. It s
 
 ### Prompted Variables
 
-| Variable | Purpose | Personal Default |
+| Variable | Purpose | Note |
 |---|---|---|
-| `op_auth_key_name` | 1Password item name for your SSH authentication key | "GitHub SSH Auth Key" |
-| `op_signing_key_name` | 1Password item name for your SSH signing key | "Git Commit Signing Key" |
+| `op_auth_key_name` | 1Password item name for your SSH authentication key | Must match your vault exactly — no default |
+| `op_signing_key_name` | 1Password item name for your SSH signing key | Must match your vault exactly — no default |
+
+> **Critical:** These names are case-sensitive and must match the item title in your 1Password vault character-for-character. Open 1Password, filter by SSH Key category, and copy the title. See `examples/chezmoi.toml.example` for guidance.
 
 Work profiles have no defaults — specify the vault item names that match your work 1Password setup.
 
@@ -43,11 +45,12 @@ Chezmoi renders these variables into `~/.config/1Password/ssh/agent.toml` via `d
 
 ```toml
 # Rendered from dot_config/1Password/ssh/agent.toml.tmpl
+# (example — actual item names come from your chezmoi.toml)
 [[ssh-keys]]
-item = "GitHub SSH Auth Key"   # ← from op_auth_key_name
+item = "Nico Personal GitHub Auth Key"   # ← from op_auth_key_name
 
 [[ssh-keys]]
-item = "Git Commit Signing Key"  # ← from op_signing_key_name
+item = "Github Signing Key (Nico Personal)"  # ← from op_signing_key_name
 ```
 
 The template source:
@@ -197,6 +200,46 @@ key: {{ onepasswordRead "op://Personal/api/key" }}
 - **Local config only** - `~/.config/chezmoi/chezmoi.toml` holds identity data and is never committed
 - **No secrets in Git** - The repository stores no secrets or encrypted blobs
 - **Rotation** - Update the secret in 1Password, then run `chezmoi apply` to propagate the new value
+
+## API Keys and TTS Backends
+
+Claude Code hooks use a priority chain for voice notifications:
+**ElevenLabs → OpenAI TTS → Kokoro (local) → pyttsx3**
+
+### Kokoro (default — no API key required)
+
+Kokoro is the default TTS backend when no cloud keys are set. It runs the `kokoro-82M v1.0` OSS neural model locally via `uv run`, downloading ~90 MB from Hugging Face on first use.
+
+Pre-warm before your first session:
+```bash
+uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "Kokoro ready"
+```
+
+Voice is set via `KOKORO_VOICE` in `~/.env` (see below). Default: `af_heart` (warm American female).
+
+### Cloud TTS backends (optional, higher quality)
+
+Store API keys in 1Password and reference them in `~/.env` via chezmoi template:
+
+```bash
+# In ~/.local/share/chezmoi/private_dot_env.tmpl:
+export ELEVENLABS_API_KEY='{{ onepasswordRead "op://Personal/ElevenLabs/api_key" }}'
+export OPENAI_API_KEY='{{ onepasswordRead "op://Personal/OpenAI/api_key" }}'
+```
+
+Run `chezmoi apply` after editing the template to render the keys to `~/.env`.
+
+### `~/.env` and chezmoi
+
+`~/.env` is managed by `private_dot_env.tmpl`. It is:
+- **Rendered** at `chezmoi apply` time — 1Password values are injected then
+- **Never committed** — `private_` prefix means chezmoi encrypts before storing (actually this file is excluded from the public repo)
+- **Sourced** by your shell at login
+
+To add a new secret:
+1. Store the value in 1Password
+2. Add a line to `private_dot_env.tmpl` using `{{ onepasswordRead "op://Vault/Item/field" }}`
+3. Run `chezmoi apply`
 
 ## Troubleshooting
 

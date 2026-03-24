@@ -31,8 +31,8 @@
 {{- $op_signing_key_name := "" -}}
 {{- if eq $profile "personal" -}}
 {{-   $git_signing_key = promptStringOnce . "git_signing_key" "Git signing public key" "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGfxtbZHZuHkiMv2ZXR52KSwROrTXK0wyxoX8yd88Ih6" -}}
-{{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "GitHub SSH Auth Key" -}}
-{{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name" "Git Commit Signing Key" -}}
+{{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name (1Password > SSH Key category > exact item title)" "" -}}
+{{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name (1Password > SSH Key category > exact item title)" "" -}}
 {{- else -}}
 {{-   $git_signing_key = promptStringOnce . "git_signing_key" "Work git signing public key (ssh-ed25519 ...)" "" -}}
 {{-   $op_auth_key_name = promptStringOnce . "op_auth_key_name" "1Password SSH auth key name" "GitHub Auth Key" -}}
