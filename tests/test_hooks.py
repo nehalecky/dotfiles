@@ -109,6 +109,15 @@ class TestBackend:
             timeout=15,
         )
 
+    def test_run_returns_empty_string_on_success_with_no_stdout(self, tmp_script):
+        """TTS backends exit 0 with no stdout; run() must return '' not None."""
+        b = Backend(name="test", script=tmp_script)
+        mock_result = MagicMock(returncode=0, stdout="")
+        with patch("utils.common.subprocess.run", return_value=mock_result):
+            result = b.run("some text")
+        assert result == ""        # success: is not None
+        assert result is not None  # caller uses `is not None` to detect success
+
     def test_run_returns_none_on_nonzero_returncode(self, tmp_script):
         b = Backend(name="test", script=tmp_script)
         mock_result = MagicMock(returncode=1, stdout="error output")
@@ -256,6 +265,29 @@ class TestNotificationService:
         tts_run.assert_called_once()
         spoken = tts_run.call_args[0][0]
         assert spoken in FALLBACK_MESSAGES
+
+    def test_speak_completion_stops_after_tts_returns_empty_string(self):
+        """Empty stdout (real TTS success) must stop the chain — not treated as failure."""
+        tts1 = MagicMock()
+        tts1.is_available.return_value = True
+        tts1.run.return_value = ""  # exit 0, no stdout — real TTS success
+
+        tts2 = MagicMock()
+        tts2.is_available.return_value = True
+
+        llm = MagicMock()
+        llm.is_available.return_value = True
+        llm.run.return_value = "Done!"
+
+        svc = NotificationService(
+            tts_backends=[tts1, tts2],
+            llm_backends=[llm],
+            fallback_messages=FALLBACK_MESSAGES,
+        )
+        svc.speak_completion()
+
+        tts1.run.assert_called_once()
+        tts2.run.assert_not_called()  # chain stopped after tts1 succeeded
 
     def test_speak_completion_falls_through_to_second_tts_when_first_run_fails(self):
         """First TTS is available but run() returns None; second TTS should be used."""
@@ -411,7 +443,7 @@ class TestBuildService:
     def test_tts_backends_in_correct_order(self, tmp_path):
         svc = build_service(hooks_dir=tmp_path)
         names = [b.name for b in svc.tts_backends]
-        assert names == ["elevenlabs", "openai", "kokoro", "pyttsx3"]
+        assert names == ["elevenlabs", "openai", "pyttsx3"]
 
     def test_llm_backends_in_correct_order(self, tmp_path):
         svc = build_service(hooks_dir=tmp_path)
