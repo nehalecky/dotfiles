@@ -26,16 +26,21 @@ from utils.common import append_to_log, copy_transcript_to_chat
 # ---------------------------------------------------------------------------
 
 
-def run_hook(script: str, input_data: dict, args: tuple = (), env_overrides: dict = None, cwd=None):
-    """Execute a hook script with JSON on stdin. Returns CompletedProcess."""
+def run_hook(script: str, input_data: dict, args: tuple = (), env_overrides: dict = None, home=None):
+    """Execute a hook script with JSON on stdin. Returns CompletedProcess.
+
+    Pass ``home`` to redirect all ``~/...`` log paths into a temp directory,
+    keeping test runs isolated from the real ~/.claude/logs/ directory.
+    """
     env = {**os.environ, **(env_overrides or {})}
+    if home is not None:
+        env["HOME"] = str(home)
     return subprocess.run(
         [str(HOOKS_DIR / script), *args],
         input=json.dumps(input_data),
         capture_output=True,
         text=True,
         env=env,
-        cwd=str(cwd) if cwd else None,
         timeout=30,
     )
 
@@ -58,18 +63,18 @@ def make_transcript(tmp_path: Path, lines: list[dict] = None) -> Path:
 
 class TestStopHookBehavior:
     def test_exits_zero_and_writes_log(self, tmp_path):
-        result = run_hook("stop.py", {"event": "stop"}, cwd=tmp_path)
+        result = run_hook("stop.py", {"event": "stop"}, home=tmp_path)
         assert result.returncode == 0
-        log = tmp_path / "logs" / "stop.json"
+        log = tmp_path / ".claude" / "logs" / "stop.json"
         assert log.exists()
         data = json.loads(log.read_text())
         assert isinstance(data, list)
         assert data[0] == {"event": "stop"}
 
     def test_appends_on_multiple_calls(self, tmp_path):
-        run_hook("stop.py", {"n": 1}, cwd=tmp_path)
-        run_hook("stop.py", {"n": 2}, cwd=tmp_path)
-        log = tmp_path / "logs" / "stop.json"
+        run_hook("stop.py", {"n": 1}, home=tmp_path)
+        run_hook("stop.py", {"n": 2}, home=tmp_path)
+        log = tmp_path / ".claude" / "logs" / "stop.json"
         data = json.loads(log.read_text())
         assert len(data) == 2
         assert data[0]["n"] == 1
@@ -81,17 +86,17 @@ class TestStopHookBehavior:
             "stop.py",
             {"transcript_path": str(transcript)},
             args=("--chat",),
-            cwd=tmp_path,
+            home=tmp_path,
         )
         assert result.returncode == 0
-        chat = tmp_path / "logs" / "chat.json"
+        chat = tmp_path / ".claude" / "logs" / "chat.json"
         assert chat.exists()
         data = json.loads(chat.read_text())
         assert isinstance(data, list)
         assert len(data) == 2
 
     def test_chat_flag_missing_transcript_key_no_crash(self, tmp_path):
-        result = run_hook("stop.py", {"event": "stop"}, args=("--chat",), cwd=tmp_path)
+        result = run_hook("stop.py", {"event": "stop"}, args=("--chat",), home=tmp_path)
         assert result.returncode == 0
 
     def test_recursion_guard_exits_zero_no_log(self, tmp_path):
@@ -99,20 +104,19 @@ class TestStopHookBehavior:
             "stop.py",
             {"event": "stop"},
             env_overrides={"_CLAUDE_HOOK_GENERATING": "1"},
-            cwd=tmp_path,
+            home=tmp_path,
         )
         assert result.returncode == 0
-        assert not (tmp_path / "logs" / "stop.json").exists()
+        assert not (tmp_path / ".claude" / "logs" / "stop.json").exists()
 
     def test_invalid_json_exits_zero(self, tmp_path):
-        env = {**os.environ}
+        env = {**os.environ, "HOME": str(tmp_path)}
         result = subprocess.run(
             [str(HOOKS_DIR / "stop.py")],
             input="not valid json",
             capture_output=True,
             text=True,
             env=env,
-            cwd=str(tmp_path),
             timeout=30,
         )
         assert result.returncode == 0
@@ -125,17 +129,17 @@ class TestStopHookBehavior:
 
 class TestNotificationHookBehavior:
     def test_exits_zero_and_writes_log(self, tmp_path):
-        result = run_hook("notification.py", {"message": "Claude needs input"}, cwd=tmp_path)
+        result = run_hook("notification.py", {"message": "Claude needs input"}, home=tmp_path)
         assert result.returncode == 0
-        log = tmp_path / "logs" / "notification.json"
+        log = tmp_path / ".claude" / "logs" / "notification.json"
         assert log.exists()
         data = json.loads(log.read_text())
         assert data[0]["message"] == "Claude needs input"
 
     def test_appends_on_multiple_calls(self, tmp_path):
-        run_hook("notification.py", {"message": "first"}, cwd=tmp_path)
-        run_hook("notification.py", {"message": "second"}, cwd=tmp_path)
-        data = json.loads((tmp_path / "logs" / "notification.json").read_text())
+        run_hook("notification.py", {"message": "first"}, home=tmp_path)
+        run_hook("notification.py", {"message": "second"}, home=tmp_path)
+        data = json.loads((tmp_path / ".claude" / "logs" / "notification.json").read_text())
         assert len(data) == 2
 
     def test_recursion_guard_exits_zero_no_log(self, tmp_path):
@@ -143,10 +147,10 @@ class TestNotificationHookBehavior:
             "notification.py",
             {"message": "x"},
             env_overrides={"_CLAUDE_HOOK_GENERATING": "1"},
-            cwd=tmp_path,
+            home=tmp_path,
         )
         assert result.returncode == 0
-        assert not (tmp_path / "logs" / "notification.json").exists()
+        assert not (tmp_path / ".claude" / "logs" / "notification.json").exists()
 
 
 # ---------------------------------------------------------------------------
@@ -156,9 +160,9 @@ class TestNotificationHookBehavior:
 
 class TestSubagentStopHookBehavior:
     def test_exits_zero_and_writes_log(self, tmp_path):
-        result = run_hook("subagent_stop.py", {"event": "subagent_stop"}, cwd=tmp_path)
+        result = run_hook("subagent_stop.py", {"event": "subagent_stop"}, home=tmp_path)
         assert result.returncode == 0
-        log = tmp_path / "logs" / "subagent_stop.json"
+        log = tmp_path / ".claude" / "logs" / "subagent_stop.json"
         assert log.exists()
         data = json.loads(log.read_text())
         assert data[0] == {"event": "subagent_stop"}
@@ -169,20 +173,20 @@ class TestSubagentStopHookBehavior:
             "subagent_stop.py",
             {"transcript_path": str(transcript)},
             args=("--chat",),
-            cwd=tmp_path,
+            home=tmp_path,
         )
         assert result.returncode == 0
-        assert (tmp_path / "logs" / "chat.json").exists()
+        assert (tmp_path / ".claude" / "logs" / "chat.json").exists()
 
     def test_recursion_guard_exits_zero_no_log(self, tmp_path):
         result = run_hook(
             "subagent_stop.py",
             {"event": "subagent_stop"},
             env_overrides={"_CLAUDE_HOOK_GENERATING": "1"},
-            cwd=tmp_path,
+            home=tmp_path,
         )
         assert result.returncode == 0
-        assert not (tmp_path / "logs" / "subagent_stop.json").exists()
+        assert not (tmp_path / ".claude" / "logs" / "subagent_stop.json").exists()
 
 
 # ---------------------------------------------------------------------------
