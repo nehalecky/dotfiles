@@ -11,6 +11,10 @@ logs/
 *.tmp
 *.temp
 
+# Python bytecode
+__pycache__/
+*.pyc
+
 # OS-specific files
 .DS_Store
 Thumbs.db
@@ -29,6 +33,7 @@ test*.py
 # CI tests are tracked (override test* patterns)
 !tests/
 !tests/**
+tests/__pycache__/
 
 # Go workspace (if using local development)
 go/
