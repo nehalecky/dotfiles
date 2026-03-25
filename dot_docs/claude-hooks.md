@@ -92,8 +92,6 @@ flowchart LR
 ├── stop.py                    # Stop lifecycle hook
 ├── notification.py            # Notification lifecycle hook
 ├── subagent_stop.py           # SubagentStop lifecycle hook
-# (session_start.py, pre_tool_use.py, post_tool_use.py, pre_compact.py,
-#  and user_prompt_submit.py are lifecycle hooks outside this document's scope)
 └── utils/
     ├── common.py              # Backend, TranscriptParser, NotificationService, build_service()
     ├── tts/
@@ -107,6 +105,8 @@ flowchart LR
         ├── anth.py            # Anthropic messages API
         └── ollama.py          # Local Ollama inference
 ```
+
+Five additional lifecycle hooks (`session_start.py`, `pre_tool_use.py`, `post_tool_use.py`, `pre_compact.py`, `user_prompt_submit.py`) are not covered in this document.
 
 Source files in the chezmoi repo: [`dot_claude/hooks/`](../dot_claude/hooks/).
 

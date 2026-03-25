@@ -201,45 +201,16 @@ key: {{ onepasswordRead "op://Personal/api/key" }}
 - **No secrets in Git** - The repository stores no secrets or encrypted blobs
 - **Rotation** - Update the secret in 1Password, then run `chezmoi apply` to propagate the new value
 
-## API Keys and TTS Backends
+## TTS Voice Notifications
 
-Claude Code hooks use a priority chain for voice notifications:
-**ElevenLabs → OpenAI TTS → Kokoro (local) → pyttsx3**
-
-### Kokoro (default — no API key required)
-
-Kokoro is the default TTS backend when no cloud keys are set. It runs the `kokoro-82M v1.0` OSS neural model locally via `uv run`, downloading ~90 MB from Hugging Face on first use.
-
-Pre-warm before your first session:
-```bash
-uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "Kokoro ready"
-```
-
-Voice is set via `KOKORO_VOICE` in `~/.env` (see below). Default: `af_heart` (warm American female).
-
-### Cloud TTS backends (optional, higher quality)
-
-Store API keys in 1Password and reference them in `~/.env` via chezmoi template:
+Claude Code hooks speak task completions via a priority chain: **ElevenLabs → OpenAI TTS → Kokoro (local) → pyttsx3**. Kokoro runs locally with no key required. To enable cloud TTS, store API keys in 1Password and add them to `private_dot_env.tmpl`:
 
 ```bash
-# In ~/.local/share/chezmoi/private_dot_env.tmpl:
 export ELEVENLABS_API_KEY='{{ onepasswordRead "op://Personal/ElevenLabs/api_key" }}'
 export OPENAI_API_KEY='{{ onepasswordRead "op://Personal/OpenAI/api_key" }}'
 ```
 
-Run `chezmoi apply` after editing the template to render the keys to `~/.env`.
-
-### `~/.env` and chezmoi
-
-`~/.env` is managed by `private_dot_env.tmpl`. It is:
-- **Rendered** at `chezmoi apply` time — 1Password values are injected then
-- **Mode 600 on deploy** — `private_` prefix sets restrictive file permissions (0600); the template is committed to this repo, but the rendered `~/.env` containing real values lives only on your machine
-- **Sourced** by your shell at login
-
-To add a new secret:
-1. Store the value in 1Password
-2. Add a line to `private_dot_env.tmpl` using `{{ onepasswordRead "op://Vault/Item/field" }}`
-3. Run `chezmoi apply`
+Run `chezmoi apply` to render keys into `~/.env`. For voice configuration and Kokoro setup, see [Voice Notifications in SETUP.md](../SETUP.md#voice-notifications).
 
 ## Troubleshooting
 
