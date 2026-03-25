@@ -51,9 +51,6 @@ def main() -> None:
     parser.add_argument("message", nargs="?", default="Task complete")
     parser.add_argument("--subtitle", default="", help="Notification subtitle")
     parser.add_argument(
-        "--session-id", default="", help="Session ID (reserved for future grouping)"
-    )
-    parser.add_argument(
         "--urgent",
         action="store_true",
         help="Use attention sound (for input-needed events)",

@@ -12,6 +12,9 @@ Usage:
 import sys
 from pathlib import Path
 
+# SYNC REQUIRED: these mode values must match _VALID_MODES in
+# ~/.claude/hooks/utils/common.py. The CLI cannot import from the hooks
+# library (different runtime context), so keep both lists in step manually.
 MODES = ("tts", "macos", "both", "silent")
 STATE_FILE = Path.home() / ".claude" / "data" / "notify-mode"
 DESCRIPTIONS = {
@@ -25,7 +28,7 @@ DESCRIPTIONS = {
 def get_mode() -> str:
     try:
         return STATE_FILE.read_text().strip()
-    except FileNotFoundError:
+    except (FileNotFoundError, OSError):
         return "both"
 
 

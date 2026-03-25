@@ -15,6 +15,8 @@ from pathlib import Path
 from typing import Optional
 
 MODE_FILE = Path.home() / ".claude" / "data" / "notify-mode"
+# SYNC REQUIRED: these mode values must match MODES in ~/.local/bin/claude-notify.
+# The CLI is a standalone script that cannot import from this library.
 _VALID_MODES = frozenset({"tts", "macos", "both", "silent"})
 
 
