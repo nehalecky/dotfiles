@@ -556,3 +556,54 @@ class TestDeliverVisual:
         svc = NotificationService([], [], ["done"], visual_backends=[backend])
         svc._deliver_visual("alert", urgent=True)
         assert "--urgent" in received[0]
+
+
+# ---------------------------------------------------------------------------
+# TestCompletionMessagePrompt
+# Tests the *structure* of the LLM prompt, not LLM output quality (eval
+# territory). Deterministic guard against prompt regressions that could
+# re-introduce premature or forward-looking completion announcements.
+# ---------------------------------------------------------------------------
+
+# Import claude_cli from the hooks source tree
+sys.path.insert(0, str(Path(__file__).parent.parent / "dot_claude" / "hooks" / "utils" / "llm"))
+import claude_cli  # noqa: E402
+
+
+class TestCompletionMessagePrompt:
+    """Guard against prompt regressions that cause premature announcements."""
+
+    def _capture_prompt(self, context=None):
+        """Capture the prompt string built by generate_completion_message."""
+        captured = []
+
+        def fake_prompt_llm(prompt_text):
+            captured.append(prompt_text)
+            return "Task complete."
+
+        with patch.object(claude_cli, "prompt_llm", side_effect=fake_prompt_llm):
+            claude_cli.generate_completion_message(context=context)
+
+        return captured[0]
+
+    def test_prompt_constrains_to_completed_actions(self):
+        prompt = self._capture_prompt()
+        assert "definitively completed" in prompt
+
+    def test_prompt_forbids_future_inference(self):
+        prompt = self._capture_prompt()
+        assert "Do NOT infer" in prompt or "do NOT infer" in prompt.lower()
+
+    def test_prompt_excludes_specific_outcome_examples(self):
+        # "PR merged" was the example that caused premature announcements
+        prompt = self._capture_prompt()
+        assert "PR merged" not in prompt
+
+    def test_prompt_includes_context_when_provided(self):
+        prompt = self._capture_prompt(context="Request: fix bug\nOutcome: tests pass")
+        assert "fix bug" in prompt
+        assert "tests pass" in prompt
+
+    def test_prompt_omits_context_section_when_none(self):
+        prompt = self._capture_prompt(context=None)
+        assert "What was just completed" not in prompt
