@@ -62,9 +62,11 @@ def generate_completion_message(context=None):
     prompt = (
         "Generate a short spoken completion announcement for an AI coding assistant.\n"
         "Rules: under 12 words, plain text only, no quotes, return ONLY the announcement.\n"
+        "IMPORTANT: only describe actions that are definitively completed in the context below.\n"
+        "Do NOT infer or predict future steps — say only what is already done.\n"
         f"{name_line}"
         f"{context_section}"
-        "Examples: All done! / PR merged and tests passing. / Changes committed successfully.\n"
+        "Examples: All done! / Task complete. / Analysis finished.\n"
         "Announcement:"
     )
 

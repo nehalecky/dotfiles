@@ -18,6 +18,7 @@ from utils.common import (
     NotificationService,
     TranscriptParser,
     build_service,
+    get_notify_mode,
 )
 
 
@@ -457,3 +458,152 @@ class TestBuildService:
 # TestStopHookBehavior::test_recursion_guard_exits_zero_no_log
 # TestNotificationHookBehavior::test_recursion_guard_exits_zero_no_log
 # TestSubagentStopHookBehavior::test_recursion_guard_exits_zero_no_log
+
+
+# ---------------------------------------------------------------------------
+# TestGetNotifyMode
+# ---------------------------------------------------------------------------
+
+
+class TestGetNotifyMode:
+    def test_default_when_no_file(self, tmp_path, monkeypatch):
+        """Returns 'both' when state file does not exist."""
+        monkeypatch.setattr("utils.common.MODE_FILE", tmp_path / "nonexistent")
+        assert get_notify_mode() == "both"
+
+    def test_reads_valid_mode(self, tmp_path, monkeypatch):
+        """Reads mode from state file."""
+        f = tmp_path / "notify-mode"
+        for mode in ("tts", "macos", "both", "silent"):
+            f.write_text(mode + "\n")
+            monkeypatch.setattr("utils.common.MODE_FILE", f)
+            assert get_notify_mode() == mode
+
+    def test_falls_back_on_unknown_value(self, tmp_path, monkeypatch):
+        """Returns 'both' for unrecognised values."""
+        f = tmp_path / "notify-mode"
+        f.write_text("invalid\n")
+        monkeypatch.setattr("utils.common.MODE_FILE", f)
+        assert get_notify_mode() == "both"
+
+
+# ---------------------------------------------------------------------------
+# TestBuildServiceModes
+# ---------------------------------------------------------------------------
+
+
+class TestBuildServiceModes:
+    def _service_for_mode(self, mode, tmp_path, monkeypatch):
+        f = tmp_path / "notify-mode"
+        f.write_text(mode + "\n")
+        monkeypatch.setattr("utils.common.MODE_FILE", f)
+        return build_service()
+
+    def test_tts_mode_no_visual(self, tmp_path, monkeypatch):
+        svc = self._service_for_mode("tts", tmp_path, monkeypatch)
+        assert len(svc.tts_backends) > 0
+        assert len(svc.visual_backends) == 0
+
+    def test_macos_mode_no_tts(self, tmp_path, monkeypatch):
+        svc = self._service_for_mode("macos", tmp_path, monkeypatch)
+        assert len(svc.tts_backends) == 0
+        assert len(svc.visual_backends) > 0
+
+    def test_both_mode_all_backends(self, tmp_path, monkeypatch):
+        svc = self._service_for_mode("both", tmp_path, monkeypatch)
+        assert len(svc.tts_backends) > 0
+        assert len(svc.visual_backends) > 0
+
+    def test_silent_mode_no_backends(self, tmp_path, monkeypatch):
+        svc = self._service_for_mode("silent", tmp_path, monkeypatch)
+        assert len(svc.tts_backends) == 0
+        assert len(svc.visual_backends) == 0
+
+    def test_visual_backends_named_correctly(self, tmp_path, monkeypatch):
+        svc = self._service_for_mode("macos", tmp_path, monkeypatch)
+        names = [b.name for b in svc.visual_backends]
+        assert "macos" in names
+        assert "terminal" in names
+
+
+# ---------------------------------------------------------------------------
+# TestDeliverVisual
+# ---------------------------------------------------------------------------
+
+
+class TestDeliverVisual:
+    def test_calls_first_available_visual_backend(self):
+        available = Backend("mock", Path("/mock"), timeout=5)
+        unavailable = Backend("missing", Path("/no/such/file"), timeout=5)
+        svc = NotificationService(
+            tts_backends=[],
+            llm_backends=[],
+            fallback_messages=["done"],
+            visual_backends=[unavailable, available],
+        )
+        called_args = []
+        available.is_available = lambda: True
+        available.run = lambda *a: (called_args.append(a), "")[1] or ""
+        svc._deliver_visual("hello")
+        # should have called available backend
+        assert any("hello" in str(a) for a in called_args)
+
+    def test_urgent_passes_flag(self):
+        backend = Backend("mock", Path("/mock"), timeout=5)
+        backend.is_available = lambda: True
+        received = []
+        backend.run = lambda *a: (received.append(a), "")[1] or ""
+        svc = NotificationService([], [], ["done"], visual_backends=[backend])
+        svc._deliver_visual("alert", urgent=True)
+        assert "--urgent" in received[0]
+
+
+# ---------------------------------------------------------------------------
+# TestCompletionMessagePrompt
+# Tests the *structure* of the LLM prompt, not LLM output quality (eval
+# territory). Deterministic guard against prompt regressions that could
+# re-introduce premature or forward-looking completion announcements.
+# ---------------------------------------------------------------------------
+
+# Import claude_cli from the hooks source tree
+sys.path.insert(0, str(Path(__file__).parent.parent / "dot_claude" / "hooks" / "utils" / "llm"))
+import claude_cli  # noqa: E402
+
+
+class TestCompletionMessagePrompt:
+    """Guard against prompt regressions that cause premature announcements."""
+
+    def _capture_prompt(self, context=None):
+        """Capture the prompt string built by generate_completion_message."""
+        captured = []
+
+        def fake_prompt_llm(prompt_text):
+            captured.append(prompt_text)
+            return "Task complete."
+
+        with patch.object(claude_cli, "prompt_llm", side_effect=fake_prompt_llm):
+            claude_cli.generate_completion_message(context=context)
+
+        return captured[0]
+
+    def test_prompt_constrains_to_completed_actions(self):
+        prompt = self._capture_prompt()
+        assert "definitively completed" in prompt
+
+    def test_prompt_forbids_future_inference(self):
+        prompt = self._capture_prompt()
+        assert "Do NOT infer" in prompt or "do NOT infer" in prompt.lower()
+
+    def test_prompt_excludes_specific_outcome_examples(self):
+        # "PR merged" was the example that caused premature announcements
+        prompt = self._capture_prompt()
+        assert "PR merged" not in prompt
+
+    def test_prompt_includes_context_when_provided(self):
+        prompt = self._capture_prompt(context="Request: fix bug\nOutcome: tests pass")
+        assert "fix bug" in prompt
+        assert "tests pass" in prompt
+
+    def test_prompt_omits_context_section_when_none(self):
+        prompt = self._capture_prompt(context=None)
+        assert "What was just completed" not in prompt
