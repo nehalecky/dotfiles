@@ -11,7 +11,22 @@ This repo is a personal dotfiles template. To use it:
 
 ## Quick Start
 
-### New machine setup
+### Option A: Direct config setup (recommended when adapting this repo)
+
+Copy the example config, fill in your values, then apply:
+
+```bash
+mkdir -p ~/.config/chezmoi
+curl -o ~/.config/chezmoi/chezmoi.toml \
+  https://raw.githubusercontent.com/<your-github-username>/dotfiles/master/examples/chezmoi.toml.example
+# Edit ~/.config/chezmoi/chezmoi.toml with your values
+chezmoi init <your-github-username>   # clones the repo without overwriting your config
+chezmoi apply
+```
+
+The example config at `examples/chezmoi.toml.example` documents every field with instructions on where to find the values (especially the 1Password key names, which must match your vault exactly).
+
+### Option B: Interactive guided setup
 
 1. Install Homebrew (if not already installed):
    ```bash
@@ -169,14 +184,14 @@ uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "Kokoro ready"
 To change the Kokoro voice or use a cloud backend, add to `~/.env`:
 
 ```bash
-KOKORO_VOICE=af_heart         # default: warm American female ("Her" aesthetic)
-# KOKORO_VOICE=bf_emma        # British female alternative
+export KOKORO_VOICE=af_heart         # default: warm American female ("Her" aesthetic)
+# export KOKORO_VOICE=bf_emma        # British female alternative
 # See https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md for all options
-ELEVENLABS_API_KEY=your-key   # ElevenLabs (highest quality, overrides Kokoro)
-OPENAI_API_KEY=your-key       # OpenAI TTS (alternative cloud voice)
+export ELEVENLABS_API_KEY=your-key   # ElevenLabs (highest quality, overrides Kokoro)
+export OPENAI_API_KEY=your-key       # OpenAI TTS (alternative cloud voice)
 ```
 
-Full reference: [`.docs/claude-hooks.md`](dot_docs/claude-hooks.md).
+Full reference: [`~/.docs/claude-hooks.md`](dot_docs/claude-hooks.md).
 
 - [ ] Kokoro TTS pre-warmed (`uv run ~/.claude/hooks/utils/tts/kokoro_tts.py "hello"`)
 - [ ] (Optional) Cloud TTS key set in `~/.env` for higher-quality voice

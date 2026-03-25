@@ -106,6 +106,8 @@ flowchart LR
         └── ollama.py          # Local Ollama inference
 ```
 
+Five additional lifecycle hooks (`session_start.py`, `pre_tool_use.py`, `post_tool_use.py`, `pre_compact.py`, `user_prompt_submit.py`) are not covered in this document.
+
 Source files in the chezmoi repo: [`dot_claude/hooks/`](../dot_claude/hooks/).
 
 ---
@@ -342,6 +344,7 @@ Set in `~/.env` (mode 600, sourced by shell profile):
 | `ANTHROPIC_API_KEY`  | Anthropic LLM           | Not needed with Claude Max (use `claude_cli`)      |
 | `ENGINEER_NAME`      | Personalized prompts    | 30% chance of "Name, your input is needed"         |
 | `HF_TOKEN`           | Gated HF models only    | Not needed for Kokoro-82M (public model)           |
+| `KOKORO_VOICE`       | Kokoro voice selection  | Default: `af_heart`; see [VOICES.md](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md) for all options |
 
 ---
 

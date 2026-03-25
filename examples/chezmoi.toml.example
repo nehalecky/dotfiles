@@ -1,0 +1,54 @@
+# chezmoi.toml — Personal machine configuration for chezmoi dotfiles.
+#
+# USAGE (direct setup — recommended for adapting this repo to your own use):
+#   mkdir -p ~/.config/chezmoi
+#   cp examples/chezmoi.toml.example ~/.config/chezmoi/chezmoi.toml
+#   # Edit the values below to match your identity and 1Password vault
+#   chezmoi apply
+#
+# Alternatively, use the guided interactive setup:
+#   chezmoi init --apply <your-github-username>
+# (prompts for the same values, but you need them ready upfront)
+
+[data]
+    # ── Profile ───────────────────────────────────────────────────────────────
+    # "personal" or "work"
+    # Controls: Brewfile sections, Starship theme, SSH keys deployed,
+    # cloud tooling (k8s/GCP for work; Signal/Spotify/Steam for personal)
+    profile    = "personal"
+    isWork     = false   # true if profile = "work"
+    isPersonal = true    # false if profile = "work"
+
+    # ── Terminal ──────────────────────────────────────────────────────────────
+    # Options: "wezterm", "iterm2", "ghostty", "kitty", "alacritty", "default"
+    # Controls which terminal-specific config files are deployed to HOME
+    terminal  = "wezterm"
+    isWezTerm = true    # true only for wezterm
+    isITerm2  = false   # true only for iterm2
+
+    # ── Git Identity ──────────────────────────────────────────────────────────
+    git_name        = "Your Full Name"
+    preferred_name  = "FirstName"      # Used in TTS voice notifications ("Hey FirstName, done!")
+    git_email       = "you@example.com"
+    github_username = "your-github-username"
+
+    # ── SSH Signing Key ───────────────────────────────────────────────────────
+    # The full public key used to sign git commits. Paste the output of:
+    #   cat ~/.ssh/id_ed25519_signing.pub
+    # To generate a dedicated signing key:
+    #   ssh-keygen -t ed25519 -C "you@example.com" -f ~/.ssh/id_ed25519_signing
+    git_signing_key = "ssh-ed25519 AAAA... you@example.com"
+
+    # ── 1Password SSH Key Names ───────────────────────────────────────────────
+    # The EXACT item titles in your 1Password vault for your SSH keys.
+    # These are case-sensitive and must match character-for-character.
+    #
+    # To find them:
+    #   1. Open 1Password
+    #   2. Filter by category: SSH Key
+    #   3. Copy the item title exactly (e.g. "GitHub Auth Key", "My Signing Key")
+    #
+    # Tip: 1Password > Settings > Developer > SSH Agent shows which items
+    # the agent is currently serving — cross-reference with `ssh-add -L`.
+    op_auth_key_name    = "Your GitHub Auth SSH Key Title in 1Password"
+    op_signing_key_name = "Your GitHub Signing SSH Key Title in 1Password"
