@@ -47,10 +47,10 @@ Chezmoi renders these variables into `~/.config/1Password/ssh/agent.toml` via `d
 # Rendered from dot_config/1Password/ssh/agent.toml.tmpl
 # (example — actual item names come from your chezmoi.toml)
 [[ssh-keys]]
-item = "Nico Personal GitHub Auth Key"   # ← from op_auth_key_name
+item = "My GitHub Auth Key"   # ← from op_auth_key_name
 
 [[ssh-keys]]
-item = "Github Signing Key (Nico Personal)"  # ← from op_signing_key_name
+item = "My Git Signing Key"  # ← from op_signing_key_name
 ```
 
 The template source:
@@ -233,7 +233,7 @@ Run `chezmoi apply` after editing the template to render the keys to `~/.env`.
 
 `~/.env` is managed by `private_dot_env.tmpl`. It is:
 - **Rendered** at `chezmoi apply` time — 1Password values are injected then
-- **Never committed** — `private_` prefix means chezmoi encrypts before storing (actually this file is excluded from the public repo)
+- **Mode 600 on deploy** — `private_` prefix sets restrictive file permissions (0600); the template is committed to this repo, but the rendered `~/.env` containing real values lives only on your machine
 - **Sourced** by your shell at login
 
 To add a new secret:

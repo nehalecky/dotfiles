@@ -289,7 +289,7 @@ class NotificationService:
 def build_service(hooks_dir: Optional[Path] = None) -> NotificationService:
     """Factory that creates a NotificationService with default backends.
 
-    TTS priority:  ElevenLabs -> OpenAI -> pyttsx3
+    TTS priority:  ElevenLabs -> OpenAI -> Kokoro -> pyttsx3
     LLM priority:  claude_cli -> OpenAI -> Anthropic -> Ollama
     """
     if hooks_dir is None:
