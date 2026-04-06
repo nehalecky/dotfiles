@@ -541,7 +541,7 @@ def run_hook_unit_tests() -> None:
         return
 
     result = run(
-        "uv", "tool", "run", "pytest", str(test_file), "-v",
+        "python3", "-m", "pytest", str(test_file), "-v",
         cwd=str(DOTFILES_DIR),
     )
     if result.returncode == 0:
