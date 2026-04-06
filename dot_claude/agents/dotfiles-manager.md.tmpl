@@ -201,7 +201,56 @@ chezmoi doctor
 chezmoi execute-template < ~/.local/share/chezmoi/dot_gitconfig.tmpl
 ```
 
-### 4. Home Directory Organization
+### 4. Plugin & Marketplace Management
+
+Claude Code plugins and marketplaces have a **two-layer architecture** that requires understanding before managing:
+
+| Layer | Files | Tracked by chezmoi? | Why |
+|---|---|---|---|
+| **Declarative config** | `~/.claude/settings.json` (`enabledPlugins`) | ✅ Yes | Defines *which* plugins you want |
+| **Marketplace registry** | `~/.claude/plugin-marketplaces.json` | ✅ Yes | Defines *where* to find plugins |
+| **Runtime cache** | `~/.claude/plugins/` | ❌ No | Downloaded plugin code — runtime state |
+
+#### Workflow A: After Installing/Updating Plugins (on any machine)
+
+Use CC tools (`/plugin install`, `/plugin marketplace add`) to install, then sync to dotfiles:
+
+```bash
+# 1. Install or update plugins via Claude Code tools
+# /plugin install some-plugin@marketplace
+# /plugin marketplace add owner/repo
+
+# 2. Sync the two config files to chezmoi source
+chezmoi add ~/.claude/settings.json
+chezmoi add ~/.claude/plugin-marketplaces.json
+
+# 3. Review what changed
+chezmoi git -- diff
+
+# 4. Commit and push
+chezmoi git -- commit -m "chore: update enabled plugins and marketplaces"
+chezmoi git -- push
+```
+
+#### Workflow B: Syncing Plugins to Another Machine
+
+Dotfiles pull brings the *list* of desired plugins; you still need to fetch them:
+
+```bash
+# 1. Pull latest dotfiles (gets updated enabledPlugins + marketplaces)
+chezmoi git -- pull
+chezmoi apply
+
+# 2. Inside Claude Code, install all enabled plugins
+# /plugin install   (installs any enabled but not-yet-fetched plugins)
+```
+
+#### Key Rules
+- **Never manually edit `~/.claude/plugins/`** — managed exclusively by CC plugin tools
+- **Always `chezmoi add` both files** after any plugin change — they must stay in sync
+- `~/.claude/settings.local.json` is intentionally excluded from chezmoi (machine-local overrides)
+
+### 5. Home Directory Organization
 
 #### Directory Structure Enforcement
 - **Visible directories**: Only essential user directories (Documents, Desktop, etc.)
