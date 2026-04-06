@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+"""
+claude-notify — switch Claude Code notification delivery mode.
+
+Usage:
+    claude-notify             show current mode
+    claude-notify tts         audio only (ElevenLabs → OpenAI → Kokoro → say)
+    claude-notify macos       macOS Notification Center only, silent TTS
+    claude-notify both        audio + visual (default)
+    claude-notify silent      log only, no delivery
+"""
+import sys
+from pathlib import Path
+
+# SYNC REQUIRED: these mode values must match _VALID_MODES in
+# ~/.claude/hooks/utils/common.py. The CLI cannot import from the hooks
+# library (different runtime context), so keep both lists in step manually.
+MODES = ("tts", "macos", "both", "silent")
+STATE_FILE = Path.home() / ".claude" / "data" / "notify-mode"
+DESCRIPTIONS = {
+    "tts":    "audio only  (ElevenLabs → OpenAI → Kokoro → say)",
+    "macos":  "visual only  (macOS Notification Center, silent TTS)",
+    "both":   "audio + visual  (default)",
+    "silent": "log only, no delivery",
+}
+
+
+def get_mode() -> str:
+    try:
+        return STATE_FILE.read_text().strip()
+    except (FileNotFoundError, OSError):
+        return "both"
+
+
+def set_mode(mode: str) -> None:
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    STATE_FILE.write_text(mode + "\n")
+
+
+def main() -> None:
+    if len(sys.argv) == 1:
+        current = get_mode()
+        print(f"Notification mode: {current}  —  {DESCRIPTIONS[current]}")
+        print("\nAvailable modes:")
+        for m, desc in DESCRIPTIONS.items():
+            marker = "▶" if m == current else " "
+            print(f"  {marker} {m:<8}  {desc}")
+        return
+
+    mode = sys.argv[1].lower()
+    if mode not in MODES:
+        print(f"Unknown mode '{mode}'. Choose: {', '.join(MODES)}", file=sys.stderr)
+        sys.exit(1)
+
+    set_mode(mode)
+    print(f"Notification mode -> {mode}  ({DESCRIPTIONS[mode]})")
+
+
+if __name__ == "__main__":
+    main()
