@@ -20,7 +20,6 @@
   "enabledPlugins": {
     "code-simplifier@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "atlassian@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "huggingface-skills@claude-plugins-official": true,
     "superpowers@superpowers-marketplace": true,
@@ -80,4 +79,11 @@
       }
     ]
   }
+{{ if eq .profile "work" }},
+  "mcpServers": {
+    "incident-io": {
+      "type": "http",
+      "url": "https://mcp.incident.io/mcp"
+    }
+  }{{ end }}
 }
