@@ -22,6 +22,7 @@ jobs:
       - name: Validate YAML
         run: |
           python3 -c "import yaml; yaml.safe_load(open('.chezmoidata.yaml'))"
+          python3 -c "import yaml; yaml.safe_load(open('.chezmoiexternal.yaml'))"
 
   test:
     runs-on: ubuntu-latest
@@ -37,7 +38,7 @@ jobs:
       - name: Install starship
         run: curl -sS https://starship.rs/install.sh | sh -s -- --yes
       - name: Install Python deps
-        run: pip install tomli pytest
+        run: pip install tomli pytest pyyaml
       - name: Run tests
         env:
           PROFILE: ${{ matrix.profile }}

@@ -247,6 +247,61 @@ def run_template_tests() -> None:
 # ---------------------------------------------------------------------------
 
 
+def _validate_chezmoiexternal(external_yaml: Path) -> None:
+    """Validate .chezmoiexternal.yaml syntax and field schema."""
+    label = "Config: .chezmoiexternal.yaml is valid YAML"
+    if not external_yaml.exists():
+        pass_test(f"{label} (skipped — file not present)")
+        return
+
+    try:
+        import yaml
+    except ImportError:
+        pass_test(f"{label} (skipped — pyyaml not installed)")
+        return
+
+    try:
+        with open(external_yaml) as f:
+            externals = yaml.safe_load(f)
+        pass_test(label)
+    except Exception as e:
+        fail_test(label, str(e))
+        return
+
+    if not externals or not isinstance(externals, dict):
+        return
+
+    # Schema validation — catch invalid fields like the "recursive" bug
+    VALID_GIT_REPO_FIELDS = {
+        "type", "url", "clone", "pull", "refreshPeriod",
+        "stripComponents", "include", "exclude", "encrypted",
+        "filter", "readOnly",
+    }
+    VALID_ARCHIVE_FIELDS = VALID_GIT_REPO_FIELDS | {"format", "path"}
+    VALID_FILE_FIELDS = {
+        "type", "url", "refreshPeriod", "encrypted", "filter",
+        "executable",
+    }
+    TYPE_FIELDS = {
+        "git-repo": VALID_GIT_REPO_FIELDS,
+        "archive": VALID_ARCHIVE_FIELDS,
+        "archive-file": VALID_ARCHIVE_FIELDS,
+        "file": VALID_FILE_FIELDS,
+    }
+    for target, spec in externals.items():
+        ext_type = spec.get("type", "unknown")
+        allowed = TYPE_FIELDS.get(ext_type)
+        entry_label = f"Config: .chezmoiexternal.yaml '{target}' has valid fields for type '{ext_type}'"
+        if allowed is None:
+            fail_test(entry_label, f"Unknown external type: {ext_type}")
+        else:
+            invalid_fields = set(spec.keys()) - allowed
+            if invalid_fields:
+                fail_test(entry_label, f"Invalid fields: {invalid_fields}")
+            else:
+                pass_test(entry_label)
+
+
 def run_syntax_tests() -> None:
     print()
     print("=== Syntax Validation ===")
@@ -306,6 +361,10 @@ def run_syntax_tests() -> None:
             pass_test(label)
         else:
             fail_test(label, result.stderr or result.stdout)
+
+    # .chezmoiexternal.yaml — YAML validity + schema validation
+    external_yaml = DOTFILES_DIR / ".chezmoiexternal.yaml"
+    _validate_chezmoiexternal(external_yaml)
 
     # 1Password agent TOML
     label = "Config: 1Password/ssh/agent.toml is valid TOML"
