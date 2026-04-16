@@ -7,7 +7,7 @@
 # Re-runs automatically when either config file changes.
 #
 # Marketplaces hash: {{ include "dot_claude/plugin-marketplaces.json" | sha256sum }}
-# Settings hash:     {{ include "dot_claude/settings.json.tmpl" | sha256sum }}
+# Settings hash:     {{ include "dot_claude/create_settings.json.tmpl" | sha256sum }}
 
 import json
 import shutil
