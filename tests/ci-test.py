@@ -500,16 +500,25 @@ def run_hook_tests() -> None:
         else:
             fail_test(label, result.stderr)
 
-    # Determine settings file — may be .json or .json.tmpl
+    # Determine settings file — may be .json, .json.tmpl, or create_.json.tmpl
     settings_tmpl = DOTFILES_DIR / "dot_claude" / "settings.json.tmpl"
+    settings_create_tmpl = DOTFILES_DIR / "dot_claude" / "create_settings.json.tmpl"
     settings_plain = DOTFILES_DIR / "dot_claude" / "settings.json"
 
-    if settings_tmpl.exists():
+    # Find the first existing settings source
+    found_tmpl = (
+        settings_tmpl if settings_tmpl.exists()
+        else settings_create_tmpl if settings_create_tmpl.exists()
+        else None
+    )
+
+    if found_tmpl is not None:
         # Render the template first
         settings_path = Path("/tmp/ci-claude-settings.json")
-        label = "Config: dot_claude/settings.json.tmpl renders successfully"
+        tmpl_name = found_tmpl.name
+        label = f"Config: dot_claude/{tmpl_name} renders successfully"
         try:
-            with open(settings_tmpl, "r") as f:
+            with open(found_tmpl, "r") as f:
                 result = run(
                     "chezmoi",
                     "execute-template",
@@ -526,7 +535,7 @@ def run_hook_tests() -> None:
             fail_test(label, str(e))
             return
         settings_file = settings_path
-        settings_display = "dot_claude/settings.json.tmpl (rendered)"
+        settings_display = f"dot_claude/{tmpl_name} (rendered)"
     elif settings_plain.exists():
         settings_file = settings_plain
         settings_display = "dot_claude/settings.json"
