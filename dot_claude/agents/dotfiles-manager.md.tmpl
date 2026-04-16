@@ -230,6 +230,28 @@ chezmoi execute-template < ~/.local/share/chezmoi/dot_gitconfig.tmpl
 - **Templates**: `dot_gitconfig.tmpl` → `~/.gitconfig` (with variable substitution)
 - **Private files**: `private_dot_ssh/config` → `~/.ssh/config` (encrypted)
 - **Directories**: `dot_config/app/` → `~/.config/app/`
+- **Create-only files**: `create_filename` → deployed once on new machines, never overwritten by subsequent `chezmoi apply`
+
+### Create-only Files (`create_` prefix)
+
+Create-only files deploy once, then the **application owns them**. Chezmoi never overwrites them afterward.
+
+**Use `create_` when:**
+- An application modifies the file at runtime (permission grants, plugin state)
+- Chezmoi's "always overwrite" behavior would discard runtime changes
+
+**Key example — `settings.json`:**
+`dot_claude/create_settings.json.tmpl` seeds `~/.claude/settings.json` on new machines. Claude Code then modifies it at runtime (tool permissions, plugin state). The `create_` prefix prevents chezmoi from overwriting those changes.
+
+**To force-reset** (deploy an updated baseline):
+```bash
+rm ~/.claude/settings.json
+chezmoi apply
+```
+
+**Workflow difference from managed files:**
+- **Managed:** Edit in HOME → `chezmoi add` → commit (chezmoi always wins)
+- **Create-only:** Edit the source in `~/.local/share/chezmoi/` → commit → new baseline deploys only where the file does not yet exist, or after manual deletion
 
 ### Template Usage
 ```yaml
