@@ -156,6 +156,7 @@ Local runtime data (NOT managed):
 - **Runtime:** `~/.claude/` (automatically populated by chezmoi)
 - **Local Data:** Excluded via `.chezmoiignore` (never version controlled)
 - **Updates:** Edit source via chezmoi, then `chezmoi apply`
+- **Create-only:** `settings.json` uses `create_` prefix — deployed once on new machines, then owned by Claude Code at runtime (avoids conflict with runtime permission grants)
 
 ## Superpowers Plugin Integration
 
