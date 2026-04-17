@@ -183,8 +183,11 @@ After setup, verify everything works:
 - [ ] Development workspace launches (`workspace-dev test`)
 - [ ] All panes populate correctly
 
+### Claude Code
+- [ ] Claude Code installed via npm (`claude --version`)
+- [ ] To update: `npm update -g @anthropic-ai/claude-code`
+
 ### Claude Code Plugins
-- [ ] Claude CLI available (`claude --version`)
 - [ ] Superpowers marketplace registered (`claude plugin marketplace list` shows `superpowers-marketplace`)
 - [ ] Core plugins installed (`claude plugin list` includes `superpowers`, `elements-of-style`, `episodic-memory`)
 - [ ] No dead marketplace entries in `~/.claude/settings.json`
