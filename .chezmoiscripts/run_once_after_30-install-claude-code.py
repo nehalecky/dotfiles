@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Install Claude Code native binary if not already present."""
+"""Install Claude Code native binary if not already present.
+
+Official installation docs: https://code.claude.com/docs/en/setup
+"""
 import shutil
 import subprocess
 import sys

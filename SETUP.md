@@ -201,8 +201,10 @@ After setup, verify everything works:
 
 > **Install:** `curl -fsSL https://claude.ai/install.sh | bash`
 > Auto-updates in the background. Versions stored at `~/.local/share/claude/versions/`.
+> Docs: [code.claude.com/docs/en/setup](https://code.claude.com/docs/en/setup)
 
 ### Claude Code Plugins
+- [ ] Claude CLI available (`claude --version`)
 - [ ] Superpowers marketplace registered (`claude plugin marketplace list` shows `superpowers-marketplace`)
 - [ ] Core plugins installed (`claude plugin list` includes `superpowers`, `elements-of-style`, `episodic-memory`)
 - [ ] No dead marketplace entries in `~/.claude/settings.json`
