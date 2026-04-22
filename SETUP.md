@@ -24,6 +24,11 @@ chezmoi init <your-github-username>   # clones the repo without overwriting your
 chezmoi apply
 ```
 
+> **Claude Code:** After `chezmoi apply`, install the Claude Code CLI separately:
+> ```bash
+> curl -fsSL https://claude.ai/install.sh | bash
+> ```
+
 The example config at `examples/chezmoi.toml.example` documents every field with instructions on where to find the values (especially the 1Password key names, which must match your vault exactly).
 
 ### Option B: Interactive guided setup
@@ -53,6 +58,13 @@ The example config at `examples/chezmoi.toml.example` documents every field with
    ```bash
    brew bundle --global
    ```
+
+5. Install Claude Code (native binary — auto-updating):
+   ```bash
+   curl -fsSL https://claude.ai/install.sh | bash
+   ```
+   > **Why not Homebrew?** The native binary installer auto-updates in the background.
+   > The Homebrew cask (`claude-code`) requires manual `brew upgrade` and is not used here.
 
 ### Re-initializing (change profile or update values)
 
@@ -128,31 +140,6 @@ chezmoi add ~/.zshrc
 chezmoi git -- commit -m "feat: add custom shell aliases"
 ```
 
-### How Chezmoi Manages Files
-
-Chezmoi manages files with three distinct strategies:
-
-| Strategy | Behavior | Examples |
-|----------|----------|----------|
-| **Managed** | Updates on every `chezmoi apply` | `.zshrc`, `starship.toml`, git config |
-| **Create-only** | Deploys once, never overwrites | `.claude/settings.json` |
-| **External** | Clones git repos or archives into HOME | `.zprezto` (via `.chezmoiexternal.yaml`) |
-
-**Managed files** follow the HOME→Source workflow above. Chezmoi overwrites them on every apply.
-
-**Create-only files** (`create_` prefix in source) deploy once, then the application owns them. For example, Claude Code modifies `settings.json` at runtime with permission grants — chezmoi seeds the initial version and steps aside. To force a fresh deploy: `rm ~/.claude/settings.json && chezmoi apply`.
-
-**Externals** live in `.chezmoiexternal.yaml`. Chezmoi clones them on first apply and refreshes them periodically (weekly for zprezto).
-
-### `chezmoi init` vs `chezmoi apply`
-
-| Command | When to use |
-|---------|------------|
-| `chezmoi apply` | Deploy managed files from source to HOME |
-| `chezmoi init` | Regenerate config after a "config file template has changed" warning |
-
-`chezmoi init` re-runs the setup prompts (profile, git identity, 1Password keys) and regenerates `~/.config/chezmoi/chezmoi.toml`. Existing values appear as defaults — press Enter to keep them.
-
 ## Tool Verification Checklist
 
 After setup, verify everything works:
@@ -184,8 +171,12 @@ After setup, verify everything works:
 - [ ] All panes populate correctly
 
 ### Claude Code
-- [ ] Claude Code installed via npm (`claude --version`)
-- [ ] To update: `npm update -g @anthropic-ai/claude-code`
+- [ ] Claude Code installed via native binary (`~/.local/bin/claude` exists)
+- [ ] Claude CLI works (`claude --version`)
+- [ ] Binary is on PATH (`which claude` returns `~/.local/bin/claude`)
+
+> **Install:** `curl -fsSL https://claude.ai/install.sh | bash`
+> Auto-updates in the background. Versions stored at `~/.local/share/claude/versions/`.
 
 ### Claude Code Plugins
 - [ ] Superpowers marketplace registered (`claude plugin marketplace list` shows `superpowers-marketplace`)
@@ -233,7 +224,7 @@ Full reference: [`~/.docs/claude-hooks.md`](dot_docs/claude-hooks.md).
 
 ### Config template changed warning
 
-If you see `chezmoi: warning: config file template has changed, run chezmoi init to regenerate config file`, your config needs regeneration (see [`chezmoi init` vs `chezmoi apply`](#chezmoi-init-vs-chezmoi-apply) above). Either:
+If you see `chezmoi: warning: config file template has changed, run chezmoi init to regenerate config file`, your local `~/.config/chezmoi/chezmoi.toml` is missing a newly added variable. Either:
 
 - Run `chezmoi init --apply <your-github-username>` to regenerate (you will be prompted for new values)
 - Or add the missing key manually to `~/.config/chezmoi/chezmoi.toml` under `[data]`
