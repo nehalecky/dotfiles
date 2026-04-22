@@ -24,6 +24,10 @@ chezmoi init <your-github-username>   # clones the repo without overwriting your
 chezmoi apply
 ```
 
+> **Claude Code:** Installed automatically by `chezmoi apply`. If the script
+> was skipped or you're setting up without chezmoi, install manually:
+> `curl -fsSL https://claude.ai/install.sh | bash`
+
 The example config at `examples/chezmoi.toml.example` documents every field with instructions on where to find the values (especially the 1Password key names, which must match your vault exactly).
 
 ### Option B: Interactive guided setup
@@ -52,6 +56,13 @@ The example config at `examples/chezmoi.toml.example` documents every field with
 4. Run brew bundle to install packages:
    ```bash
    brew bundle --global
+   ```
+
+5. Claude Code is installed automatically by `chezmoi apply` via the
+   `run_once_after_30-install-claude-code.py` script. If it wasn't picked
+   up, install manually:
+   ```bash
+   curl -fsSL https://claude.ai/install.sh | bash
    ```
 
 ### Re-initializing (change profile or update values)
@@ -184,8 +195,12 @@ After setup, verify everything works:
 - [ ] All panes populate correctly
 
 ### Claude Code
-- [ ] Claude Code installed via npm (`claude --version`)
-- [ ] To update: `npm update -g @anthropic-ai/claude-code`
+- [ ] Claude Code installed via native binary (`~/.local/bin/claude` exists)
+- [ ] Claude CLI works (`claude --version`)
+- [ ] Binary is on PATH (`which claude` returns `~/.local/bin/claude`)
+
+> **Install:** `curl -fsSL https://claude.ai/install.sh | bash`
+> Auto-updates in the background. Versions stored at `~/.local/share/claude/versions/`.
 
 ### Claude Code Plugins
 - [ ] Superpowers marketplace registered (`claude plugin marketplace list` shows `superpowers-marketplace`)
