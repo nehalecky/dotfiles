@@ -139,6 +139,31 @@ chezmoi add ~/.zshrc
 chezmoi git -- commit -m "feat: add custom shell aliases"
 ```
 
+### How Chezmoi Manages Files
+
+Chezmoi manages files with three distinct strategies:
+
+| Strategy | Behavior | Examples |
+|----------|----------|----------|
+| **Managed** | Updates on every `chezmoi apply` | `.zshrc`, `starship.toml`, git config |
+| **Create-only** | Deploys once, never overwrites | `.claude/settings.json` |
+| **External** | Clones git repos or archives into HOME | `.zprezto` (via `.chezmoiexternal.yaml`) |
+
+**Managed files** follow the HOME→Source workflow above. Chezmoi overwrites them on every apply.
+
+**Create-only files** (`create_` prefix in source) deploy once, then the application owns them. For example, Claude Code modifies `settings.json` at runtime with permission grants — chezmoi seeds the initial version and steps aside. To force a fresh deploy: `rm ~/.claude/settings.json && chezmoi apply`.
+
+**Externals** live in `.chezmoiexternal.yaml`. Chezmoi clones them on first apply and refreshes them periodically (weekly for zprezto).
+
+### `chezmoi init` vs `chezmoi apply`
+
+| Command | When to use |
+|---------|------------|
+| `chezmoi apply` | Deploy managed files from source to HOME |
+| `chezmoi init` | Regenerate config after a "config file template has changed" warning |
+
+`chezmoi init` re-runs the setup prompts (profile, git identity, 1Password keys) and regenerates `~/.config/chezmoi/chezmoi.toml`. Existing values appear as defaults — press Enter to keep them.
+
 ## Tool Verification Checklist
 
 After setup, verify everything works:
@@ -223,7 +248,7 @@ Full reference: [`~/.docs/claude-hooks.md`](dot_docs/claude-hooks.md).
 
 ### Config template changed warning
 
-If you see `chezmoi: warning: config file template has changed, run chezmoi init to regenerate config file`, your local `~/.config/chezmoi/chezmoi.toml` is missing a newly added variable. Either:
+If you see `chezmoi: warning: config file template has changed, run chezmoi init to regenerate config file`, your config needs regeneration (see [`chezmoi init` vs `chezmoi apply`](#chezmoi-init-vs-chezmoi-apply) above). Either:
 
 - Run `chezmoi init --apply <your-github-username>` to regenerate (you will be prompted for new values)
 - Or add the missing key manually to `~/.config/chezmoi/chezmoi.toml` under `[data]`
