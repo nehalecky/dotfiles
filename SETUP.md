@@ -24,10 +24,9 @@ chezmoi init <your-github-username>   # clones the repo without overwriting your
 chezmoi apply
 ```
 
-> **Claude Code:** After `chezmoi apply`, install the Claude Code CLI separately:
-> ```bash
-> curl -fsSL https://claude.ai/install.sh | bash
-> ```
+> **Claude Code:** Installed automatically by `chezmoi apply`. If the script
+> was skipped or you're setting up without chezmoi, install manually:
+> `curl -fsSL https://claude.ai/install.sh | bash`
 
 The example config at `examples/chezmoi.toml.example` documents every field with instructions on where to find the values (especially the 1Password key names, which must match your vault exactly).
 
@@ -59,12 +58,12 @@ The example config at `examples/chezmoi.toml.example` documents every field with
    brew bundle --global
    ```
 
-5. Install Claude Code (native binary — auto-updating):
+5. Claude Code is installed automatically by `chezmoi apply` via the
+   `run_once_after_30-install-claude-code.py` script. If it wasn't picked
+   up, install manually:
    ```bash
    curl -fsSL https://claude.ai/install.sh | bash
    ```
-   > **Why not Homebrew?** The native binary installer auto-updates in the background.
-   > The Homebrew cask (`claude-code`) requires manual `brew upgrade` and is not used here.
 
 ### Re-initializing (change profile or update values)
 
