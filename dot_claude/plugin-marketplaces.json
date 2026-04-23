@@ -2,5 +2,9 @@
   "superpowers-marketplace": {
     "repo": "obra/superpowers-marketplace",
     "description": "Superpowers skills: TDD, brainstorming, planning, debugging"
+  },
+  "workon": {
+    "repo": "nehalecky/workon",
+    "description": "Composes a unified view over your work queues — tasks, calendar, code reviews, document review, local project state — and recommends where your attention belongs right now"
   }
 }
