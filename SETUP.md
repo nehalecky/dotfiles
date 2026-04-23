@@ -203,6 +203,8 @@ After setup, verify everything works:
 > Auto-updates in the background. Versions stored at `~/.local/share/claude/versions/`.
 > Docs: [code.claude.com/docs/en/setup](https://code.claude.com/docs/en/setup)
 
+> **Migration note:** If Claude Code was previously installed via npm or Homebrew, `chezmoi apply` will detect this and prompt you to migrate to the native binary.
+
 ### Claude Code Plugins
 - [ ] Claude CLI available (`claude --version`)
 - [ ] Superpowers marketplace registered (`claude plugin marketplace list` shows `superpowers-marketplace`)
