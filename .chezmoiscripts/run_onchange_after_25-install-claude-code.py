@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
-"""Install Claude Code native binary, migrating from other install methods if needed."""
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
+"""Install Claude Code native binary, migrating from other distributions if needed.
+
+This script re-runs when its content changes (run_onchange), so migration detection
+fires again if the installation method ever changes in the future.
+"""
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
-# Allow importing from sibling utils/ directory
 sys.path.insert(0, str(Path(__file__).parent))
-from utils.migration import migration_prompt
+from utils.migration import ConfigItem, migration_prompt
 
 INSTALL_URL = "https://claude.ai/install.sh"
 CLAUDE_BIN = Path.home() / ".local" / "bin" / "claude"
@@ -24,22 +31,25 @@ def install_native() -> None:
         print("❌ Installation failed", file=sys.stderr)
         sys.exit(1)
     version = subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
-    print(f"✅ Claude Code native binary installed ({version})")
+    print(f"✅ Claude Code installed ({version})")
 
 
-def detect_source(binary_path: str | None) -> str:
-    if not binary_path:
+def detect_source(binary: str | None) -> str:
+    if not binary:
         return "unknown"
-    p = Path(binary_path)
-    if "homebrew" in str(p).lower() or "npm" in str(p).lower():
+    s = str(Path(binary).resolve())
+    if "homebrew" in s.lower() or "npm" in s.lower():
         return "npm (Homebrew-managed)"
-    if "nvm" in str(p).lower():
+    if "nvm" in s.lower():
         return "npm (nvm-managed)"
-    return str(p)
+    if "node_modules" in s.lower():
+        return "npm"
+    return str(binary)
 
 
 def main() -> None:
     current = shutil.which("claude")
+
     migration_prompt(
         tool="claude",
         current_binary=current,
@@ -47,6 +57,20 @@ def main() -> None:
         current_source=detect_source(current),
         expected_source="native binary",
         install_fn=install_native,
+        config_items=[
+            ConfigItem(
+                path="~/.claude",
+                description="settings, plugins, memories, hooks",
+                compatible=True,
+            ),
+        ],
+        cleanup_hints=[
+            "npm uninstall -g @anthropic-ai/claude-code  # remove the npm package if previously installed",
+        ],
+        post_migration_notes=[
+            "Native binary auto-updates in the background — no more `npm update -g` needed.",
+            "Update manually anytime with: claude update",
+        ],
     )
 
 
