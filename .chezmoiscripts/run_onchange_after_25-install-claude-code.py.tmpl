@@ -5,16 +5,15 @@
 # ///
 """Install Claude Code native binary, migrating from other distributions if needed.
 
-This script re-runs when its content changes (run_onchange), so migration detection
-fires again if the installation method ever changes in the future.
+Re-runs when this file changes (run_onchange), so migration detection fires again
+if the installation method changes in future dotfile updates.
 """
+{{ template "migration-utils.tmpl" . }}
+
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent))
-from utils.migration import ConfigItem, migration_prompt
 
 INSTALL_URL = "https://claude.ai/install.sh"
 CLAUDE_BIN = Path.home() / ".local" / "bin" / "claude"
@@ -49,7 +48,6 @@ def detect_source(binary: str | None) -> str:
 
 def main() -> None:
     current = shutil.which("claude")
-
     migration_prompt(
         tool="claude",
         current_binary=current,

@@ -16,8 +16,17 @@ jobs:
       - uses: actions/checkout@v4
       - name: Lint Python scripts
         run: |
-          for f in .chezmoiscripts/*.py; do
-            python3 -m py_compile "$f" && echo "OK: $f"
+          for f in .chezmoiscripts/*.py .chezmoiscripts/*.py.tmpl; do
+            [ -f "$f" ] && python3 -m py_compile "$f" && echo "OK: $f"
+          done
+          # Lint chezmoitemplates (pure Python fragments — wrap in try block)
+          for f in .chezmoitemplates/*.tmpl; do
+            [ -f "$f" ] && python3 -c "
+import sys
+with open('$f') as fh:
+    compile(fh.read(), '$f', 'exec')
+print('OK: $f')
+" || echo "FAIL: $f"
           done
       - name: Validate YAML
         run: |
