@@ -18,7 +18,7 @@ brew "glow"
 brew "jq"
 brew "just"
 brew "lazygit"
-brew "node"
+brew "node" # candidate for mise management when Descript toolchain is adopted
 brew "ripgrep"
 brew "starship"
 brew "tealdeer"
@@ -38,14 +38,16 @@ brew "procs"
 # ── Containers & Infra ──────────────────────────────────────
 brew "lazydocker"
 
-# ── Cask - All Profiles ────────────────────────────────────
+# ── macOS Applications - All Profiles ──────────────────────
 cask "1password"
-cask "1password-cli"
+cask "1password-cli" # CLI tool, distributed as cask by AgileBits
 cask "claude"
 cask "cursor"
+cask "raycast"
+
+# ── Fonts & Resources ───────────────────────────────────────
 cask "font-awesome-terminal-fonts"
 cask "font-meslo-lg-nerd-font"
-cask "raycast"
 
 {{ if eq .terminal "wezterm" -}}
 # ── Terminal: WezTerm ───────────────────────────────────────
