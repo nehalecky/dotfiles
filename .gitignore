@@ -35,5 +35,10 @@ test*.py
 !tests/**
 tests/__pycache__/
 
+# Script-level tests are tracked (override test* patterns for any tests/ subdir)
+!.chezmoiscripts/tests/
+!.chezmoiscripts/tests/**
+.chezmoiscripts/tests/__pycache__/
+
 # Go workspace (if using local development)
 go/
