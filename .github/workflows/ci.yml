@@ -19,14 +19,9 @@ jobs:
           for f in .chezmoiscripts/*.py .chezmoiscripts/*.py.tmpl; do
             [ -f "$f" ] && python3 -m py_compile "$f" && echo "OK: $f"
           done
-          # Lint chezmoitemplates (pure Python fragments — wrap in try block)
+          # Lint chezmoitemplates (pure Python fragments)
           for f in .chezmoitemplates/*.tmpl; do
-            [ -f "$f" ] && python3 -c "
-import sys
-with open('$f') as fh:
-    compile(fh.read(), '$f', 'exec')
-print('OK: $f')
-" || echo "FAIL: $f"
+            [ -f "$f" ] && python3 -c "compile(open('$f').read(), '$f', 'exec')" && echo "OK: $f" || echo "FAIL: $f"
           done
       - name: Validate YAML
         run: |
