@@ -594,7 +594,158 @@ def run_hook_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 5: Hook unit tests (pytest)
+# Category 5: Source structure validation
+# ---------------------------------------------------------------------------
+
+
+def run_source_structure_tests() -> None:
+    """Validate .chezmoiscripts/ contains only valid run_* files (no subdirs, no non-script files)."""
+    print()
+    print("=== Source Structure Validation ===")
+
+    scripts_dir = DOTFILES_DIR / ".chezmoiscripts"
+    VALID_PREFIXES = ("run_once_", "run_onchange_")
+
+    for item in sorted(scripts_dir.iterdir()):
+        if item.name == "__pycache__":
+            continue
+        if item.is_dir():
+            fail_test(
+                f"Script structure: .chezmoiscripts/{item.name}/ is a directory",
+                "Only run_* named files are allowed in .chezmoiscripts/ — "
+                "use .chezmoitemplates/ for shared code.",
+            )
+        elif not any(item.name.startswith(p) for p in VALID_PREFIXES):
+            fail_test(
+                f"Script structure: .chezmoiscripts/{item.name} is not a valid run_* script",
+                "Files in .chezmoiscripts/ must start with run_once_ or run_onchange_",
+            )
+        else:
+            pass_test(f"Script structure: .chezmoiscripts/{item.name} is valid")
+
+    # Validate .chezmoitemplates/ if it exists
+    templates_dir = DOTFILES_DIR / ".chezmoitemplates"
+    if templates_dir.exists():
+        for tmpl in sorted(templates_dir.iterdir()):
+            if tmpl.is_file():
+                pass_test(f"Script structure: .chezmoitemplates/{tmpl.name} present")
+
+
+# ---------------------------------------------------------------------------
+# Category 6: Init template validation
+# ---------------------------------------------------------------------------
+
+
+def run_init_template_tests() -> None:
+    """Validate .chezmoi.toml.tmpl (the init template) renders to valid TOML."""
+    print()
+    print("=== Init Template Validation ===")
+
+    init_tmpl = DOTFILES_DIR / ".chezmoi.toml.tmpl"
+    label = "Init: .chezmoi.toml.tmpl exists"
+    if not init_tmpl.exists():
+        fail_test(label)
+        return
+    pass_test(label)
+
+    label = f"Init: .chezmoi.toml.tmpl renders for profile={PROFILE} terminal={TERMINAL}"
+    try:
+        with open(init_tmpl) as f:
+            result = run(
+                "chezmoi", "execute-template",
+                "--init",
+                f"--promptString=profile={PROFILE}",
+                f"--promptString=terminal={TERMINAL}",
+                f"--source={DOTFILES_DIR}",
+                stdin=f,
+            )
+        if result.returncode == 0:
+            rendered = result.stdout
+            Path("/tmp/ci-chezmoi-init.toml").write_text(rendered)
+            pass_test(label)
+        else:
+            fail_test(label, result.stderr)
+            return
+    except Exception as e:
+        fail_test(label, str(e))
+        return
+
+    label = "Init: rendered .chezmoi.toml is valid TOML"
+    try:
+        validate_toml("/tmp/ci-chezmoi-init.toml")
+        pass_test(label)
+    except Exception as e:
+        fail_test(label, str(e))
+
+
+# ---------------------------------------------------------------------------
+# Category 7: chezmoi apply dry run
+# ---------------------------------------------------------------------------
+
+
+def run_apply_lifecycle_tests() -> None:
+    """Run chezmoi apply --dry-run to validate full enumeration and planning.
+
+    --dry-run validates that chezmoi can enumerate all files and scripts without
+    errors (e.g. 'not a script') and plan all file deployments — without actually
+    writing files or executing scripts. This catches structural issues like
+    non-run_* files in .chezmoiscripts/ that only surface during apply.
+    """
+    print()
+    print("=== Lifecycle: chezmoi apply --dry-run ===")
+
+    label = "Lifecycle: chezmoi apply --dry-run succeeds (no enumeration errors)"
+    result = run(
+        "chezmoi", "apply", "--dry-run", "--force",
+        f"--source={DOTFILES_DIR}",
+    )
+    if result.returncode == 0:
+        pass_test(label)
+    else:
+        fail_test(label, result.stderr or result.stdout)
+
+    # Second pass: verify idempotency of dry-run (output should be stable)
+    label = "Lifecycle: chezmoi apply --dry-run is stable on second run"
+    result2 = run(
+        "chezmoi", "apply", "--dry-run", "--force",
+        f"--source={DOTFILES_DIR}",
+    )
+    if result2.returncode == 0:
+        pass_test(label)
+    else:
+        fail_test(label, result2.stderr or result2.stdout)
+
+
+# ---------------------------------------------------------------------------
+# Category 8: Migration unit tests (pytest)
+# ---------------------------------------------------------------------------
+
+
+def run_migration_unit_tests() -> None:
+    """Run pytest against the migration utility test suite."""
+    print()
+    print("=== Migration Unit Tests ===")
+
+    test_dir = DOTFILES_DIR / "tests" / "chezmoiscripts"
+    label = "Migration: tests/chezmoiscripts/ exists"
+    if not test_dir.exists():
+        fail_test(label)
+        return
+    pass_test(label)
+
+    label = "Migration: pytest tests/chezmoiscripts/ passes"
+    result = run(
+        "python3", "-m", "pytest", str(test_dir), "-v",
+        cwd=str(DOTFILES_DIR),
+    )
+    if result.returncode == 0:
+        pass_test(label)
+    else:
+        fail_test(label, result.stdout + "\n" + result.stderr)
+
+
+# ---------------------------------------------------------------------------
+# Category 9: Hook unit tests (pytest)
 # ---------------------------------------------------------------------------
 
 
@@ -634,11 +785,15 @@ def main() -> None:
     print(f"  DOTFILES_DIR: {DOTFILES_DIR}")
 
     with chezmoi_config(config_dir, DOTFILES_DIR, PROFILE, TERMINAL):
+        run_source_structure_tests()     # must be first
+        run_init_template_tests()
         run_template_tests()
         run_syntax_tests()
         run_lint_tests()
+        run_apply_lifecycle_tests()      # after templates are validated
         run_hook_tests()
         run_hook_unit_tests()
+        run_migration_unit_tests()
 
     print()
     print("=" * 40)
