@@ -13,8 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
-from utils.migration import ConfigItem, migration_prompt
+sys.path.insert(0, str(Path.home() / ".local" / "lib" / "chezmoi-scripts"))
+from migration import ConfigItem, migration_prompt
 
 INSTALL_URL = "https://claude.ai/install.sh"
 CLAUDE_BIN = Path.home() / ".local" / "bin" / "claude"

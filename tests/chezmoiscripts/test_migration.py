@@ -1,7 +1,7 @@
 """Tests for the chezmoi migration utility.
 
 Run from the chezmoi source root:
-    python3 -m pytest .chezmoiscripts/tests/ -v
+    python3 -m pytest tests/chezmoiscripts/ -v
 """
 from __future__ import annotations
 
@@ -11,12 +11,21 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-# Allow importing from the parent .chezmoiscripts directory without installation.
-_scripts_dir = Path(__file__).parent.parent
-if str(_scripts_dir) not in sys.path:
-    sys.path.insert(0, str(_scripts_dir))
+# The migration module lives at ~/.local/lib/chezmoi-scripts/migration.py.
+# When running tests in CI or locally before chezmoi apply, fall back to the
+# source copy under dot_local/lib/chezmoi-scripts/.
+_lib_home = Path.home() / ".local" / "lib" / "chezmoi-scripts"
+_lib_source = Path(__file__).parent.parent.parent / "dot_local" / "lib" / "chezmoi-scripts"
 
-from utils.migration import ConfigItem, migration_prompt  # noqa: E402
+for _candidate in (_lib_home, _lib_source):
+    if _candidate.exists() and str(_candidate) not in sys.path:
+        sys.path.insert(0, str(_candidate))
+        break
+
+from migration import ConfigItem, migration_prompt  # noqa: E402
+
+# Path to the scripts directory (for TestDetectSource fixture)
+_scripts_dir = Path(__file__).parent.parent.parent / ".chezmoiscripts"
 
 
 # ---------------------------------------------------------------------------
@@ -83,7 +92,7 @@ class TestAlreadyCorrect:
         install_fn = _make_install_fn()
 
         # Make Path.resolve() return the same path for both sides of comparison
-        with patch("utils.migration.Path") as MockPath:
+        with patch("migration.Path") as MockPath:
             # Build a fake Path whose .resolve() equals itself for comparison
             fake_path = MagicMock()
             fake_path.resolve.return_value = expected
@@ -148,7 +157,7 @@ def _migration_prompt_with_different_paths(install_fn, extra_kwargs=None, env=No
 
     with (
         patch.dict("os.environ", env, clear=False),
-        patch("utils.migration.sys") as mock_sys,
+        patch("migration.sys") as mock_sys,
         patch("builtins.input", return_value=user_input),
     ):
         mock_sys.stdin.isatty.return_value = isatty
@@ -279,13 +288,13 @@ class TestMigrationNonInteractive:
 # ---------------------------------------------------------------------------
 
 class TestConfigItemDisplay:
-    """Verify ✅ / ➖ / ⚠️ lines in the config audit section."""
+    """Verify checkmark / dash / warning lines in the config audit section."""
 
     def _run_with_items(self, config_items, tmp_path, isatty=False):
         """Run migration_prompt in migration state with the given config_items."""
         install_fn = _make_install_fn()
         with (
-            patch("utils.migration.sys") as mock_sys,
+            patch("migration.sys") as mock_sys,
             patch("builtins.input", return_value="n"),
         ):
             mock_sys.stdin.isatty.return_value = isatty
@@ -361,7 +370,7 @@ class TestConfigItemDisplay:
         install_fn = _make_install_fn()
 
         with (
-            patch("utils.migration.sys") as mock_sys,
+            patch("migration.sys") as mock_sys,
             patch("builtins.input", return_value="y"),
         ):
             mock_sys.stdin.isatty.return_value = True
@@ -393,7 +402,7 @@ class TestHintsAndNotes:
     def _run_migration_state(self, tmp_path, extra_kwargs):
         install_fn = _make_install_fn()
         with (
-            patch("utils.migration.sys") as mock_sys,
+            patch("migration.sys") as mock_sys,
             patch("builtins.input", return_value="n"),
         ):
             mock_sys.stdin.isatty.return_value = False

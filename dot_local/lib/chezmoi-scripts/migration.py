@@ -2,7 +2,7 @@
 
 Usage pattern for any script that manages a tool installation:
 
-    from utils.migration import ConfigItem, migration_prompt
+    from migration import ConfigItem, migration_prompt
 
     migration_prompt(
         tool="mytool",
@@ -22,6 +22,10 @@ Usage pattern for any script that manages a tool installation:
         cleanup_hints=["run `old-pkg remove mytool` to clean up the old install"],
         post_migration_notes=["new distribution auto-updates; no manual update needed"],
     )
+
+This module lives at ~/.local/lib/chezmoi-scripts/migration.py and is deployed
+by chezmoi before any scripts run, making it importable by .chezmoiscripts/*.py
+via sys.path.insert(0, str(Path.home() / ".local" / "lib" / "chezmoi-scripts")).
 """
 from __future__ import annotations
 
