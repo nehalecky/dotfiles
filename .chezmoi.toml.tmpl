@@ -25,6 +25,9 @@
 {{-   $github_username = promptStringOnce . "github_username" "Work GitHub username" "" -}}
 {{- end -}}
 
+{{- /* ── Personal Strata Layer ────────────────────────────── */ -}}
+{{- $personal_repo_url := promptStringOnce . "personal_repo_url" "Personal strata.rc SSH URL e.g. git@github.com:username/strata.rc.git (leave blank to skip)" "" -}}
+
 {{- /* ── SSH & Signing ─────────────────────────────────────── */ -}}
 {{- $git_signing_key := "" -}}
 {{- $op_auth_key_name := "" -}}
@@ -53,3 +56,4 @@
     git_signing_key     = {{ $git_signing_key | quote }}
     op_auth_key_name    = {{ $op_auth_key_name | quote }}
     op_signing_key_name = {{ $op_signing_key_name | quote }}
+    personal_repo_url   = {{ $personal_repo_url | quote }}

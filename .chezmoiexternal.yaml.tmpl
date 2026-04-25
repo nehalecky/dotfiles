@@ -1,0 +1,11 @@
+{{/* Pull personal strata layer if configured — uses SSH to support private repos */}}
+{{- $personal_repo_url := "" -}}
+{{- if hasKey . "personal_repo_url" -}}
+{{-   $personal_repo_url = .personal_repo_url -}}
+{{- end -}}
+{{ if $personal_repo_url -}}
+.strata_personal/:
+  type: git
+  url: "{{ $personal_repo_url }}"
+  refreshPeriod: "168h"
+{{ end -}}
