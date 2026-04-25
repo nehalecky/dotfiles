@@ -4,6 +4,20 @@
 
 Pronounced **STRAY-tah**.
 
+```
+                S T R A T A
+       ___________________________
+      /                           \
+     |  ~ ~ ~  personal  ~ ~ ~ ~ ~ |   <- your work builds here
+     |-----------------------------|
+     |  - - -  team     - - - - -  |
+     |=============================|
+     |  = = =  org      = = = = =  |
+     |#############################|
+     |  # # #  engine   # # # # #  |
+      \___________________________/
+```
+
 `strata` is the engine. `strata.rc` is a configured instance. The relationship mirrors `bash` and `.bashrc`: one is the runtime, the other is your configuration of it.
 
 ## Quick start
@@ -23,10 +37,11 @@ A machine is a stack of declarative layers. The engine resolves them in order; e
 | Layer | Repo | Purpose |
 |-------|------|---------|
 | Engine | `nehalecky/strata` | Runtime, schemas, layer resolution, bootstrap |
-| Company | `descript/strata.rc` | Org-wide identity, packages, tooling, policies |
+| Org | `descript/strata.rc` | Org-wide identity, packages, tooling, policies |
+| Team | `descript-platform/strata.rc` | Team-specific tooling (platform ≠ data ≠ frontend) |
 | Personal | `nehalecky/strata.rc` | Your packages, shell, git config, machine-specific overrides |
 
-The engine has no opinions about *what* you install. It defines *how* layers compose. Company and personal layers carry the content.
+Layers are additive. A setup can use two (engine + personal) or four. Each layer only needs to express what it changes.
 
 A LAYERS.md document covering precedence rules, override semantics, and merge strategy is coming soon.
 
@@ -60,6 +75,8 @@ Anything chezmoi can manage, a `strata.rc` can carry. Templating, profiles, secr
 macOS is the working surface today. The architecture is POSIX-first and platform-agnostic; Linux and Windows support follow the same layer model as the primitives stabilize.
 
 ## Philosophy
+
+**Consistent ground for everything you build on a machine.** strata gives a developer one declarative environment that reproduces across machines and across people. The same engine, the same layer model, the same resolved state — whether you are setting up a new laptop, onboarding a teammate, or letting an automated process change a config file. That reproducibility is what makes work reliable, for humans and for the tools they delegate to. The scope reaches past dotfiles into applications, package managers, Claude Code configuration, and MCP servers, because the full developer environment is what determines whether anything on top of it actually works.
 
 **POSIX primitives, not a new platform.** The engine composes chezmoi, shell, git, and package managers — tools that already exist on every developer machine. There is no daemon, no proprietary state store, no service to keep alive. If `strata` disappeared tomorrow, the underlying configuration would still apply.
 
