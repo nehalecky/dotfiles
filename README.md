@@ -5,17 +5,11 @@
 Pronounced **STRAY-tah**.
 
 ```
-                S T R A T A
-       ___________________________
-      /                           \
-     |  ~ ~ ~  personal  ~ ~ ~ ~ ~ |   <- your work builds here
-     |-----------------------------|
-     |  - - -  team     - - - - -  |
-     |=============================|
-     |  = = =  org      = = = = =  |
-     |#############################|
-     |  # # #  engine   # # # # #  |
-      \___________________________/
+   _______________  ___  _________ 
+  / ___/_  __/ __ \/   |/_  __/   |
+  \__ \ / / / /_/ / /| | / / / /| |
+ ___/ // / / _, _/ ___ |/ / / ___ |
+/____//_/ /_/ |_/_/  |_/_/ /_/  |_|
 ```
 
 `strata` is the engine. `strata.rc` is a configured instance. The relationship mirrors `bash` and `.bashrc`: one is the runtime, the other is your configuration of it.
