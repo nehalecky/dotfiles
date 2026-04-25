@@ -1,192 +1,155 @@
-# Claude Code Instructions - Dotfiles Repository
+# strata — Engine Repository
 
-## CRITICAL WORKFLOW ENFORCEMENT
+`nehalecky/strata` is the **strata engine** — the composable, cross-platform developer machine management framework. This is the public repo other users fork (or `chezmoi init`) to bootstrap their machines.
 
-**YOU MUST follow this decision tree before ANY file operation:**
+The engine defines *how* configuration is applied. A `strata.rc` defines *what* gets applied. The relationship mirrors `bash` and `.bashrc`: one is the runtime, the other is the configuration.
 
-### MANDATORY PRE-ACTION CHECK:
-**IMPORTANT:** Read this section EVERY TIME before creating/editing files.
+- See `README.md` for the vision and quick start.
+- See `LAYERS.md` for the layer model fundamentals (what a `strata.rc` is, composition, precedence, agent routing).
 
-1. **FILE LOCATION CHECK**:
-   - Am I about to create/edit in `~/.local/share/chezmoi/`? → **STOP! WRONG WORKFLOW**
-   - Am I editing in HOME directory first? → **CONTINUE**
+This file serves agents and developers working in this repo. Read it before any non-trivial change.
 
-2. **WORKFLOW VERIFICATION**:
-   - New file: Create in HOME → Test → `chezmoi add` → Commit
-   - Existing file: Edit in HOME → Test → `chezmoi add` → Commit
+---
 
-**Course Correction:** When you catch yourself about to write to `~/.local/share/chezmoi/`, STOP and use the HOME→Source workflow instead.
+## Three-Repo Model — Where Changes Belong
 
-### GIT OPERATIONS FOR DOTFILES:
-**Golden Rule:** Always use `chezmoi git -- <command>`, never raw `git` in HOME.
+Before editing anything, decide which repo owns the change. Most accidental work happens in the wrong repo.
 
-Examples:
-- `chezmoi git -- status` (not `git status`)
-- `chezmoi git -- rebase -i HEAD~3` (not `git rebase -i`)
-- `chezmoi git -- push` (not `git push`)
-- `chezmoi git -- commit -m "msg"` (not `git commit`)
-- Edit in HOME → `chezmoi add` (not `git add`)
+| Change type | Target repo |
+|-------------|-------------|
+| Engine / framework behavior, schemas, layer resolution, bootstrap | **this repo** (`nehalecky/strata`) |
+| Org-wide layer config (identity, packages, policies) | `<org>/strata.rc` |
+| Team layer config (team-specific tooling) | `<org>/<team>.strata.rc` |
+| Personal config (your packages, shell, git, machine overrides) | `<username>/strata.rc` |
 
-### PR WORKFLOW (MANDATORY):
-**Never push directly to master.** All changes go through PRs:
-1. `chezmoi git -- checkout -b fix/description` or `feat/description`
+**Key rule:** if a change affects ALL users of strata, it belongs in this repo. If it's specific to one person, team, or org, it belongs in their `strata.rc`.
+
+When in doubt, ask: "would another strata user need this?" If no, it's not engine work.
+
+---
+
+## Critical Workflow Enforcement
+
+**YOU MUST follow this decision tree before ANY file operation in this repo.**
+
+### File location check (mandatory)
+
+This repo IS the chezmoi source directory (`~/.local/share/chezmoi`). The rule depends on what the file's purpose is:
+
+| File type | Location | Workflow |
+|-----------|----------|----------|
+| Dotfile that deploys to HOME (`dot_*`, `.chezmoi*`) | Source = here, Runtime = HOME | **HOME → Source**: edit in HOME → test → `chezmoi add` → commit |
+| Repo file (`README.md`, `LAYERS.md`, `CLAUDE.md`, `tests/`, `.chezmoiscripts/`, `dot_claude/`) | Source only | Edit directly in source |
+
+**Course correction:** if you're about to edit `~/dot_zshrc` directly in the source, STOP. That deploys to HOME — edit `~/.zshrc` first, then `chezmoi add`. The `dot_claude/` directory is a special case: it's the source for `~/.claude/` runtime, but it's edited directly in source (not via HOME→Source) because chezmoi treats it as repo content.
+
+### Git operations
+
+**Golden rule:** always use `chezmoi git -- <command>` in this directory. Never raw `git` in HOME.
+
+```bash
+chezmoi git -- status
+chezmoi git -- checkout -b feat/description
+chezmoi git -- commit -m "feat: ..."
+chezmoi git -- push
+```
+
+Use `chezmoi add <path>` (not `git add`) when staging dotfile changes from HOME.
+
+### PR workflow (mandatory)
+
+Never push directly to master. All changes go through PRs.
+
+1. `chezmoi git -- checkout -b feat/description` (or `fix/`, `docs/`, `chore/`)
 2. Commit and push the branch
-3. Open a PR with `gh pr create` — CI validates across 2 profiles × 3 terminals
+3. `gh pr create` — CI validates the change
 4. Ask user for review before merging
-5. Close related GitHub issues with commit references when fixes land
+5. Close related GitHub issues with commit references
 
+---
 
-## Core Development Context
+## Repo Structure
 
-### Essential Workflow Modules (Auto-Loaded)
+| Path | Purpose |
+|------|---------|
+| `README.md` | Vision, quick start, philosophy |
+| `LAYERS.md` | Layer model fundamentals — what a `strata.rc` is, composition, precedence, routing |
+| `SETUP.md` | Detailed onboarding for new machines |
+| `CLAUDE.md` | This file — agent and developer orientation |
+| `.chezmoi.toml.tmpl` | Init-time prompts: identity, terminal, `strata_layers` URLs |
+| `.chezmoiexternal.yaml.tmpl` | Composition mechanism — pulls strata layers from `strata_layers` into numbered layer dirs |
+| `.chezmoiignore` | Files excluded from runtime apply (local data, machine-specific overrides) |
+| `dot_*` | Chezmoi-managed files deployed to HOME (e.g., `dot_zshrc` → `~/.zshrc`) |
+| `dot_claude/` | Claude Code config source (agents, hooks, memories, commands) → `~/.claude/` |
+| `dot_docs/` | Documentation deployed to `~/.docs/` |
+| `.chezmoiscripts/` | Lifecycle scripts: `run_once_*`, `run_onchange_*` (Python preferred) |
+| `tests/` | Pytest suite — run with `uv run pytest tests/ -v` |
+
+---
+
+## Key Concepts (defer to `LAYERS.md` for detail)
+
+- **`strata_layers`** — comma-separated SSH git URLs configured at init time. The engine pulls each layer and applies them in order; higher index = higher priority (personal overrides team overrides org).
+- **`.local` convention** — the engine ships sourcing hooks (e.g., `dot_zshrc`, `dot_gitconfig`) that source layer-provided `zshrc.local`, `gitconfig.local`, and stack `Brewfile`s. Layers fill content; the engine wires it up.
+- **`chezmoi update`** — pulls latest engine + all registered layers, then applies. This is the standard sync command after the initial `chezmoi init`.
+- **Composition is additive-only** — no layer can remove what an earlier layer installed. Last layer wins for same-key shell/git settings; brew packages accumulate.
+
+---
+
+## Development Standards
+
+### Code
+
+- **Python over bash for all scripts.** Python's context managers, `pathlib`, and `subprocess` eliminate bash quoting/trap/scope footguns. When editing any shell script, migrate the whole file to Python and update callers (Dockerfiles, CI configs).
+- Use `uv run` for Python execution (not raw `python3` or `pip`). Project deps via `uv add`.
+- 4-space indentation for Python; 2-space for shell (legacy only).
+- Comment non-obvious configuration choices.
+- Never commit secrets — use 1Password references in templates.
+
+### Pre-PR checklist (run before every PR)
+
+```bash
+uv run pytest tests/ -v       # full test suite must pass
+chezmoi apply --dry-run       # validate templating + script logic
+```
+
+CI runs broader validation across profiles and terminals. Local checks catch the obvious failures first.
+
+### Commits
+
+- Conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`
+- Imperative mood, subject under 50 chars, explain "why" in body
+- SSH commit signing via 1Password is automatic — no extra flags needed
+- Reference issues: `Fixes #123` or `Refs #456`
+
+### Workflow principles
+
+- **Proactive agent delegation.** Before non-trivial tasks, check `~/.claude/agents/` for specialists. Delegate when an agent matches the domain (e.g., `dotfiles-manager` for chezmoi work, `repo` for git/PR ops).
+- **Verify success.** After source-side edits, confirm `chezmoi apply --dry-run` is clean. After HOME→Source, confirm the source diff matches what you edited.
+- **Ask before creating** new tools/scripts — prefer enhancing existing ones.
+- **Strict spec compliance.** When implementing per docs, implement exactly as specified — no extra files, no "helpful" assumptions.
+- **Always ask for explicit review** before posting GitHub issues, PRs, or external comms.
+
+---
+
+## Environment
+
+- **Platform:** macOS (working surface today). Architecture is POSIX-first; Linux/Windows track the same layer model as primitives stabilize.
+- **Shell:** Zsh
+- **Package managers:** Homebrew (system), `uv` (Python)
+- **Core CLI tools:** `rg`, `fd`, `eza`, `bat`, `delta` — Claude Code prefers these over their traditional counterparts
+- **Git:** SSH commit signing enforced via 1Password agent
+
+---
+
+## Memory and Skills (Auto-Loaded)
+
 @.claude/memories/workflows/core-workflows.md
 @.claude/memories/tools/essential-tools.md
 @.claude/memories/tools/git-standards.md
 
-### Environment Context
-**Platform:** macOS with Zsh shell
-**Package Managers:** uv (Python), Homebrew (macOS)
-**Core Tools:** rg, fd, eza, bat, delta (CLI tools Claude Code can execute)
-**Dotfiles:** chezmoi-managed (HOME→Source workflow mandatory)
-**Claude Config:** Direct chezmoi management via `dot_claude/` directory
-**Git:** SSH commit signing enforced
-**Profiles:** personal/work via `.chezmoi.toml.tmpl` — see `SETUP.md`
-
-### Code Standards
-- **Prefer Python over bash for all scripts** — Python context managers, pathlib, and subprocess eliminate bash quoting/trap/scope footguns. When editing any shell script, migrate the whole file to Python. Update callers (Dockerfiles, CI configs) accordingly.
-- 2-space indentation for shell scripts (legacy only); 4-space for Python
-- Comment non-obvious configuration choices
-- Group related settings with clear headers
-- Never commit secrets or credentials
-
-### Workflow Principles
-- **PROACTIVE AGENT DELEGATION**: Before starting non-trivial tasks, check `~/.claude/agents/` for specialists. Run `ls ~/.claude/agents/` and read relevant agent descriptions to understand capabilities. Delegate when an agent matches the task domain.
-- **HOME → Source workflow**: Always edit files in HOME directory first, then `chezmoi add`
-- **Verify success**: When using source → HOME workflow, verify `chezmoi apply` succeeds
-- **Ask before creating** new tools/scripts - prefer enhancing existing ones
-- **Test everything** before suggesting commands
-- **Leverage Superpowers skills** for TDD, brainstorming, planning, and execution workflows
-- **ALWAYS ASK FOR EXPLICIT REVIEW** before posting GitHub issues, PRs, or any external communications
-- **STRICT SPEC COMPLIANCE**: When implementing any tool, spec, or app based on documentation, implement EXACTLY as specified - no additional files, no assumptions, no "helpful" extras beyond what's documented
-
-## Memory System References
-
-### Technology Stack Modules
-Use when working with specific technologies:
-- **Python Development:** `~/.claude/memories/stacks/python.md` (uv, ruff, pytest patterns)
-- **Node.js Development:** `~/.claude/memories/stacks/nodejs.md` (pnpm, TypeScript, testing)
-- **Frontend Development:** `~/.claude/memories/stacks/web-frontend.md` (React, Vite, Tailwind)
-
-### MCP Integration References
-Use when setting up or troubleshooting integrations:
-- **Installation Guide:** `~/.claude/memories/mcp/installation.md`
-- **GitHub Integration:** `~/.claude/memories/mcp/github-integration.md`
-- **Hugging Face Integration:** `~/.claude/memories/mcp/huggingface-integration.md`
-
-### Development Workflows
-Reference for complex development methodologies:
-- **Discovery-First:** For complex features or unfamiliar codebases
-- **Test-Driven:** For well-defined functionality with clear requirements
-- **Visual Feedback:** For UI/UX development or visual outputs
-- **Verification-Driven:** Implementation verification from user perspective
-
-Note: All workflows enhanced with Superpowers skill integration for rigorous execution patterns.
-
-### Quick Access Commands
-```bash
-# Memory system
-python3 ~/.claude/memories/templates/generator.py /path/to/project
-```
-
-## Claude Code Configuration Architecture
-
-### Direct Chezmoi Management
-**Claude configuration is now directly managed by chezmoi as `~/.local/share/chezmoi/dot_claude/`**
-
-**Structure:**
-```
-~/.claude/                    # Runtime directory (managed by chezmoi)
-├── agents/         (12)      # Specialized agents by category
-├── hooks/          (8)       # Python workflow automation hooks
-├── memories/       (30+)     # Project context & methodologies (42% token reduction via Superpowers)
-├── commands/       (8)       # Custom slash commands
-├── output-styles/  (8)       # Response formatting styles
-├── status_lines/   (4)       # Status bar configurations
-└── settings.json             # Global configuration
-
-Local runtime data (NOT managed):
-├── data/                     # Session data
-├── projects/                 # Project configurations
-├── todos/                    # Task management
-├── settings.local.json       # Machine-specific overrides
-└── shell-snapshots/          # Command history
-```
-
-### Agent Ecosystem (12 Active Agents)
-
-**Core Operations (4)**
-- `repo.md` - Git + GitHub operations via `gh` CLI (commits, PRs, issues, search)
-- `system-environment.md` - System & package management (Homebrew, uv, npm)
-- `dotfiles-manager.md` - Chezmoi dotfiles management (HOME→Source workflow)
-- `agent-designer.md` - Creates new agents with doc discovery
-
-**Platform Integrations (2)**
-- `google-workspace.md` - Gmail, Calendar, Drive via `gog` CLI
-- `executive-assistant.md` - Daily productivity rituals, calendar orchestration
-
-**Content Creation (3)**
-- `report-generator.md` - Reports with citations and references
-- `document-writer.md` - Professional consulting documents
-- `presentation-creator.md` - Quarto RevealJS presentations
-
-**Development & Workflow (2)**
-- `workflow-manager.md` - Workflow design & orchestration
-- `ai-modeling-developer.md` - ML development with TDD enforcement
-
-**Utility (1)**
-- `hello-world.md` - Simple greeting
-
-**Design Principles:**
-- Agents encapsulate **workflows**, not thin tool wrappers
-- Use CLI tools (`gh`, `gog`, `hf`) instead of MCP for context efficiency
-- Dynamic discovery: check `~/.claude/agents/` before delegating
-
-### Configuration Management
-- **Source:** `~/.local/share/chezmoi/dot_claude/`
-- **Runtime:** `~/.claude/` (automatically populated by chezmoi)
-- **Local Data:** Excluded via `.chezmoiignore` (never version controlled)
-- **Updates:** Edit source via chezmoi, then `chezmoi apply`
-- **Create-only:** `settings.json` uses `create_` prefix — deployed once on new machines, then owned by Claude Code at runtime (avoids conflict with runtime permission grants)
-
-## Superpowers Plugin Integration
-
-**Adoption Date:** October 2024
-**Architecture:** Progressive Enhancement Pattern
-
-### Division of Responsibility
-- **Claude Memories:** Strategic patterns, when-to-use criteria, environment-specific tools
-- **Superpowers Skills:** Tactical execution, rigid process discipline, bulletproof checklists
-- **Integration:** Graceful degradation - Claude works standalone, enhances with Superpowers
-
-### Key Skills Integrated
-- `test-driven-development` skill - Strict RED-GREEN-REFACTOR TDD
-- `brainstorming` skill - Interactive idea refinement
-- `writing-plans` skill - Bite-sized task planning
-- `executing-plans` skill - Batch execution with checkpoints
-- `subagent-driven-development` skill - Task-by-task with code review
-
-### Workflow Memory Updates
-All workflow memories updated with Superpowers skill references:
-- `test-driven.md`: Delegates detailed TDD execution to Superpowers
-- `discovery-first.md`: References brainstorming & planning skills
-- `verification-driven.md`: Integrated verification checklists
-- `core-workflows.md`: Complete skill integration mapping
-
-**Token Efficiency:** 42% reduction in workflow memories (818 lines saved) through strategic Superpowers delegation while preserving unique Claude Code patterns (uv, chezmoi, rg, fd, eza, delta).
-
-## Claude Code Focus Areas
-Dotfiles management, command execution, file operations, git workflows, project analysis, comprehensive report generation, agent ecosystem coordination, SETUP.md onboarding guide
+Stack-specific modules under `~/.claude/memories/stacks/` (Python, Node.js, frontend) load on demand. Superpowers skills handle tactical execution (TDD, brainstorming, plan writing/execution); memories handle strategic patterns and environment specifics.
 
 ---
 
-*Lean context for immediate workflow enforcement. Reference detailed modules when needed for specific technology work.*
+*This file is the entry point for any agent or developer working in the strata engine. Keep it current — when the engine's contract with layers changes, update this file and `LAYERS.md` together.*
