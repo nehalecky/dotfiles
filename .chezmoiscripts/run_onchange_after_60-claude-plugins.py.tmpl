@@ -6,8 +6,9 @@
 # Install Claude Code plugins and register marketplaces.
 # Re-runs automatically when either config file changes.
 #
-# Marketplaces hash: {{ include "dot_claude/plugin-marketplaces.json" | sha256sum }}
-# Settings hash:     {{ include "dot_claude/create_settings.json.tmpl" | sha256sum }}
+# Marketplaces hash:     {{ include "dot_claude/plugin-marketplaces.json" | sha256sum }}
+# Settings hash:         {{ include "dot_claude/create_settings.json.tmpl" | sha256sum }}
+# Enabled-plugins hash:  {{ include "dot_claude/enabled-plugins.json" | sha256sum }}
 
 import json
 import shutil
@@ -17,6 +18,7 @@ from pathlib import Path
 
 SETTINGS = Path.home() / ".claude" / "settings.json"
 PLUGIN_MARKETPLACES = Path.home() / ".claude" / "plugin-marketplaces.json"
+ENABLED_PLUGINS = Path.home() / ".claude" / "enabled-plugins.json"
 
 # Official marketplace plugins are pre-installed by the Claude CLI — skip them
 OFFICIAL_MARKETPLACE = "claude-plugins-official"
@@ -24,6 +26,35 @@ OFFICIAL_MARKETPLACE = "claude-plugins-official"
 
 def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
+
+
+def compute_enabled_plugins(
+    runtime_enabled: dict,
+    chezmoi_enabled: dict,
+) -> tuple:
+    """Compute the only-true union of runtime and chezmoi plugin enables.
+
+    Returns (enabled_plugins, sources) where:
+      - enabled_plugins maps plugin_key -> True for any plugin truthy in either source
+      - sources maps plugin_key -> "settings.json" | "dot_claude/enabled-plugins.json" | "both"
+
+    Additive only: a plugin enabled anywhere is in the result. False values
+    in either source never force-disable the other.
+    """
+    enabled_plugins = {}
+    sources = {}
+    for k in set(runtime_enabled) | set(chezmoi_enabled):
+        in_runtime = bool(runtime_enabled.get(k))
+        in_chezmoi = bool(chezmoi_enabled.get(k))
+        if in_runtime or in_chezmoi:
+            enabled_plugins[k] = True
+            if in_runtime and in_chezmoi:
+                sources[k] = "both"
+            elif in_chezmoi:
+                sources[k] = "dot_claude/enabled-plugins.json"
+            else:
+                sources[k] = "settings.json"
+    return enabled_plugins, sources
 
 
 def main():
@@ -42,7 +73,15 @@ def main():
         print(f"❌ Failed to parse config: {e}", file=sys.stderr)
         sys.exit(1)
 
-    enabled_plugins = settings.get("enabledPlugins", {})
+    try:
+        chezmoi_enabled = json.loads(ENABLED_PLUGINS.read_text())
+    except FileNotFoundError:
+        chezmoi_enabled = {}
+
+    runtime_enabled = settings.get("enabledPlugins", {})
+
+    # Only-true union: additive, never disables. Tracks source for log clarity.
+    enabled_plugins, sources = compute_enabled_plugins(runtime_enabled, chezmoi_enabled)
 
     # Register marketplaces
     print("🔍 Checking marketplace registrations...")
@@ -52,7 +91,7 @@ def main():
         if name in registered:
             print(f"✅ Marketplace '{name}' already registered")
         else:
-            print(f"📦 Registering marketplace '{name}' ({info['repo']})...")
+            print(f"📦 Registering marketplace '{name}' ({info['repo']}) — declared in dot_claude/plugin-marketplaces.json...")
             result = run(["claude", "plugin", "marketplace", "add", info["repo"]])
             if result.returncode != 0:
                 print(f"⚠️  Failed to register '{name}': {result.stderr.strip()}", file=sys.stderr)
@@ -78,7 +117,8 @@ def main():
             print(f"✅ Plugin '{plugin_key}' already installed")
             continue
 
-        print(f"📦 Installing plugin '{plugin_key}'...")
+        source_note = sources.get(plugin_key, "unknown")
+        print(f"📦 Installing plugin '{plugin_key}' (declared in {source_note})...")
         result = run(["claude", "plugin", "install", plugin_key, "--scope", "user"])
         if result.returncode != 0:
             print(f"⚠️  Failed to install '{plugin_key}': {result.stderr.strip()}", file=sys.stderr)

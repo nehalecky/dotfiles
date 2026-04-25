@@ -87,6 +87,34 @@ Or edit the value directly in `~/.config/chezmoi/chezmoi.toml` and run `chezmoi 
 | `.ssh/id_ed25519_signing.pub` | deployed | excluded |
 | `.kube/`, `.aws/` | excluded | excluded (managed by cloud CLIs) |
 
+## What gets installed
+
+`chezmoi apply` seeds two config files that drive automated plugin setup:
+
+| File | Purpose |
+|------|---------|
+| `~/.claude/plugin-marketplaces.json` | Registers third-party plugin registries with the Claude CLI |
+| `~/.claude/enabled-plugins.json` | Declares plugins that should be installed on every machine |
+
+The setup script (`run_onchange_after_60-claude-plugins.py`) runs after every `chezmoi apply` when either file changes. It is **additive only** — it installs missing plugins but never disables ones you've enabled at runtime.
+
+### Registered marketplaces
+
+| Name | Repo | Description |
+|------|------|-------------|
+| `superpowers-marketplace` | [`obra/superpowers-marketplace`](https://github.com/obra/superpowers-marketplace) | Superpowers skills: TDD, brainstorming, planning, debugging |
+| `workon` | [`nehalecky/workon`](https://github.com/nehalecky/workon) | Unified view over work queues and attention recommendations |
+
+### Enabled plugins (propagated across machines)
+
+| Plugin key | Source |
+|------------|--------|
+| `workon@workon` | `dot_claude/enabled-plugins.json` |
+
+Any plugins you enable at runtime via `claude plugin install ...` are preserved — the union logic keeps everything that is `true` in either source.
+
+**To opt out or customize:** fork this repo, then edit `dot_claude/enabled-plugins.json` and `dot_claude/plugin-marketplaces.json` to reflect your own plugin preferences.
+
 ## Day 1 work machine setup (after chezmoi apply)
 
 After running `chezmoi init --apply` with the `work` profile:
