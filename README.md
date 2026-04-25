@@ -1,81 +1,88 @@
-# My Dots
+# strata
 
-*One command deploys a complete, AI-augmented development environment — personal or work profile, any Mac. Versioned Claude agents, memories, and skills follow you across machines and across interfaces: the same configuration powers both Claude Code in the terminal and Claude on the web.*
+> strata is a composable, cross-platform developer machine management framework — declarative layers from dotfiles to applications — that agentic tooling makes sustainable for anyone to maintain what previously required a team.
 
-> **[Documentation](dot_docs/README.md)** | **[Setup Guide](SETUP.md)**
+Pronounced **STRAY-tah**.
 
-## Why
-
-Your development environment is software. It deserves version control, documentation, and reproducible builds — the same discipline you apply to production code. [Chezmoi](https://chezmoi.io) manages every configuration file here; a single `chezmoi init` on a fresh machine prompts for a profile — personal or work — then wires up the correct git identity, SSH keys, Brewfile packages, and terminal theme automatically. Twelve specialized Claude Code agents, a persistent memory system, and workflow hooks ship as versioned configuration alongside the shell and editor, so the same AI workflow reproduces on every machine as reliably as the shell config does.
-
-## Quick Setup
-
-> **Fork this repo first.** `chezmoi init` pulls from your own fork so your identity, keys, and profile choices stay private. See [SETUP.md](SETUP.md) for the full walkthrough.
-
-```bash
-# Install Homebrew package manager
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install chezmoi and deploy dotfiles from your fork
-brew install chezmoi
-chezmoi init --apply <your-github-username>
+```
+   _______________  ___  _________ 
+  / ___/_  __/ __ \/   |/_  __/   |
+  \__ \ / / / /_/ / /| | / / / /| |
+ ___/ // / / _, _/ ___ |/ / / ___ |
+/____//_/ /_/ |_/_/  |_/_/ /_/  |_|
 ```
 
-`chezmoi init` prompts for your profile (personal/work), git identity, SSH keys, and terminal emulator (WezTerm, iTerm2, Ghostty, and others supported). It installs only the packages and configs for your choices — faster and friendlier developer tools, 12 Claude Code agents, and XDG-compliant dotfile organization.
+`strata` is the engine. `strata.rc` is a configured instance. The relationship mirrors `bash` and `.bashrc`: one is the runtime, the other is your configuration of it.
 
-## Key Components
+## Quick start
 
-### Core Stack
-- **Terminal**: WezTerm, iTerm2, Ghostty, Kitty, or Alacritty (chosen at init)
-- **Shell**: Zsh + Starship prompt
-- **Editor**: Helix/Emacs with LSP integration
-- **Package Management**: Homebrew + uv (Python)
+On a clean machine:
 
-### Tool Suite
-| Traditional | Replacement | Key Benefit |
-|-------------|------------|-------------|
-| `ls` | `eza` | Git integration, tree view |
-| `cat` | `bat` | Syntax highlighting |
-| `find` | `fd` | Faster, respects .gitignore |
-| `grep` | `ripgrep` | Faster searches |
-| `top` | `btop` | Interactive system monitor |
+```bash
+chezmoi init --apply github.com/nehalecky/strata
+```
 
-### Claude Code Integration
+That is the entire bootstrap. The engine clones, prompts for the values it needs, and applies the layers in order.
 
-[Claude Code](https://claude.ai/code) configuration with specialized agents and workflow automation:
+## The layer model
 
-- **12 agents** covering development, research, and operations
-- **Memory system** storing project context and methodologies across sessions
-- **Workflow automation** through Python hooks and custom commands
-- **MCP integrations** connecting GitHub, Google Workspace, and Atlassian
-- **Superpowers plugin** adding structured TDD, planning, and execution skills
-- **Voice notifications** announcing task completion and input prompts, powered by local neural TTS (Kokoro) with ElevenLabs and OpenAI as optional cloud upgrades
+A machine is a stack of declarative layers. The engine resolves them in order; each layer overrides the one below.
 
-Agents, memories, and skills are version-controlled alongside the rest of the dotfiles. Deploy to a new machine with `chezmoi apply` and your full AI configuration — context, behavior, and tooling — arrives with it. The same files power both Claude Code in the terminal and Claude on the web.
+| Layer | Repo | Purpose |
+|-------|------|---------|
+| Engine | `nehalecky/strata` | Runtime, schemas, layer resolution, bootstrap |
+| Org | `descript/strata.rc` | Org-wide identity, packages, tooling, policies |
+| Team | `descript-platform/strata.rc` | Team-specific tooling (platform ≠ data ≠ frontend) |
+| Personal | `nehalecky/strata.rc` | Your packages, shell, git config, machine-specific overrides |
 
-*Claude Code setup based on [disler/claude-code-hooks-mastery](https://github.com/disler/claude-code-hooks-mastery).*
+Layers are additive. A setup can use two (engine + personal) or four. Each layer only needs to express what it changes.
 
-## Documentation
+A LAYERS.md document covering precedence rules, override semantics, and merge strategy is coming soon.
 
-- **[Documentation Index](dot_docs/README.md)** — Full reference for tools, architecture, and troubleshooting
-- **[SETUP.md](SETUP.md)** — First-time installation, profile selection, and customization
-- **[CLAUDE.md](CLAUDE.md)** — Claude Code configuration and [Superpowers](https://github.com/obra/superpowers) integration
+## Your personal `strata.rc`
 
-## Technology Stack
+A configured instance of `strata` lives in a repo named `<username>/strata.rc`. At minimum it contains:
 
-- **Dotfiles Management**: chezmoi
-- **Terminal**: WezTerm + tmux/zellij
-- **Shell**: Zsh + Prezto + Starship
-- **Package Managers**: Homebrew (macOS), uv (Python)
-- **AI Integration**: Claude Code + specialized agents
-- **Documentation**: GitHub Pages (auto-deployed)
+```
+strata.rc/
+├── Brewfile          # packages (or equivalent for your platform)
+├── zshrc.local       # shell additions, aliases, env
+└── gitconfig.local   # identity, signing, aliases
+```
 
-## Contributing
+To create yours:
 
-This is a personal dotfiles repository built for my workflow. Explore and borrow freely, but expect opinionated defaults.
+1. Fork `nehalecky/strata.rc` or start from scratch with the three files above
+2. Push to `github.com/<your-username>/strata.rc`
+3. Reference it from your `strata` init prompts; the engine will pull and apply it
 
-For questions or discussion, [open an issue](https://github.com/<your-github-username>/dotfiles/issues).
+Anything chezmoi can manage, a `strata.rc` can carry. Templating, profiles, secrets via 1Password, and machine-conditional logic all work because the engine is chezmoi underneath.
+
+## What strata manages
+
+- **Dotfiles** — shell, editor, terminal, prompt, git
+- **Shell configuration** — zsh, environment, aliases, completions
+- **Git** — identity, signing, hooks, per-host overrides
+- **Applications** — Homebrew bundles today; cross-platform package managers over time
+- **Claude Code** — agents, memories, hooks, commands, skills, MCP servers
+
+macOS is the working surface today. The architecture is POSIX-first and platform-agnostic; Linux and Windows support follow the same layer model as the primitives stabilize.
+
+## Philosophy
+
+**Consistent ground for everything you build on a machine.** strata gives a developer one declarative environment that reproduces across machines and across people. The same engine, the same layer model, the same resolved state — whether you are setting up a new laptop, onboarding a teammate, or letting an automated process change a config file. That reproducibility is what makes work reliable, for humans and for the tools they delegate to. The scope reaches past dotfiles into applications, package managers, Claude Code configuration, and MCP servers, because the full developer environment is what determines whether anything on top of it actually works.
+
+**POSIX primitives, not a new platform.** The engine composes chezmoi, shell, git, and package managers — tools that already exist on every developer machine. There is no daemon, no proprietary state store, no service to keep alive. If `strata` disappeared tomorrow, the underlying configuration would still apply.
+
+**Not a platform-engineering tool.** The capabilities here historically required a dedicated team: declarative provisioning, multi-machine consistency, environment reproducibility, secrets management. strata makes those capabilities available to a single developer — and to non-engineers who want a managed machine without owning the management.
+
+**Agentic tooling is the multiplier.** A framework like this is only sustainable for one person to maintain because agents can read, route, and write the right files. A change request gets routed:
+
+- Framework change → `nehalecky/strata` (engine)
+- Personal change → `<username>/strata.rc` (your layer)
+
+Anyone can interact in natural language. The agent understands the layer model, opens the PR in the correct repo, and the engine applies the result on the next sync. strata is **not an agentic framework** — it is a framework whose architecture flows seamlessly with agentic tools.
 
 ---
 
-**Repository**: [dotfiles](https://github.com/<your-github-username>/dotfiles) | **Documentation**: [dot_docs/README.md](dot_docs/README.md) | **License**: MIT
+**Status:** active development. The vision is settled; the surface is moving. Issues and discussion welcome at [nehalecky/strata](https://github.com/nehalecky/strata).
