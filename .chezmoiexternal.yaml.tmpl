@@ -1,11 +1,12 @@
-{{/* Pull personal strata layer if configured — uses SSH to support private repos */}}
-{{- $personal_repo_url := "" -}}
-{{- if hasKey . "personal_repo_url" -}}
-{{-   $personal_repo_url = .personal_repo_url -}}
+{{/* Pull strata layers in order — lower index = lower priority, higher index overrides.
+     strata_layers is a comma-separated list of SSH git URLs. */}}
+{{- $layers := list -}}
+{{- if and (hasKey . "strata_layers") .strata_layers -}}
+{{-   $layers = splitList "," .strata_layers | compact -}}
 {{- end -}}
-{{ if $personal_repo_url -}}
-.strata_personal/:
+{{- range $i, $url := $layers }}
+.strata_layer_{{ $i }}/:
   type: git
-  url: "{{ $personal_repo_url }}"
+  url: "{{ $url | trim }}"
   refreshPeriod: "168h"
 {{ end -}}
