@@ -28,6 +28,35 @@ def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
+def compute_enabled_plugins(
+    runtime_enabled: dict,
+    chezmoi_enabled: dict,
+) -> tuple:
+    """Compute the only-true union of runtime and chezmoi plugin enables.
+
+    Returns (enabled_plugins, sources) where:
+      - enabled_plugins maps plugin_key -> True for any plugin truthy in either source
+      - sources maps plugin_key -> "settings.json" | "dot_claude/enabled-plugins.json" | "both"
+
+    Additive only: a plugin enabled anywhere is in the result. False values
+    in either source never force-disable the other.
+    """
+    enabled_plugins = {}
+    sources = {}
+    for k in set(runtime_enabled) | set(chezmoi_enabled):
+        in_runtime = bool(runtime_enabled.get(k))
+        in_chezmoi = bool(chezmoi_enabled.get(k))
+        if in_runtime or in_chezmoi:
+            enabled_plugins[k] = True
+            if in_runtime and in_chezmoi:
+                sources[k] = "both"
+            elif in_chezmoi:
+                sources[k] = "dot_claude/enabled-plugins.json"
+            else:
+                sources[k] = "settings.json"
+    return enabled_plugins, sources
+
+
 def main():
     # Pre-flight checks
     if not shutil.which("claude"):
@@ -52,19 +81,7 @@ def main():
     runtime_enabled = settings.get("enabledPlugins", {})
 
     # Only-true union: additive, never disables. Tracks source for log clarity.
-    enabled_plugins = {}
-    sources = {}  # plugin_key -> "runtime" | "dot_claude/enabled-plugins.json" | "both"
-    for k in set(runtime_enabled) | set(chezmoi_enabled):
-        in_runtime = bool(runtime_enabled.get(k))
-        in_chezmoi = bool(chezmoi_enabled.get(k))
-        if in_runtime or in_chezmoi:
-            enabled_plugins[k] = True
-            if in_runtime and in_chezmoi:
-                sources[k] = "both"
-            elif in_chezmoi:
-                sources[k] = "dot_claude/enabled-plugins.json"
-            else:
-                sources[k] = "settings.json"
+    enabled_plugins, sources = compute_enabled_plugins(runtime_enabled, chezmoi_enabled)
 
     # Register marketplaces
     print("🔍 Checking marketplace registrations...")
