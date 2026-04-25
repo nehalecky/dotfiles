@@ -32,7 +32,7 @@ A machine is a stack of declarative layers. The engine resolves them in order; e
 |-------|------|---------|
 | Engine | `nehalecky/strata` | Runtime, schemas, layer resolution, bootstrap |
 | Org | `acme/strata.rc` | Org-wide identity, packages, tooling, policies |
-| Team | `acme-platform/strata.rc` | Team-specific tooling (platform ≠ data ≠ frontend) |
+| Team | `acme/platform.strata.rc` | Team-specific tooling (platform ≠ data ≠ frontend) |
 | Personal | `nehalecky/strata.rc` | Your packages, shell, git config, machine-specific overrides |
 
 Layers are additive. A setup can use two (engine + personal) or four. Each layer only needs to express what it changes.

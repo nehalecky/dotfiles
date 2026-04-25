@@ -55,22 +55,24 @@ def test_external_template_renders_with_single_layer():
 
 def test_external_template_renders_with_multiple_layers():
     """Template generates numbered entries preserving order for multiple layers."""
-    layers = "git@github.com:descript/strata.rc.git,git@github.com:nehalecky/strata.rc.git"
+    layers = "git@github.com:acme/strata.rc.git,git@github.com:acme/platform.strata.rc.git,git@github.com:nehalecky/strata.rc.git"
     result = _render_external_template(layers)
     assert result.returncode == 0, f"Template error: {result.stderr}"
     data = yaml.safe_load(result.stdout)
     assert data is not None
     assert ".strata_layer_0/" in data
     assert ".strata_layer_1/" in data
-    assert data[".strata_layer_0/"]["url"] == "git@github.com:descript/strata.rc.git"
-    assert data[".strata_layer_1/"]["url"] == "git@github.com:nehalecky/strata.rc.git"
+    assert ".strata_layer_2/" in data
+    assert data[".strata_layer_0/"]["url"] == "git@github.com:acme/strata.rc.git"
+    assert data[".strata_layer_1/"]["url"] == "git@github.com:acme/platform.strata.rc.git"
+    assert data[".strata_layer_2/"]["url"] == "git@github.com:nehalecky/strata.rc.git"
 
 
 def test_external_template_trims_whitespace_in_urls():
     """Template trims whitespace around URLs in comma-separated list."""
-    layers = " git@github.com:descript/strata.rc.git , git@github.com:nehalecky/strata.rc.git "
+    layers = " git@github.com:acme/strata.rc.git , git@github.com:nehalecky/strata.rc.git "
     result = _render_external_template(layers)
     assert result.returncode == 0, f"Template error: {result.stderr}"
     data = yaml.safe_load(result.stdout)
-    assert data[".strata_layer_0/"]["url"] == "git@github.com:descript/strata.rc.git"
+    assert data[".strata_layer_0/"]["url"] == "git@github.com:acme/strata.rc.git"
     assert data[".strata_layer_1/"]["url"] == "git@github.com:nehalecky/strata.rc.git"
