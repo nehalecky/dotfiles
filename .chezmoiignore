@@ -19,6 +19,10 @@ dot_claude/logs
 # Claude app runtime state (contains account UUIDs, session history)
 .config/claude/config.json
 
+# Runtime hook outputs and ad-hoc tool logs (never chezmoi-managed)
+logs/
+*.log
+
 # System files
 **/.DS_Store
 **/__pycache__/
