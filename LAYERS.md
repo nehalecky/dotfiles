@@ -6,7 +6,7 @@ The foundational concepts of strata: what a `strata.rc` is, what composition mea
 
 A `strata.rc` is a configured instance of strata. The relationship to the strata engine mirrors `bash` and `.bashrc`: the engine defines *how* configuration is applied; a `strata.rc` is *what* gets applied.
 
-Any entity — a person, a team, an org — can have a `strata.rc`. It lives in a git repo. The engine pulls it and applies it.
+Any entity — a person, a team, an org, or an agentic system — can have a `strata.rc`. It lives in a git repo. The engine pulls it and applies it.
 
 A minimum viable `strata.rc` contains four files:
 
@@ -26,8 +26,11 @@ Anything chezmoi can manage is also supported: templates, profiles, secrets via 
 | Personal | `<username>/strata.rc` | `username/strata.rc` |
 | Org | `<org>/strata.rc` | `acme/strata.rc` |
 | Team | `<org>/<team>.strata.rc` | `acme/platform.strata.rc` |
+| Agent | `<agent>/strata.rc` | `claude/strata.rc` |
 
 The `.strata.rc` suffix on team repos distinguishes team layers from the org's single `strata.rc`. Teams live under the same GitHub org — no separate org needed.
+
+An agent layer carries the configuration an agentic system needs on the machine: Claude Code agents, memories, hooks, MCP servers, and any tooling the agent relies on. It is registered in `strata_layers` like any other layer and is applied in order — so a personal layer can still override what the agent layer sets.
 
 ## What is composition
 
