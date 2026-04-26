@@ -56,11 +56,9 @@ def get_git_status():
     divergence (always ~200+ by design — chezmoi renames files on deploy).
     """
     try:
-        # Resolve the HOME-symlink case to chezmoi source
         run_dir = Path.cwd()
-        git_path = run_dir / ".git"
-        if run_dir == Path.home() and git_path.is_symlink():
-            run_dir = git_path.resolve().parent
+        if run_dir == Path.home() and (run_dir / ".git").is_symlink():
+            run_dir = (run_dir / ".git").resolve().parent
 
         # Get current branch
         branch_result = subprocess.run(
