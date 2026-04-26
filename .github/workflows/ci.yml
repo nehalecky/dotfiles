@@ -37,10 +37,30 @@ jobs:
         terminal: [wezterm, iterm2, default]
     steps:
       - uses: actions/checkout@v4
-      - name: Install chezmoi
-        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/bin"
-      - name: Install starship
-        run: curl -sS https://starship.rs/install.sh | sh -s -- --yes
+      - name: Cache chezmoi
+        uses: actions/cache@v4
+        id: cache-chezmoi
+        with:
+          path: ~/bin/chezmoi
+          key: chezmoi-${{ runner.os }}-2.70.2
+      - name: Install chezmoi (if not cached)
+        if: steps.cache-chezmoi.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/bin
+          curl -fsSL "https://github.com/twpayne/chezmoi/releases/download/v2.70.2/chezmoi_2.70.2_linux_amd64.tar.gz" \
+            | tar xz -C ~/bin chezmoi
+      - name: Cache starship
+        uses: actions/cache@v4
+        id: cache-starship
+        with:
+          path: ~/bin/starship
+          key: starship-${{ runner.os }}-1.25.0
+      - name: Install starship (if not cached)
+        if: steps.cache-starship.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/bin
+          curl -fsSL "https://github.com/starship/starship/releases/download/v1.25.0/starship-x86_64-unknown-linux-gnu.tar.gz" \
+            | tar xz -C ~/bin starship
       - name: Install Python deps
         run: pip install tomli pytest pyyaml
       - name: Run tests
