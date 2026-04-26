@@ -47,14 +47,28 @@ def log_session_start(input_data):
 
 
 def get_git_status():
-    """Get current git status information."""
+    """Get current git status information.
+
+    When CWD is HOME and .git is a symlink (the chezmoi-source-as-HOME
+    convenience pattern that powers Starship's git module in HOME),
+    redirect git commands to the symlink's target so the count reflects
+    real source-side work, not the structural HOME-vs-source-HEAD
+    divergence (always ~200+ by design — chezmoi renames files on deploy).
+    """
     try:
+        # Resolve the HOME-symlink case to chezmoi source
+        run_dir = Path.cwd()
+        git_path = run_dir / ".git"
+        if run_dir == Path.home() and git_path.is_symlink():
+            run_dir = git_path.resolve().parent
+
         # Get current branch
         branch_result = subprocess.run(
             ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
             capture_output=True,
             text=True,
-            timeout=5
+            timeout=5,
+            cwd=str(run_dir),
         )
         current_branch = branch_result.stdout.strip() if branch_result.returncode == 0 else "unknown"
 
@@ -63,7 +77,8 @@ def get_git_status():
             ['git', 'status', '--porcelain'],
             capture_output=True,
             text=True,
-            timeout=5
+            timeout=5,
+            cwd=str(run_dir),
         )
         if status_result.returncode == 0:
             changes = status_result.stdout.strip().split('\n') if status_result.stdout.strip() else []
