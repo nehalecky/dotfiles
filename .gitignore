@@ -45,6 +45,3 @@ go/
 
 # Planning artifacts (also excluded via .chezmoiignore)
 plan/
-
-# Editor artifacts (e.g., Claude Code scratch files)
-Untitled
