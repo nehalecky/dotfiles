@@ -42,3 +42,6 @@ tests/__pycache__/
 
 # Go workspace (if using local development)
 go/
+
+# Planning artifacts (also excluded via .chezmoiignore)
+plan/
