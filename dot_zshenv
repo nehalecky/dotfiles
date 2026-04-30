@@ -18,4 +18,4 @@ export GOPATH=$HOME/.local/share/go
 export ENGINEER_NAME="Nico"
 
 # Skillzilla telemetry — resolved at shell startup so hook subprocesses inherit it
-export SKILLZILLA_HC_WRITE_KEY=$(op read "op://Employee/Honeycomb Classic API Key/password" 2>/dev/null)
+export SKILLZILLA_HC_WRITE_KEY=${SKILLZILLA_HC_WRITE_KEY:-$(op read "op://Employee/Honeycomb Classic API Key/password" 2>/dev/null)}
