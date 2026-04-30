@@ -17,5 +17,6 @@ export GOPATH=$HOME/.local/share/go
 # Claude Code hook personalization
 export ENGINEER_NAME="Nico"
 
-# Skillzilla telemetry — resolved at shell startup so hook subprocesses inherit it
-export SKILLZILLA_HC_WRITE_KEY=${SKILLZILLA_HC_WRITE_KEY:-$(op read "op://Engineering/Honeycomb Skillzilla Ingest Key/password" 2>/dev/null)}
+# Skillzilla telemetry — only resolve in interactive shells to avoid op popup
+# on every non-interactive subprocess CC spawns; subshells inherit from parent.
+[[ -o interactive ]] && export SKILLZILLA_HC_WRITE_KEY=${SKILLZILLA_HC_WRITE_KEY:-$(op read "op://Engineering/Honeycomb Skillzilla Ingest Key/password" 2>/dev/null)}
