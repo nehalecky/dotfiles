@@ -43,5 +43,8 @@ tests/__pycache__/
 # Go workspace (if using local development)
 go/
 
+# chezmoi persistent state (test artifacts, should never be committed)
+*.boltdb
+
 # Planning artifacts (also excluded via .chezmoiignore)
 plan/

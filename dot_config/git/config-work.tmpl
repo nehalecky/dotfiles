@@ -1,0 +1,8 @@
+{{ if eq .profile "work" -}}
+# Work-specific git identity — loaded via includeIf when cwd is under ~/work/descript/.
+# Managed by chezmoi.
+# TODO(work-device): verify gitdir path matches actual Descript repo layout (#56).
+# TODO(work-device): set signingkey if Descript requires a separate key (#56).
+[user]
+    email = {{ dig "work_git_email" "TODO-WORK-EMAIL" . }}
+{{ end -}}
