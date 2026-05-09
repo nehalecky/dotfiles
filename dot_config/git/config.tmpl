@@ -27,7 +27,7 @@
     editor = code --wait
 {{ if eq .profile "work" -}}
 # Dual-identity: route work email/signing config inside Descript repos.
-# TODO(work-device): confirm gitdir path matches actual repo layout on the work machine (#follow-up).
+# TODO(work-device): confirm gitdir path matches actual repo layout on the work machine (#56).
 [includeIf "gitdir:~/work/descript/"]
     path = ~/.config/git/config-work
 {{ end -}}
