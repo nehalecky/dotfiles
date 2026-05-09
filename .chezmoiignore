@@ -38,6 +38,10 @@ plan/
 .ssh/id_ed25519_signing.pub
 {{ end }}
 
+{{ if not (dig "isWork" false .) }}
+.config/git/config-work
+{{ end }}
+
 {{ if .isPersonal }}
 .kube/
 .aws/

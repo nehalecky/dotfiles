@@ -39,6 +39,12 @@
 {{-   $op_signing_key_name = promptStringOnce . "op_signing_key_name" "1Password signing key name" "Signing Key" -}}
 {{- end -}}
 
+{{- /* ── Dual-identity (work only) ─────────────────────────── */ -}}
+{{- $work_git_email := "" -}}
+{{- if eq $profile "work" -}}
+{{-   $work_git_email = promptStringOnce . "work_git_email" "Work git email (used inside ~/work/descript/)" "nicholaus.halecky@descript.com" -}}
+{{- end -}}
+
 [data]
     profile             = {{ $profile | quote }}
     isWork              = {{ eq $profile "work" }}
@@ -53,3 +59,4 @@
     git_signing_key     = {{ $git_signing_key | quote }}
     op_auth_key_name    = {{ $op_auth_key_name | quote }}
     op_signing_key_name = {{ $op_signing_key_name | quote }}
+    work_git_email      = {{ $work_git_email | quote }}

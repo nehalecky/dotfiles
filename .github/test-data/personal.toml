@@ -16,3 +16,4 @@
     git_signing_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAItest"
     op_auth_key_name = "CI Auth Key"
     op_signing_key_name = "CI Signing Key"
+    work_git_email = ""
