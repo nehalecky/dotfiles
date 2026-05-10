@@ -26,11 +26,13 @@ from utils.common import append_to_log, copy_transcript_to_chat
 # ---------------------------------------------------------------------------
 
 
-def run_hook(script: str, input_data: dict, args: tuple = (), env_overrides: dict = None, home=None):
+def run_hook(script: str, input_data: dict, args: tuple = (), env_overrides: dict = None, home=None, cwd=None):
     """Execute a hook script with JSON on stdin. Returns CompletedProcess.
 
     Pass ``home`` to redirect all ``~/...`` log paths into a temp directory,
     keeping test runs isolated from the real ~/.claude/logs/ directory.
+    Pass ``cwd`` to set the working directory of the subprocess (used to
+    verify that hooks resolve log paths from __file__, not os.getcwd()).
     """
     env = {**os.environ, **(env_overrides or {})}
     if home is not None:
@@ -41,6 +43,7 @@ def run_hook(script: str, input_data: dict, args: tuple = (), env_overrides: dic
         capture_output=True,
         text=True,
         env=env,
+        cwd=str(cwd) if cwd is not None else None,
         timeout=30,
     )
 
@@ -251,3 +254,71 @@ class TestCopyTranscriptToChat:
         # Should silently swallow the FileNotFoundError
         copy_transcript_to_chat("/nonexistent/path.jsonl", log_dir)
         assert not (Path(log_dir) / "chat.json").exists()
+
+
+# ---------------------------------------------------------------------------
+# TestSessionStartHookBehavior
+# Regression test for CWD-leak bug: session_start.py previously used
+# Path("logs") (CWD-relative), causing log files to be written into whatever
+# directory the parent process had cd'd into (e.g. ~/.zprezto/logs/).
+# The fix uses Path(__file__).parent / "logs" so the log always lands next
+# to the hook script at ~/.claude/hooks/logs/, regardless of CWD.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def session_start_log_cleanup():
+    """Remove any session_start.json written under HOOKS_DIR/logs/ during the test."""
+    log_file = HOOKS_DIR / "logs" / "session_start.json"
+    yield log_file
+    if log_file.exists():
+        log_file.unlink()
+    # Remove the logs dir itself only if we created it and it is now empty
+    logs_dir = HOOKS_DIR / "logs"
+    if logs_dir.exists() and not any(logs_dir.iterdir()):
+        logs_dir.rmdir()
+
+
+def run_session_start(input_data: dict, cwd=None):
+    """Invoke session_start.py via python3 (not executable-bit) with JSON on stdin.
+
+    session_start.py is not marked executable in chezmoi (no executable_ prefix),
+    so it must be called through the interpreter rather than directly.
+    ``cwd`` sets the working directory to simulate a foreign directory like ~/.zprezto/.
+    """
+    script = HOOKS_DIR / "session_start.py"
+    return subprocess.run(
+        ["python3", str(script)],
+        input=json.dumps(input_data),
+        capture_output=True,
+        text=True,
+        cwd=str(cwd) if cwd is not None else None,
+        timeout=30,
+    )
+
+
+class TestSessionStartHookBehavior:
+    def test_log_resolves_to_script_dir_not_cwd(self, tmp_path, session_start_log_cleanup):
+        """Regression: log must land in HOOKS_DIR/logs/, not in the CWD.
+
+        Runs session_start.py with CWD set to tmp_path (simulating a foreign
+        directory like ~/.zprezto/), then asserts:
+          - The log did NOT appear in tmp_path/logs/ (old buggy behaviour).
+          - The log DID appear in HOOKS_DIR/logs/ (correct behaviour after fix).
+        """
+        input_payload = {"hook_event_name": "SessionStart", "session_id": "test-cwd-leak"}
+        result = run_session_start(input_payload, cwd=tmp_path)
+        assert result.returncode == 0, f"session_start.py exited non-zero: {result.stderr}"
+
+        # Bug would create the log file under the CWD — assert it is absent there.
+        cwd_log = tmp_path / "logs" / "session_start.json"
+        assert not cwd_log.exists(), (
+            f"CWD-leak detected: log written to {cwd_log} instead of HOOKS_DIR/logs/"
+        )
+
+        # Fix must write the log next to the script.
+        expected_log = session_start_log_cleanup  # HOOKS_DIR / "logs" / "session_start.json"
+        assert expected_log.exists(), (
+            f"Log not found at expected location {expected_log}; "
+            "session_start.py may not have fixed the CWD-relative Path('logs') bug"
+        )
