@@ -61,6 +61,8 @@ jobs:
           mkdir -p ~/bin
           curl -fsSL "https://github.com/starship/starship/releases/download/v1.25.0/starship-x86_64-unknown-linux-gnu.tar.gz" \
             | tar xz -C ~/bin starship
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
       - name: Install Python deps
         run: pip install tomli pytest pyyaml
       - name: Run tests
