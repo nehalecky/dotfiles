@@ -747,7 +747,7 @@ def run_migration_unit_tests() -> None:
 
     label = "Migration: pytest tests/chezmoiscripts/ passes"
     result = run(
-        "python3", "-m", "pytest", str(test_dir), "-v",
+        "uv", "tool", "run", "pytest", str(test_dir), "-v",
         cwd=str(DOTFILES_DIR),
     )
     if result.returncode == 0:
@@ -772,7 +772,7 @@ def run_hook_unit_tests() -> None:
         return
 
     result = run(
-        "python3", "-m", "pytest", str(test_file), "-v",
+        "uv", "tool", "run", "pytest", str(test_file), "-v",
         cwd=str(DOTFILES_DIR),
     )
     if result.returncode == 0:
