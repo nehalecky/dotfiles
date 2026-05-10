@@ -500,6 +500,18 @@ def run_hook_tests() -> None:
         else:
             fail_test(label, result.stderr)
 
+    # All hook scripts must use chezmoi's executable_ filename prefix; without
+    # it, the deployed file is mode 644 and the shebang can't fire.
+    unprefixed = [
+        p.name for p in hooks_dir.glob("*.py")
+        if not p.name.startswith("executable_")
+    ]
+    label = "Hooks: all scripts use executable_ prefix"
+    if not unprefixed:
+        pass_test(label)
+    else:
+        fail_test(label, f"missing prefix on: {unprefixed}")
+
     # Determine settings file — may be .json, .json.tmpl, or create_.json.tmpl
     settings_tmpl = DOTFILES_DIR / "dot_claude" / "settings.json.tmpl"
     settings_create_tmpl = DOTFILES_DIR / "dot_claude" / "create_settings.json.tmpl"
