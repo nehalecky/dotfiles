@@ -5,4 +5,6 @@
 [[ "$(uname -s)" == "Darwin" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Source XDG-compliant bash config if it exists
-[ -f "$HOME/.config/bash/bashrc" ] && source "$HOME/.config/bash/bashrc"
+if [ -f "$HOME/.config/bash/bashrc" ]; then
+    source "$HOME/.config/bash/bashrc"
+fi
