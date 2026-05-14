@@ -26,7 +26,9 @@
 [core]
     editor = code --wait
 {{ if eq .profile "work" -}}
-# Dual-identity: route work email/signing config inside ~/Projects/ repos.
+# Dual-identity: route work email/signing config for local and Coder VM repos.
 [includeIf "gitdir:~/Projects/"]
+    path = ~/.config/git/config-work
+[includeIf "gitdir:~/src/"]
     path = ~/.config/git/config-work
 {{ end -}}
