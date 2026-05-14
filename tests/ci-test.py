@@ -480,7 +480,48 @@ def run_lint_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 4: Hook tests (Python syntax + settings validation)
+# Category 4: Bashrc platform tests
+# ---------------------------------------------------------------------------
+
+
+def run_bashrc_tests() -> None:
+    """Verify dot_bashrc sources without errors on the current platform."""
+    import platform
+    print()
+    print("=== Bashrc Platform Tests ===")
+
+    bashrc = DOTFILES_DIR / "dot_bashrc"
+    label = "Bashrc: dot_bashrc exists"
+    if not bashrc.exists():
+        fail_test(label)
+        return
+    pass_test(label)
+
+    system = platform.system()  # "Linux" or "Darwin"
+
+    # Source in a subshell — exit code must be 0 and stderr must be empty
+    label = f"Bashrc: sources without errors on {system}"
+    result = subprocess.run(
+        ["bash", "-c", f". {bashrc}"],
+        capture_output=True, text=True
+    )
+    if result.returncode == 0 and not result.stderr.strip():
+        pass_test(label)
+    else:
+        fail_test(label, f"returncode={result.returncode}\nstderr={result.stderr}")
+
+    # On Linux: confirm brew is never invoked (uname guard must be working)
+    if system == "Linux":
+        label = "Bashrc: brew not invoked on Linux (Darwin guard works)"
+        combined = result.stdout + result.stderr
+        if "brew" not in combined:
+            pass_test(label)
+        else:
+            fail_test(label, f"brew appeared in output:\n{combined}")
+
+
+# ---------------------------------------------------------------------------
+# Category 6: Hook tests (Python syntax + settings validation)
 # ---------------------------------------------------------------------------
 
 
@@ -594,7 +635,7 @@ def run_hook_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 5: Source structure validation
+# Category 7: Source structure validation
 # ---------------------------------------------------------------------------
 
 
@@ -632,7 +673,7 @@ def run_source_structure_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 6: Init template validation
+# Category 8: Init template validation
 # ---------------------------------------------------------------------------
 
 
@@ -679,7 +720,7 @@ def run_init_template_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 7: chezmoi apply dry run
+# Category 9: chezmoi apply dry run
 # ---------------------------------------------------------------------------
 
 
@@ -717,7 +758,7 @@ def run_apply_lifecycle_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 8: Migration unit tests (pytest)
+# Category 10: Migration unit tests (pytest)
 # ---------------------------------------------------------------------------
 
 
@@ -745,7 +786,7 @@ def run_migration_unit_tests() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Category 9: Hook unit tests (pytest)
+# Category 11: Hook unit tests (pytest)
 # ---------------------------------------------------------------------------
 
 
@@ -790,6 +831,7 @@ def main() -> None:
         run_template_tests()
         run_syntax_tests()
         run_lint_tests()
+        run_bashrc_tests()
         run_apply_lifecycle_tests()      # after templates are validated
         run_hook_tests()
         run_hook_unit_tests()

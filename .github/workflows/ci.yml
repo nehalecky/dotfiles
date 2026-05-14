@@ -29,10 +29,11 @@ jobs:
           python3 -c "import yaml; yaml.safe_load(open('.chezmoiexternal.yaml'))"
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest]
         profile: [personal, work]
         terminal: [wezterm, iterm2, default]
     steps:
@@ -47,7 +48,10 @@ jobs:
         if: steps.cache-chezmoi.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/bin
-          curl -fsSL "https://github.com/twpayne/chezmoi/releases/download/v2.70.2/chezmoi_2.70.2_linux_amd64.tar.gz" \
+          VERSION=2.70.2
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          ARCH=$(uname -m | sed 's/x86_64/amd64/; s/aarch64/arm64/')
+          curl -fsSL "https://github.com/twpayne/chezmoi/releases/download/v${VERSION}/chezmoi_${VERSION}_${OS}_${ARCH}.tar.gz" \
             | tar xz -C ~/bin chezmoi
       - name: Cache starship
         uses: actions/cache@v4
@@ -59,7 +63,14 @@ jobs:
         if: steps.cache-starship.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/bin
-          curl -fsSL "https://github.com/starship/starship/releases/download/v1.25.0/starship-x86_64-unknown-linux-gnu.tar.gz" \
+          VERSION=1.25.0
+          ARCH=$(uname -m)
+          if [[ "$(uname -s)" == "Darwin" ]]; then
+            [[ "$ARCH" == "arm64" ]] && TARGET="aarch64-apple-darwin" || TARGET="x86_64-apple-darwin"
+          else
+            TARGET="x86_64-unknown-linux-gnu"
+          fi
+          curl -fsSL "https://github.com/starship/starship/releases/download/v${VERSION}/starship-${TARGET}.tar.gz" \
             | tar xz -C ~/bin starship
       - name: Install Python deps
         run: pip install tomli pytest pyyaml
