@@ -190,3 +190,6 @@ Dotfiles management, command execution, file operations, git workflows, project 
 ---
 
 *Lean context for immediate workflow enforcement. Reference detailed modules when needed for specific technology work.*
+
+## Workon
+coder_workspace: nico.coder
