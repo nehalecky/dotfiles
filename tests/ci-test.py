@@ -484,6 +484,45 @@ def run_lint_tests() -> None:
 # ---------------------------------------------------------------------------
 
 
+def run_shell_dropin_tests() -> None:
+    """Source each conf.d/*.zsh in a minimal environment; fail on 'command not found'."""
+    print()
+    print("=== Shell Drop-in Tests (conf.d/*.zsh) ===")
+
+    conf_d = DOTFILES_DIR / "dot_config" / "shell" / "conf.d"
+    if not conf_d.exists():
+        pass_test("Shell drop-ins: dot_config/shell/conf.d/ present (skipped — not found)")
+        return
+
+    if not shutil.which("zsh"):
+        pass_test("Shell drop-ins: zsh available (skipped — not installed)")
+        return
+
+    for f in sorted(conf_d.glob("*.zsh")):
+        name = f.name
+
+        label = f"Shell drop-in: conf.d/{name} passes zsh -n"
+        result = run("zsh", "-n", str(f))
+        if result.returncode == 0:
+            pass_test(label)
+        else:
+            fail_test(label, result.stderr)
+
+        # Source in a minimal non-interactive zsh with a stripped PATH.
+        # Tools like mise and gh won't be present — any unguarded eval will
+        # produce "command not found" and fail this test.
+        label = f"Shell drop-in: conf.d/{name} sources without 'command not found'"
+        env = {**os.environ, "PATH": "/usr/bin:/bin"}
+        result = subprocess.run(
+            ["zsh", "--no-rcs", "-c", f"source {f}"],
+            capture_output=True, text=True, env=env,
+        )
+        if "command not found" in result.stderr:
+            fail_test(label, result.stderr.strip())
+        else:
+            pass_test(label)
+
+
 def run_bashrc_tests() -> None:
     """Verify dot_bashrc sources without errors on the current platform."""
     import platform
@@ -844,6 +883,7 @@ def main() -> None:
         run_syntax_tests()
         run_lint_tests()
         run_bashrc_tests()
+        run_shell_dropin_tests()
         run_apply_lifecycle_tests()      # after templates are validated
         run_hook_tests()
         run_hook_unit_tests()
