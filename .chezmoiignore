@@ -47,6 +47,10 @@ plan/
 .aws/
 {{ end }}
 
+{{ if not .isWork }}
+dot_config/shell/conf.d/work.zsh
+{{ end }}
+
 # Terminal-conditional exclusions
 {{ if ne .terminal "wezterm" }}
 .wezterm.lua

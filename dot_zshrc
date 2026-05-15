@@ -66,7 +66,10 @@ source <(fzf --zsh)  # Homebrew fzf integration
 # https://github.com/astral-sh/uv
 # UV manages Python installations and virtual environments
 
-# Prompt configuration - Toggle between Starship and Powerlevel10k  
+# Machine-specific shell config drop-ins
+for f in ~/.config/shell/conf.d/*.zsh(N); do source "$f"; done
+
+# Prompt configuration - Toggle between Starship and Powerlevel10k
 # Set PROMPT_THEME to "starship" or "p10k" (switched to starship for modern performance)
 export PROMPT_THEME="${PROMPT_THEME:-starship}"
 
