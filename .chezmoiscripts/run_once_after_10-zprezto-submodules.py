@@ -1,8 +1,4 @@
-#!/usr/bin/env -S uv run
-# /// script
-# requires-python = ">=3.10"
-# dependencies = []
-# ///
+#!/usr/bin/env python3
 """
 Initialize zprezto git submodules after chezmoi deploys the repo.
 
