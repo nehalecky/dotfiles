@@ -20,3 +20,4 @@ export ENGINEER_NAME="Nico"
 # Skillzilla telemetry — only resolve in interactive shells to avoid op popup
 # on every non-interactive subprocess CC spawns; subshells inherit from parent.
 [[ -o interactive ]] && export SKILLZILLA_HC_WRITE_KEY=${SKILLZILLA_HC_WRITE_KEY:-$(op read "op://Engineering/Honeycomb Skillzilla Ingest Key/password" 2>/dev/null)}
+[[ -o interactive ]] && export OPENAI_API_KEY=${OPENAI_API_KEY:-$(op read "op://Employee/OpenAI API Key/password" 2>/dev/null)}
