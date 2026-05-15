@@ -27,9 +27,9 @@ test -e "${HOME}/.config/iterm2/shell_integration.zsh" && source "${HOME}/.confi
 
 # CLI completions
 command -v op &>/dev/null && { eval "$(op completion zsh)"; compdef _op op; }  # 1Password CLI
-eval "$(gh completion -s zsh)"                     # GitHub CLI
-eval "$(chezmoi completion zsh)"                   # chezmoi
-eval "$(uv generate-shell-completion zsh)"         # uv Python manager
+command -v gh &>/dev/null && eval "$(gh completion -s zsh)"                    # GitHub CLI
+command -v chezmoi &>/dev/null && eval "$(chezmoi completion zsh)"             # chezmoi
+command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"        # uv Python manager
 
 # Taskwarrior completion
 fpath=(~/.local/share/zsh/site-functions $fpath)
