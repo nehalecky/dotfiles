@@ -1,13 +1,6 @@
 # XDG Base Directory compliance - load early for other configs to use
 [ -f "$HOME/.config/shell/xdg-env.sh" ] && source "$HOME/.config/shell/xdg-env.sh"
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 #
 # Executes commands at the start of an interactive session.
 #
@@ -69,33 +62,7 @@ source <(fzf --zsh)  # Homebrew fzf integration
 # Machine-specific shell config drop-ins
 for f in ~/.config/shell/conf.d/*.zsh(N); do source "$f"; done
 
-# Prompt configuration - Toggle between Starship and Powerlevel10k
-# Set PROMPT_THEME to "starship" or "p10k" (switched to starship for modern performance)
-export PROMPT_THEME="${PROMPT_THEME:-starship}"
-
-if [[ "$PROMPT_THEME" == "starship" ]]; then
-  # Initialize Starship
-  eval "$(starship init zsh)"
-  # Suppress P10k configuration wizard when using Starship
-  export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-else
-  # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-fi
-
-# Helper function to switch between prompts
-prompt_switch() {
-  if [[ "$1" == "starship" ]]; then
-    export PROMPT_THEME="starship"
-    echo "Switched to Starship prompt. Restart your shell or run: exec zsh"
-  elif [[ "$1" == "p10k" ]]; then
-    export PROMPT_THEME="p10k"
-    echo "Switched to Powerlevel10k prompt. Restart your shell or run: exec zsh"
-  else
-    echo "Usage: prompt_switch [starship|p10k]"
-    echo "Current prompt: $PROMPT_THEME"
-  fi
-}
+eval "$(starship init zsh)"
 
 # Direnv hook for automatic environment activation
 if command -v direnv >/dev/null 2>&1; then
