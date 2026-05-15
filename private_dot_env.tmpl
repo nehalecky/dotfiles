@@ -8,8 +8,12 @@
 # Reference: https://www.chezmoi.io/user-guide/password-managers/1password/
 
 # ── GitHub ────────────────────────────────────────────────────────────────────
-# Sourced dynamically from gh CLI — always fresh, no PAT needed
+# Sourced dynamically from gh CLI — always fresh, no PAT needed.
+# On Linux (Coder VM) GITHUB_TOKEN is injected by the workspace environment, so
+# the command substitution is skipped — mise's dotenv parser rejects $(...) syntax.
+{{- if eq .chezmoi.os "darwin" }}
 export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
+{{- end }}
 
 # ── Voice Notifications (Claude Code hooks) ───────────────────────────────────
 # TTS priority: ElevenLabs → OpenAI → Kokoro (local, default) → pyttsx3
