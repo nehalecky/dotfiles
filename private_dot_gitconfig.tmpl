@@ -1,0 +1,10 @@
+# This file redirects to the actual config in ~/.config/git/config
+# Maintained by chezmoi
+[include]
+    path = ~/.config/git/config
+[credential "https://github.com"]
+	helper =
+	helper = !{{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/gh{{ else }}/usr/bin/env gh{{ end }} auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !{{ if eq .chezmoi.os "darwin" }}/opt/homebrew/bin/gh{{ else }}/usr/bin/env gh{{ end }} auth git-credential
