@@ -59,3 +59,6 @@ dot_config/shell/conf.d/work.zsh
 {{ if ne .terminal "iterm2" }}
 .config/iterm2/
 {{ end }}
+
+# Coder SSH config — written by `coder config-ssh`, not managed by chezmoi
+private_dot_ssh/private_coder_config
