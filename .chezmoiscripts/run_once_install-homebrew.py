@@ -21,6 +21,10 @@ def find_brew() -> Optional[Path]:
 
 
 def main() -> None:
+    if sys.platform != "darwin":
+        print("⏭️  Skipping Homebrew install (macOS only)")
+        return
+
     print("🍺 Checking Homebrew installation...")
 
     if shutil.which("brew"):
