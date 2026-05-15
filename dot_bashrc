@@ -1,6 +1,11 @@
 # Minimal bash configuration
 # Primary shell is zsh - this is just for compatibility
 
+# Hand off to zsh for interactive shells (Linux only — chsh is disabled on Coder VMs)
+if [[ "$OSTYPE" == "linux"* ]] && [[ $- == *i* ]] && command -v zsh &>/dev/null; then
+  exec zsh
+fi
+
 # Ensure homebrew is in PATH (macOS only — not present on Linux/Coder VMs)
 [[ "$(uname -s)" == "Darwin" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
