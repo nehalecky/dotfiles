@@ -1,2 +1,2 @@
 # Descript work environment
-eval "$(mise activate zsh)"
+command -v mise &>/dev/null && eval "$(mise activate zsh)"
