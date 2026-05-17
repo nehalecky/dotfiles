@@ -17,6 +17,18 @@ export GOPATH=$HOME/.local/share/go
 # Claude Code hook personalization
 export ENGINEER_NAME="Nico"
 
+# Authenticate op CLI once at shell start so secret reads below are silent.
+# Only run `op signin` on macOS with the 1Password desktop app (Touch ID flow).
+# On Linux/Coder, `op` is authenticated via OP_SERVICE_ACCOUNT_TOKEN if set;
+# otherwise `op read` below fails silently and secrets stay unset.
+if [[ -o interactive ]] && command -v op &>/dev/null; then
+    if ! op whoami &>/dev/null; then
+        if [[ "$OSTYPE" == darwin* ]] && [[ -d "/Applications/1Password.app" ]]; then
+            op signin --account team-descript.1password.com
+        fi
+    fi
+fi
+
 # Skillzilla telemetry — only resolve in interactive shells to avoid op popup
 # on every non-interactive subprocess CC spawns; subshells inherit from parent.
 [[ -o interactive ]] && export SKILLZILLA_HC_WRITE_KEY=${SKILLZILLA_HC_WRITE_KEY:-$(op read "op://Engineering/Honeycomb Skillzilla Ingest Key/password" 2>/dev/null)}
