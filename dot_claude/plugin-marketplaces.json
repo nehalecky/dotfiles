@@ -2,5 +2,9 @@
   "superpowers-marketplace": {
     "repo": "obra/superpowers-marketplace",
     "description": "Superpowers skills: TDD, brainstorming, planning, debugging"
+  },
+  "skillzilla": {
+    "repo": "descriptinc/skillzilla",
+    "description": "Descript's skills platform — operating workflows for engineering and EM work"
   }
 }
