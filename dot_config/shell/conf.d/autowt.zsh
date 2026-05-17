@@ -1,9 +1,6 @@
 # autowt — automatic worktree shell integration
-# Adds ~/bin to PATH (where autowt/awt binaries live) and defines the
-# shell function that lets autowt switch the *current* shell's directory.
-# Defined manually to avoid trap RETURN and broken completion output in rc3.
-export PATH="$HOME/bin:$PATH"
-
+# Defines the shell function that lets autowt switch the *current* shell's
+# directory. Binary managed by mise (github:irskep/autowt).
 if command -v autowt &>/dev/null; then
     autowt() {
         local tmpfile exit_code
