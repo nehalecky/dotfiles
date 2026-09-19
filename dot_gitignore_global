@@ -1,0 +1,31 @@
+# Global gitignore — applies to every repo on this machine.
+# Set via: git config --global core.excludesfile ~/.gitignore_global
+#
+# Scope: machine/tool litter that no project should have to defend against
+# individually. Project-specific ignores still belong in the repo's .gitignore.
+
+# --- MCP server litter ---------------------------------------------------
+# Several MCP servers open their logfile at a RELATIVE path, so it lands in
+# whatever CWD the stdio process inherits. Claude Code spawns them with the
+# session's working directory, so these seed themselves into any repo you
+# happen to be working in. (Observed: mcp-excalidraw-server, 5 copies.)
+excalidraw.log
+mcp-*.log
+
+# --- macOS ---------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# --- editor / IDE scratch ------------------------------------------------
+*.swp
+*.swo
+*~
+.idea/
+*.code-workspace
+
+# --- environment & direnv ------------------------------------------------
+.envrc.local
+.direnv/
