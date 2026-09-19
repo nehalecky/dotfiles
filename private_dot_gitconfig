@@ -9,4 +9,4 @@
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [core]
-	excludesfile = /Users/nehalecky/.gitignore_global
+	excludesfile = ~/.gitignore_global
